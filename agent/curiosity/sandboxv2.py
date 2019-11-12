@@ -137,21 +137,33 @@ def goal_space_policy(context):
 def meta_policy(goal_space, goal, context):
     if evaluating:
         ###different types of evaluation###
-        # outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[3].stop)
+        outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[3].stop)
         # outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[2].stop)
         # outcome_slice_one_time = slice(goal_spaces_indices[2].start//n_steps,goal_spaces_indices[2].stop//n_steps)
-        outcome_slice = slice(goal_spaces_indices[3].start,goal_spaces_indices[3].stop)
+        # outcome_slice = slice(goal_spaces_indices[3].start,goal_spaces_indices[3].stop)
         # outcome_slice_one_time = slice(goal_spaces_indices[3].start//n_steps,goal_spaces_indices[3].stop//n_steps)
-        # mask_outcome = np.zeros(outcome_dim).reshape((context_dim,n_steps))
-        # mask_outcome[outcome_slice_one_time,-1] = 1
-        # mask_outcome = mask_outcome.reshape((-1,))
-        # mask = np.concatenate([np.ones(context_dim),mask_outcome,np.zeros(action_dim)])
         mask = np.zeros(memory_dim)
         memory_slice = slice(context_dim+outcome_slice.start,context_dim+outcome_slice.stop)
         mask[memory_slice] = 1
         mask[:context_dim] = 1
         index_of_memory, closeness = find_memory_by_slice(context, outcome_slice, goal, mask=mask)
-        action = database[index_of_memory,-action_dim:]
+        print("closeness", closeness)
+        if closeness > 2.0:
+            outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[3].stop)
+            # outcome_slice = slice(goal_spaces_indices[3].start,goal_spaces_indices[3].stop)
+            memory_slice = slice(outcome_slice.start,outcome_slice.stop)
+            outcomes = np.zeros(outcome_dim)
+            outcomes[memory_slice] = goal
+            outcomes = np.expand_dims(outcomes,0)
+            outcomes = outcomes.reshape((1,context_dim,n_steps))
+            outcomes = np.concatenate([outcomes,np.zeros(outcomes.shape[0:2]+(1,))],2)
+            context = np.expand_dims(context,0)
+            outcomes = np.concatenate([np.expand_dims(context,2),outcomes],2)
+            outcomes = outcomes.transpose(0,2,1)
+            action = meta_policy_nn_model(outcomes.astype("float32")).numpy()[0,1:,:].transpose(1,0).reshape((-1,))
+            print(action.shape)
+        else:
+            action = database[index_of_memory,-action_dim:]
     else:
         index_of_memory, closeness = find_memory(context, goal_space, goal)
         print("closeness",closeness)
@@ -300,20 +312,36 @@ def main(argv):
     rank = comm.Get_rank()
     size = comm.Get_size()
 
+    if evaluating: assert size == 1
+
     #initialize NN
     from meta_policy_neural_net import make_meta_policy_nn_model
 
     global meta_policy_nn_model
     meta_policy_nn_model = make_meta_policy_nn_model(FLAGS)
 
+    if os.path.exists("model_weights.p"):
+        updated_model_weigths = pickle.load(open("model_weights.p","rb"))
+        meta_policy_nn_model.set_weights(updated_model_weigths)
 
     if rank == 0:
         # yeah this is uggly, okkk
         global database
         global intrinsic_rewards
         global goal_space_probs
-        if os.path.exists("database.p"):
-            database = pickle.load(open("database.p","rb"))
+        files = os.listdir("memories")
+        # print(list(files))
+        files = [os.path.join("memories", f) for f in files] # add path to each file
+        files.sort(key=lambda x: os.path.getmtime(x),reverse=True)
+        MAX_MEMORY_SIZE = 10000
+        if len(files)>1:
+            for ii,filename in enumerate(files):
+                if ii==0:
+                    database = np.load(filename)
+                else:
+                    database = np.concatenate([database,np.load(filename)],0)
+                if len(database) >MAX_MEMORY_SIZE:
+                    break
         else:
             database = None
         if os.path.exists("intrinsic_rewards.p"):
@@ -330,7 +358,7 @@ def main(argv):
         if evaluating:
             pen_goal = results["desired_goal"]
             # pen_goal = pen_goal[:3]
-            pen_goal = pen_goal[3:]
+            # pen_goal = pen_goal[3:]
             goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
             goal = np.reshape(goal.T,(-1))
 
@@ -381,14 +409,14 @@ def main(argv):
         print("active goal babbling")
         reset_env = False
         for iteration in range(200000):
-            if comm.Iprobe(source=1, tag=12):
-                updated_model_weigths = comm.recv(source=1, tag=12)
-                meta_policy_nn_model.set_weights(updated_model_weigths)
             print("iteration",iteration)
             # this chooses one of the goal_spaces as an index from 0 to len(goal_spaces_indices)-1
             goal_space = goal_space_policy(context)
 
             if not evaluating:
+                if comm.Iprobe(source=1, tag=12):
+                    updated_model_weigths = comm.recv(source=1, tag=12)
+                    meta_policy_nn_model.set_weights(updated_model_weigths)
                 #goal is of size len(goal_spaces_indices[goal_space])
                 goal = goal_policy(goal_space, context)
 
@@ -412,7 +440,7 @@ def main(argv):
                     if evaluating:
                         pen_goal = results["desired_goal"]
                         # pen_goal = pen_goal[:3]
-                        pen_goal = pen_goal[3:]
+                        # pen_goal = pen_goal[3:]
                         goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
                         goal = np.reshape(goal.T,(-1))
                     reset_env = True
@@ -439,14 +467,12 @@ def main(argv):
             if not evaluating:
                 update_exploration_policy(context, outcome, action_parameter)
                 update_goal_space_policy()
-                if iteration % save_freq == 0:
+                if iteration % save_freq == save_freq - 1:
                     print("Saving new batch of memories")
                     sys.stdout.flush()
                     # pickle.dump(database, open("database.p","wb"))
-                    if iteration == 0:
-                        database = database[-1000:]
-                    np.save("memories/database_"+str(iteration)+".npy",database)
                     database = database[-1000:]
+                    np.save("memories/database_"+str(iteration)+".npy",database)
                     pickle.dump(intrinsic_rewards, open("intrinsic_rewards.p","wb"))
                     comm.send(True, dest=1, tag=11) #signal to send to consolidation code to continue going on
 
