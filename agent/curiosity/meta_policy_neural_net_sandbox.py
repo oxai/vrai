@@ -66,6 +66,14 @@ contexts.shape
 outcomes = np.concatenate([np.expand_dims(contexts,2),outcomes],2)
 outcomes = outcomes.transpose(0,2,1)
 
+masks = np.zeros(database.shape[0],context_dim*(n_steps+1))
+masks[:,:context_dim] = 1
+for i in range(database.shape[0]):
+    goal_space = np.random.randint(6)
+    outcome_slice = goal_spaces_indices[goal_space]
+    memory_slice = slice(context_dim+outcome_slice.start,context_dim+outcome_slice.stop)
+    masks[i,memory_slice] = 1
+
 actions.shape
 actions = actions.reshape((-1,n_actuators,(n_dmp_basis+1)))
 actions = actions.transpose(0,2,1)

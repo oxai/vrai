@@ -2,6 +2,7 @@ import pickle
 from absl import app
 import matplotlib.pyplot as plt
 import os
+import sys
 # %matplotlib inline
 import numpy as np
 import gym
@@ -135,31 +136,46 @@ def goal_space_policy(context):
 
 def meta_policy(goal_space, goal, context):
     if evaluating:
+        ###different types of evaluation###
         # outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[3].stop)
-
         # outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[2].stop)
         # outcome_slice_one_time = slice(goal_spaces_indices[2].start//n_steps,goal_spaces_indices[2].stop//n_steps)
-
         outcome_slice = slice(goal_spaces_indices[3].start,goal_spaces_indices[3].stop)
         # outcome_slice_one_time = slice(goal_spaces_indices[3].start//n_steps,goal_spaces_indices[3].stop//n_steps)
         # mask_outcome = np.zeros(outcome_dim).reshape((context_dim,n_steps))
         # mask_outcome[outcome_slice_one_time,-1] = 1
         # mask_outcome = mask_outcome.reshape((-1,))
         # mask = np.concatenate([np.ones(context_dim),mask_outcome,np.zeros(action_dim)])
-
         mask = np.zeros(memory_dim)
         memory_slice = slice(context_dim+outcome_slice.start,context_dim+outcome_slice.stop)
         mask[memory_slice] = 1
         mask[:context_dim] = 1
-        index_of_memory = find_memory_by_slice(context, outcome_slice, goal, mask=mask)
+        index_of_memory, closeness = find_memory_by_slice(context, outcome_slice, goal, mask=mask)
+        action = database[index_of_memory,-action_dim:]
     else:
-        index_of_memory = find_memory(context, goal_space, goal)
-    action = database[index_of_memory,-action_dim:]
+        index_of_memory, closeness = find_memory(context, goal_space, goal)
+        print("closeness",closeness)
+        if closeness > 2.0:
+            outcome_slice = goal_spaces_indices[goal_space]
+            memory_slice = slice(outcome_slice.start,outcome_slice.stop)
+            outcomes = np.zeros(outcome_dim)
+            outcomes[memory_slice] = goal
+            outcomes = np.expand_dims(outcomes,0)
+            outcomes = outcomes.reshape((1,context_dim,n_steps))
+            outcomes = np.concatenate([outcomes,np.zeros(outcomes.shape[0:2]+(1,))],2)
+            context = np.expand_dims(context,0)
+            outcomes = np.concatenate([np.expand_dims(context,2),outcomes],2)
+            outcomes = outcomes.transpose(0,2,1)
+            action = meta_policy_nn_model(outcomes.astype("float32")).numpy()[0,1:,:].transpose(1,0).reshape((-1,))
+            print(action.shape)
+        else:
+            action = database[index_of_memory,-action_dim:]
     return action
 
 def exploration_meta_policy(goal_space, goal, context):
     action = meta_policy(goal_space, goal, context)
     action += 0.1*np.random.randn(*action.shape)
+    #clipping so that the added noise doesn't exceed the limits of the actuators
     action[:-n_actuators] = np.clip(action[:-n_actuators], -1, 1)
     actuator_center = get_actuator_center()
     action[-n_actuators:] = np.clip(action[-n_actuators:], -1 - actuator_center, 1 - actuator_center)
@@ -168,7 +184,7 @@ def exploration_meta_policy(goal_space, goal, context):
 # running_average_window_size = 5
 running_average_weighting = 0.5
 def update_intrinsic_reward(intrinsic_rewards, goal_space, goal, context, outcome):
-    index_of_memory = find_memory(context, goal_space, goal)
+    index_of_memory,_ = find_memory(context, goal_space, goal)
     old_outcomes = database[index_of_memory,context_dim:-action_dim:]
     old_outcome_for_goal_space = old_outcomes[goal_spaces_indices[goal_space]]
     current_outcome_for_goal_space = outcome[goal_spaces_indices[goal_space]]
@@ -224,6 +240,8 @@ def action_rollout(context,action_parameter,i):
 
 def main(argv):
 
+    '''PREPPING UP variables'''
+
     global FLAGS
     FLAGS = FLAGS.flag_values_dict()
     # print(FLAGS)
@@ -256,7 +274,7 @@ def main(argv):
 
     #used for find_memory
     default_mask = np.zeros(memory_dim)
-    default_mask[:-action_dim] = 1
+    default_mask[:context_dim] = 1
     def find_memory(context, goal_space, goal, action=None, mask=default_mask):
         outcome_slice = goal_spaces_indices[goal_space]
         return find_memory_by_slice(context, outcome_slice, goal, action=None, mask=default_mask)
@@ -269,56 +287,134 @@ def main(argv):
         #indices corresponding to the part of the outcome which we are querying against
         memory_slice = slice(context_dim+outcome_slice.start,context_dim+outcome_slice.stop)
         query_vector[memory_slice] = goal/np.sqrt(goal.shape[0])
-        mask[memory_slice] /= goal/np.sqrt(goal.shape[0])
+        mask[memory_slice] = 1
         if action is not None:
             query_vector[-action_dim:] = action
         distances = np.linalg.norm((database - query_vector)*mask, axis=1)
         index_of_memory = np.argmin(distances,axis=0)
-        return index_of_memory
+        return index_of_memory, distances[index_of_memory]
 
-    global database
-    global intrinsic_rewards
-    global goal_space_probs
-    if os.path.exists("database.p"):
-        database = pickle.load(open("database.p","rb"))
-    else:
-        database = None
-    if os.path.exists("intrinsic_rewards.p"):
-        intrinsic_rewards = pickle.load(open("intrinsic_rewards.p","rb"))
-    else:
-        intrinsic_rewards = np.array([0.1 for index in goal_spaces_indices],dtype=np.float32)
-    goal_space_probs = goal_space_probabilities(intrinsic_rewards)
 
-    # action = env.action_space.sample()
-    results = env.reset()
-    context = results["observation"]
-    if evaluating:
-        pen_goal = results["desired_goal"]
-        # pen_goal = pen_goal[:3]
-        pen_goal = pen_goal[3:]
-        goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
-        goal = np.reshape(goal.T,(-1))
+    from mpi4py import MPI
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    size = comm.Get_size()
 
-    #some random exploration
-    if database is None: #cold start
-        print("random warming up")
+    #initialize NN
+    from meta_policy_neural_net import make_meta_policy_nn_model
+
+    global meta_policy_nn_model
+    meta_policy_nn_model = make_meta_policy_nn_model(FLAGS)
+
+
+    if rank == 0:
+        # yeah this is uggly, okkk
+        global database
+        global intrinsic_rewards
+        global goal_space_probs
+        if os.path.exists("database.p"):
+            database = pickle.load(open("database.p","rb"))
+        else:
+            database = None
+        if os.path.exists("intrinsic_rewards.p"):
+            intrinsic_rewards = pickle.load(open("intrinsic_rewards.p","rb"))
+        else:
+            intrinsic_rewards = np.array([0.1 for index in goal_spaces_indices],dtype=np.float32)
+        goal_space_probs = goal_space_probabilities(intrinsic_rewards)
+
+        '''INITIALIZE ENVIRONMENT'''
+
+        # action = env.action_space.sample()
+        results = env.reset()
+        context = results["observation"]
+        if evaluating:
+            pen_goal = results["desired_goal"]
+            # pen_goal = pen_goal[:3]
+            pen_goal = pen_goal[3:]
+            goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
+            goal = np.reshape(goal.T,(-1))
+
+        '''INITILIAZE MEMORY DATABASE VIA RANDOM EXPLORATION'''
+
+        #some random exploration
+        if database is None: #cold start
+            print("random warming up")
+            reset_env = False
+            memories = 0
+            while memories < 1000:
+                observations = []
+                action_parameter = 2*np.random.rand(action_dim)-1
+                for i in range(n_simulation_steps):
+                    # print(i)
+                    if rendering:
+                        env.render()
+                    action = action_rollout(context, action_parameter, i)
+                    results = env.step(action)
+                    obs = results[0]["observation"]
+                    done = results[2]
+                    if done:
+                        print("reseting environment")
+                        results = env.reset()
+                        # obs = results["observation"]
+                        reset_env = True
+                        break
+                    if i % outcome_sampling_frequency == 0:
+                        observations.append(obs)
+
+                if reset_env:
+                    reset_env = False
+                    continue
+                else:
+                    print("Adding memory")
+                    memories+=1
+
+                outcome = np.reshape(np.stack(observations).T, (outcome_dim))
+                if database is None and memories == 1:
+                    database = np.expand_dims(np.concatenate([context, outcome, action_parameter]),0)
+                    # print(database.shape)
+                else:
+                    update_exploration_policy(context, outcome, action_parameter)
+        else:
+            memories = database.shape[0]
+
+        '''TRAINING LOOP'''
+        print("active goal babbling")
         reset_env = False
-        memories = 0
-        while memories < 1000:
+        for iteration in range(200000):
+            if comm.Iprobe(source=1, tag=12):
+                updated_model_weigths = comm.recv(source=1, tag=12)
+                meta_policy_nn_model.set_weights(updated_model_weigths)
+            print("iteration",iteration)
+            # this chooses one of the goal_spaces as an index from 0 to len(goal_spaces_indices)-1
+            goal_space = goal_space_policy(context)
+
+            if not evaluating:
+                #goal is of size len(goal_spaces_indices[goal_space])
+                goal = goal_policy(goal_space, context)
+
+            if evaluating:
+                action_parameter = meta_policy(goal_space, goal, context)
+            else:
+                #USE EXPLORATION POLICY
+                action_parameter = exploration_meta_policy(goal_space, goal, context)
+
             observations = []
-            action_parameter = 2*np.random.rand(action_dim)-1
             for i in range(n_simulation_steps):
-                # print(i)
+                action = action_rollout(context,action_parameter, i)
+                results = env.step(action)
                 if rendering:
                     env.render()
-                action = action_rollout(context, action_parameter, i)
-                results = env.step(action)
                 obs = results[0]["observation"]
                 done = results[2]
                 if done:
                     print("reseting environment")
                     results = env.reset()
-                    # obs = results["observation"]
+                    if evaluating:
+                        pen_goal = results["desired_goal"]
+                        # pen_goal = pen_goal[:3]
+                        pen_goal = pen_goal[3:]
+                        goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
+                        goal = np.reshape(goal.T,(-1))
                     reset_env = True
                     break
                 if i % outcome_sampling_frequency == 0:
@@ -328,78 +424,58 @@ def main(argv):
                 reset_env = False
                 continue
             else:
-                print("Adding memory")
-                memories+=1
-
+                memories += 1
             outcome = np.reshape(np.stack(observations).T, (outcome_dim))
-            if database is None and memories == 1:
-                database = np.expand_dims(np.concatenate([context, outcome, action_parameter]),0)
-                # print(database.shape)
-            else:
+
+            context = observations[-1]
+
+            if not evaluating:
+                intrinsic_rewards = update_intrinsic_reward(intrinsic_rewards, goal_space, goal, context, outcome)
+                print(goal_spaces_names)
+                print(intrinsic_rewards)
+                sys.stdout.flush()
+
+
+            if not evaluating:
                 update_exploration_policy(context, outcome, action_parameter)
-    else:
-        memories = database.shape[0]
+                update_goal_space_policy()
+                if iteration % save_freq == 0:
+                    print("Saving new batch of memories")
+                    sys.stdout.flush()
+                    # pickle.dump(database, open("database.p","wb"))
+                    if iteration == 0:
+                        database = database[-1000:]
+                    np.save("memories/database_"+str(iteration)+".npy",database)
+                    database = database[-1000:]
+                    pickle.dump(intrinsic_rewards, open("intrinsic_rewards.p","wb"))
+                    comm.send(True, dest=1, tag=11) #signal to send to consolidation code to continue going on
 
-    print("active goal babbling")
-    reset_env = False
-    for iteration in range(200000):
-        print("iteration",iteration)
-        # this chooses one of the goal_spaces as an index from 0 to len(goal_spaces_indices)-1
-        goal_space = goal_space_policy(context)
+        comm.send(False, dest=1, tag=11)
+    if rank == 1:
+        from meta_policy_neural_net import learn_from_database
+        while comm.recv(source=0, tag=11):
+        # while True:
+            # files = filter(os.path.isfile, os.listdir("memories"))
+            files = os.listdir("memories")
+            # print(list(files))
+            files = [os.path.join("memories", f) for f in files] # add path to each file
+            files.sort(key=lambda x: os.path.getmtime(x),reverse=True)
+            # print(files)
+            # sys.stdout.flush()
+            for filename in files:
+                # if True:
+                if not comm.Iprobe(source=0, tag=11):
+                    database = np.load(filename)
+                    print("Training on",filename)
+                    sys.stdout.flush()
+                    meta_policy_nn_model = learn_from_database(meta_policy_nn_model,database,FLAGS)
+                    # sys.stdout.flush()
+                    updated_model_weigths = meta_policy_nn_model.get_weights()
+                    comm.send(updated_model_weigths, dest=0, tag=12)
+                    pickle.dump(updated_model_weigths, open("model_weights.p","wb"))
+                else:
+                    break
 
-        if not evaluating:
-            #goal is of size len(goal_spaces_indices[goal_space])
-            goal = goal_policy(goal_space, context)
-
-        if evaluating:
-            action_parameter = meta_policy(goal_space, goal, context)
-        else:
-            #USE EXPLORATION POLICY
-            action_parameter = exploration_meta_policy(goal_space, goal, context)
-
-        observations = []
-        for i in range(n_simulation_steps):
-            action = action_rollout(context,action_parameter, i)
-            results = env.step(action)
-            if rendering:
-                env.render()
-            obs = results[0]["observation"]
-            done = results[2]
-            if done:
-                print("reseting environment")
-                results = env.reset()
-                if evaluating:
-                    pen_goal = results["desired_goal"]
-                    # pen_goal = pen_goal[:3]
-                    pen_goal = pen_goal[3:]
-                    goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
-                    goal = np.reshape(goal.T,(-1))
-                reset_env = True
-                break
-            if i % outcome_sampling_frequency == 0:
-                observations.append(obs)
-
-        if reset_env:
-            reset_env = False
-            continue
-        else:
-            memories += 1
-        outcome = np.reshape(np.stack(observations).T, (outcome_dim))
-
-        context = observations[-1]
-
-        if not evaluating:
-            intrinsic_rewards = update_intrinsic_reward(intrinsic_rewards, goal_space, goal, context, outcome)
-            print(goal_spaces_names)
-            print(intrinsic_rewards)
-
-
-        if not evaluating:
-            update_exploration_policy(context, outcome, action_parameter)
-            update_goal_space_policy()
-            if iteration % save_freq:
-                pickle.dump(database, open("database.p","wb"))
-                pickle.dump(intrinsic_rewards, open("intrinsic_rewards.p","wb"))
 
 if __name__ == '__main__':
   app.run(main)
