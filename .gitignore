@@ -1,3 +1,4 @@
 agent/curiosity/memories
 agent/curiosity/old_memories
 **/*.p
+agent/curiosity/pybullet-gym
