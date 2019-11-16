@@ -1,7 +1,6 @@
 '''
-Using a neural network for metapolicy, in parallel to fast memory-based metapolicy
+FIND memories by reward
 '''
-
 import pickle
 from absl import app
 import matplotlib.pyplot as plt

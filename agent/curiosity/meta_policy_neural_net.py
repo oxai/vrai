@@ -81,5 +81,5 @@ def learn_from_database(model, database, FLAGS):
     num_samples,time,dimension
     '''
 
-    model.fit(outcomes*masks,actions,epochs=20)
+    model.fit(outcomes*masks,actions,epochs=20, verbose=0)
     return model
