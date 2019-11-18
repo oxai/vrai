@@ -1,0 +1,67 @@
+This code is based on the IMGEP work by Oudeyer, https://arxiv.org/abs/1708.02190
+
+We have goal spaces (eg hand position, hand velocity, pen position, etc. see 'goal_spaces_names'), and we select one of these at a given time to try and learn.
+There are labels for each goal space (e.g. 'hand_pos', 'pen_rot'), and a vector that defines it (eg, see goal_spaces_indices)
+
+We have goals, which, here, are not single points in goal space, but rather trajectories (ie a collection of, say 30, points in goal space that are ideally connected in a meaningful way).
+For example, in the hand position space, a point defines a a particular hand congiuration, and the goal is a collection of, say, 30 hand positons.
+
+Each observation is also a point in goal space, but is the result of an action by the agent, rather that a goal that it's trying to achieve.
+For example, the position of the hand after the action, with a particular pen velocity, etc.
+Each 'point' is a 61 dimensional array. It's the sum of the dimensions that make up each goal subspace, dim(goal_spaces_indices) = 61.
+
+The actions are the (relative, not absolute) angles that the actuators change by (the hand is position is changed via the actuators). There are 20 actuators in total.
+It is also important to note that the actions are not simply implemented by updating the angle of an actuator at the next timestep, but are implemented
+using the DMP system, where the desired angle change, is converted into an impulse, which defines a smooth motion of the actuators [and not, say, a sudden jerking motion].
+
+The goal_reward (note: not instrinsic_reward, or LP) is defined as the normalised eucildean distance between the goal (a collection of points in phase space),
+and the set of observations that resulted from actions I took to tried and reach those goals (which is also a collection of points in phase space).ls
+
+
+The Learning Progress (LP) is then the difference between the goal_reward from this run/memory/batch, and the goal_reward from a similar* goal in a previous run/memory/batch.
+*The similar goal is defined as the closest (in the euclidean distance sense) goal in the agents memory, to the current goal.
+Note: there is a  Learning Progress for each goal space.
+
+The exponential of the intrinsic_reward ( intrinsic_reward = r*w + learning_progress*(1-w), see 'update_intrinsic_reward') is taken as the proability to select a particular goal space in the future.
+Note: Each goal_space has its value of the instrinsic_reward, and so own probaility of being selected.
+
+For every goal (set of 30 goals) we perform a set of (30) actions, starting from the context (last observation from the previous run/memory/batch), and record the observations.
+We use this data to update the intrinsic_rewards, and so the probaility of selecting the
+
+The context is defined as the initial observation for each memory, and is simply set to be the previous observation.
+
+The Goal Space Policy returns a goal_space, for a given context [and implicitly memory, since it depends on the intrinsic_rewards [function of LP]].
+goal_space = Goal_Space_Policy[context, intrinsic_rewards[LP[memory]] ]
+The goal_space probaility = Exp[ LP_t + w( LP_[t-1]) + w^2 LP_t[t-2] + ... + w^[t] LP_[t=0] ]
+
+The Goal Policy returns a goal, for a given context and goal_space.
+goal = Goal_Policy[context, goal_space] (At the moment, we just randomly select the action)
+The goal probaility is uniform (ie select random actions).
+
+The Meta (Action-trajectory) Policy returns a set of actions ( / an action-trajectory) which tries to reach the goal-trajectories, for a given context, goal and goal_space, and memory.
+The memory is important because we use the same set of actions as last time we tried to solve a similar goal, but add some noise to the actions.
+action = Meta_Policy[context, goal_space, goal, [memory]]
+There is no probalility in this Meta_Policy since we take the same action as before and add noise to it.
+
+Memory affects the Goal_Space_Policy, Goal_Policy, and the Meta_Policy.
+
+The Database is a list of lists, of the form [memory_index, cat(action, observation, and goal -trajectory)] (eg, [act_1, obs_1, goal_1, act_2, obs_2, goal_2, act_3, obs_3, goal_3,...])
+
+Note: I use 'goal' and 'goal-trajectory' synonymously. Similarly with 'action' and 'action-trajectory' (the action is really a collection of 30 individual acions, and so is a trajectory through action space)
+Note: If there is no database, a bunch of random actions are performed, for a given goal_space, and we save all the data into the database.
+
+
+The Main Algorithm is then as follows:
+
+1. Initialise the system (the context, the probailities of selecting a goal_space, and a goal, etc.).
+2. Select a goal_space, using the Goal Space Policy.
+3. Select a goal (-trajectory), from the Goal Policy.
+4. Select an action (-trajectory), from the Meta Policy.
+5. For every action in the action-trajectory.
+5.1. Perform the action, and measure the resulting observation state.
+5.2. Store every 2nd obseration. [The amount you store is a variable here, not a hard constraint for the version I'm writing about, unlike the NN / other verions].
+6. Update the intrinsic_rewards (which depends on the learning progress) given
+   the context, the goal-trajectory, the action-trajectory, the observation-trajectory, and the previous intrinsic_rewards.
+7. Update the database with the result from this run/memory/batch.
+8. Update the probabilities of selecting a given goal_space using the intrinsic rewards obtained in step 6.
+9. Save progress (database, and intrinsic_rewards) and then return to step 2.
