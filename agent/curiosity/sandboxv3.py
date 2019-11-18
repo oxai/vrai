@@ -242,40 +242,11 @@ def update_goal_space_policy():
     global goal_space_probs
     goal_space_probs = goal_space_probabilities(intrinsic_rewards)
 
-from scipy.integrate import ode
-
-def basis_function(t,t0):
-    return np.exp(-0.5*(t-t0)**2/((n_simulation_steps/n_dmp_basis)**2))
-
-def basis_functions(t,x,g,w,y0):
-    phis = np.array(list(map(lambda t0: basis_function(t,t0), np.linspace(0,n_simulation_steps,n_dmp_basis)))).T
-    return x*(g-y0)*np.matmul(w,phis)/np.sum(phis)
 
 env.relative_control = True
-def dmp(t, variables, w, g):
-    y0 = np.zeros(n_actuators)
-    alphay = 2.0/n_simulation_steps
-    betay = 3.0
-    alphax = 0.1
-    variables = variables.reshape((n_actuators,3))
-    y,v,x = variables[:,0],variables[:,1],variables[:,2]
-    # print(y.shape, v.shape, x.shape, g)
-    vdot = alphay*(betay*(g-y)-v) + basis_functions(t,x,g,w.reshape((n_actuators,n_dmp_basis)),y0)
-    ydot = v
-    xdot = -alphax*x
-    return np.stack([ydot,vdot,xdot],axis=1).reshape((n_actuators*3))
-
-def action_rollout(context,action_parameter,i):
-    dt=1
-    if i==0:
-        solver = ode(dmp)
-        # print(action_parameter)
-        solver.set_initial_value(np.tile(np.array([0,0,1]),(n_actuators,1)).reshape(-1),0)\
-            .set_f_params(action_parameter[:-n_actuators],action_parameter[-n_actuators:])
-        action_rollout.solver = solver
-        return np.clip(action_rollout.solver.integrate(action_rollout.solver.t+dt).reshape((n_actuators,3))[:,0], -1,1)
-    else:
-        return np.clip(action_rollout.solver.integrate(action_rollout.solver.t+dt).reshape((n_actuators,3))[:,0], -1,1)
+from dmp import DMP
+dmp = DMP(n_dmp_basis,num_steps,n_actuators)
+action_rollout = dmp.action_rollout
 
 def main(argv):
 
