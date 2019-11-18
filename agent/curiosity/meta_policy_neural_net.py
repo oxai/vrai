@@ -42,7 +42,8 @@ def learn_from_database(model, database, FLAGS):
     indices_pen_rot = slice(51*n_steps,55*n_steps)
     indices_pen_vel = slice(55*n_steps,58*n_steps)
     indices_pen_rotvel = slice(58*n_steps,61*n_steps)
-    goal_spaces_indices = [indices_hand_pos,indices_hand_vel,indices_pen_pos,indices_pen_rot,indices_pen_vel,indices_pen_rotvel]
+    # goal_spaces_indices = [indices_hand_pos,indices_hand_vel,indices_pen_pos,indices_pen_rot,indices_pen_vel,indices_pen_rotvel]
+    goal_spaces_indices = [indices_pen_pos,indices_pen_rot,indices_pen_vel,indices_pen_rotvel]
     contexts, outcomes, actions = database[:,:context_dim], database[:,context_dim:-action_dim], database[:,-action_dim:]
 
     '''
@@ -66,7 +67,7 @@ def learn_from_database(model, database, FLAGS):
     masks = np.zeros((database.shape[0],context_dim*(n_steps+2)))
     masks[:,:context_dim] = 1
     for i in range(database.shape[0]):
-        goal_space = np.random.randint(6)
+        goal_space = np.random.randint(len(goal_spaces_indices))
         outcome_slice = goal_spaces_indices[goal_space]
         memory_slice = slice(context_dim+outcome_slice.start,context_dim+outcome_slice.stop)
         masks[i,memory_slice] = 1

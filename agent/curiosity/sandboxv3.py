@@ -1,6 +1,7 @@
 '''
-FIND memories by reward
+Using a neural network for metapolicy, in parallel to fast memory-based metapolicy
 '''
+
 import pickle
 from absl import app
 import matplotlib.pyplot as plt
@@ -18,9 +19,9 @@ env.observation_space["observation"]
 from absl import flags
 
 FLAGS = flags.FLAGS
-flags.DEFINE_integer("n_dmp_basis",10,"number of basis functions used in the dynamical movement primitive")
+flags.DEFINE_integer("n_dmp_basis",5,"number of basis functions used in the dynamical movement primitive")
 flags.DEFINE_integer("n_simulation_steps",50,"number of simulation steps of each individual action rollout")
-flags.DEFINE_integer("outcome_sampling_frequency",5,"frequency of observations which are saved into the outcome vector")
+flags.DEFINE_integer("outcome_sampling_frequency",10,"frequency of observations which are saved into the outcome vector")
 flags.DEFINE_bool("rendering",False,"whether to render the environment or not")
 flags.DEFINE_bool("evaluating",False,"whether we are evaluating on the target goals, or still learning/exploring")
 flags.DEFINE_integer("save_freq",1000,"the frequency by which to save memories")
@@ -103,15 +104,19 @@ def get_actuator_center():
             'robot0:{}J0'.format(joint_name))
     return actuation_center
 
-def goal_reward(goal_space, goal, outcome, context):
-    return -np.linalg.norm(goal - outcome)/np.sqrt(goal.shape[0])
+def goal_reward(goal_space, goal, outcome, context, precision=1.0):
+    # return np.tanh(-precision*(np.linalg.norm(goal - outcome))**2/goal.shape[0])
+    a = 5.0
+    x = (np.linalg.norm(goal - outcome))**2/goal.shape[0]
+    return -np.tanh(a*x-a*precision)
 
 def goal_policy(goal_space, context):
     #goal is of size len(goal_spaces_indices[goal_space])
     indices = goal_spaces_indices[goal_space]
-    #TODO: check ranges are right
+    # TODO: check ranges are right
     goal_dim = (indices.stop-indices.start)
-    return 2*np.random.rand(goal_dim)-1
+    # return 2*np.random.rand(goal_dim)-1
+    return np.random.randn(goal_dim)
 
 def goal_space_probabilities(intrinsic_rewards):
     # probs = np.exp(intrinsic_rewards*(intrinsic_rewards>0)-np.Inf*(intrinsic_rewards<=0))
@@ -131,10 +136,12 @@ def goal_space_policy(context):
     return None
 
 
-def meta_policy(goal_space, goal, context):
+def meta_policy_inner(goal_space, goal, context, goodness_threshold=-1):
     if evaluating:
         ###different types of evaluation###
-        outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[3].stop)
+        indices_pen_pos = slice(48*n_steps,51*n_steps)
+        indices_pen_rot = slice(51*n_steps,55*n_steps)
+        outcome_slice = slice(indices_pen_pos.start,indices_pen_rot.stop)
         # outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[2].stop)
         # outcome_slice_one_time = slice(goal_spaces_indices[2].start//n_steps,goal_spaces_indices[2].stop//n_steps)
         # outcome_slice = slice(goal_spaces_indices[3].start,goal_spaces_indices[3].stop)
@@ -143,10 +150,10 @@ def meta_policy(goal_space, goal, context):
         memory_slice = slice(context_dim+outcome_slice.start,context_dim+outcome_slice.stop)
         mask[memory_slice] = 1
         mask[:context_dim] = 1
-        index_of_memory, distance = find_memory_by_slice(context, outcome_slice, goal, mask=mask)
-        print("distance", distance)
-        if distance > 2.0:
-            outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[3].stop)
+        index_of_memory, goodness = find_memory_by_slice(context, outcome_slice, goal, mask=mask)
+        print("goodness", goodness)
+        if goodness > 2:
+            outcome_slice = slice(indices_pen_pos.start,indices_pen_rot.stop)
             # outcome_slice = slice(goal_spaces_indices[3].start,goal_spaces_indices[3].stop)
             memory_slice = slice(outcome_slice.start,outcome_slice.stop)
             outcomes = np.zeros(outcome_dim)
@@ -162,9 +169,10 @@ def meta_policy(goal_space, goal, context):
         else:
             action = database[index_of_memory,-action_dim:]
     else:
-        index_of_memory, distance = find_memory(context, goal_space, goal)
-        print("distance",distance)
-        if distance > 2.0:
+        index_of_memory, goodness = find_memory_by_reward(context, goal_space, goal)
+        print("goodness",goodness)
+        p = 0.05
+        if not np.random.rand() < p and goodness < goodness_threshold:
             outcome_slice = goal_spaces_indices[goal_space]
             memory_slice = slice(outcome_slice.start,outcome_slice.stop)
             outcomes = np.zeros(outcome_dim)
@@ -175,15 +183,36 @@ def meta_policy(goal_space, goal, context):
             context = np.expand_dims(context,0)
             outcomes = np.concatenate([np.expand_dims(context,2),outcomes],2)
             outcomes = outcomes.transpose(0,2,1)
+            # meta_policy_nn_model.get_weights()
+            old_weights = meta_policy_nn_model.get_weights()
+            perturbed_weights = perturb_weights(old_weights)
+            meta_policy_nn_model.set_weights(perturbed_weights)
             action = meta_policy_nn_model(outcomes.astype("float32")).numpy()[0,1:,:].transpose(1,0).reshape((-1,))
-            print(action.shape)
+            meta_policy_nn_model.set_weights(old_weights)
+            # print(action.shape)
         else:
             action = database[index_of_memory,-action_dim:]
-    return action
+
+    action[:-n_actuators] = np.clip(action[:-n_actuators], -1, 1)
+    actuator_center = get_actuator_center()
+    action[-n_actuators:] = np.clip(action[-n_actuators:], -1 - actuator_center, 1 - actuator_center)
+    return action, goodness
+
+def perturb_weights(old_weights):
+    perturbed_weights = []
+    for weight in old_weights:
+        perturbed_weights.append(weight+0.1*np.random.randn(*weight.shape))
+    return perturbed_weights
+
+def meta_policy(goal_space,goal,context):
+    return meta_policy_inner(goal_space, goal, context)[0]
 
 def exploration_meta_policy(goal_space, goal, context):
-    action = meta_policy(goal_space, goal, context)
-    action += 0.1*np.random.randn(*action.shape)
+    # goodness_threshold = -1
+    goodness_threshold = -1
+    action, goodness = meta_policy_inner(goal_space, goal, context, goodness_threshold)
+    if goodness > goodness_threshold: #you used memory-based learning
+        action += 0.1*np.random.randn(*action.shape)
     #clipping so that the added noise doesn't exceed the limits of the actuators
     action[:-n_actuators] = np.clip(action[:-n_actuators], -1, 1)
     actuator_center = get_actuator_center()
@@ -191,14 +220,14 @@ def exploration_meta_policy(goal_space, goal, context):
     return action
 
 # running_average_window_size = 5
-running_average_weighting = 0.5
+running_average_weighting = 0.95
 def update_intrinsic_reward(intrinsic_rewards, goal_space, goal, context, outcome):
-    index_of_memory,_ = find_memory(context, goal_space, goal)
+    index_of_memory,_ = find_memory_by_reward(context, goal_space, goal)
     old_outcomes = database[index_of_memory,context_dim:-action_dim:]
-    old_outcome_for_goal_space = old_outcomes[goal_spaces_indices[goal_space]]
-    current_outcome_for_goal_space = outcome[goal_spaces_indices[goal_space]]
+    old_outcome_for_goal_space = np.expand_dims(old_outcomes,0)
+    current_outcome_for_goal_space = np.expand_dims(outcome,0)
     # old_outcomes.shape
-    learning_progress = goal_reward(goal_space, goal,current_outcome_for_goal_space, context) - goal_reward(goal_space, goal,old_outcome_for_goal_space, context)
+    learning_progress = reward_funs(goal_space)(context,current_outcome_for_goal_space,goal) - reward_funs(goal_space)(context,old_outcome_for_goal_space,goal)
     print(learning_progress)
     w = running_average_weighting
     r = intrinsic_rewards[goal_space]
@@ -224,13 +253,13 @@ def basis_functions(t,x,g,w,y0):
 
 env.relative_control = True
 def dmp(t, variables, w, g):
-    #TODO: make it relative to current position, rather than reset. Need to set env.relative_control = True
     y0 = np.zeros(n_actuators)
-    alphay = 2/n_simulation_steps
+    alphay = 2.0/n_simulation_steps
     betay = 3.0
     alphax = 0.1
     variables = variables.reshape((n_actuators,3))
     y,v,x = variables[:,0],variables[:,1],variables[:,2]
+    # print(y.shape, v.shape, x.shape, g)
     vdot = alphay*(betay*(g-y)-v) + basis_functions(t,x,g,w.reshape((n_actuators,n_dmp_basis)),y0)
     ydot = v
     xdot = -alphax*x
@@ -240,6 +269,7 @@ def action_rollout(context,action_parameter,i):
     dt=1
     if i==0:
         solver = ode(dmp)
+        # print(action_parameter)
         solver.set_initial_value(np.tile(np.array([0,0,1]),(n_actuators,1)).reshape(-1),0)\
             .set_f_params(action_parameter[:-n_actuators],action_parameter[-n_actuators:])
         action_rollout.solver = solver
@@ -276,20 +306,37 @@ def main(argv):
     indices_pen_vel = slice(55*n_steps,58*n_steps)
     indices_pen_rotvel = slice(58*n_steps,61*n_steps)
 
-    global n_goal_spaces, goal_spaces_indices, goal_spaces_names, find_memory, find_memory_by_slice
+    global n_goal_spaces, goal_spaces_indices, goal_spaces_names, reward_funs, find_memory_by_reward, find_memory_by_slice
     # goal_spaces_indices = [indices_hand_pos,indices_hand_vel,indices_pen_pos,indices_pen_rot,indices_pen_vel,indices_pen_rotvel]
     goal_spaces_indices = [indices_pen_pos,indices_pen_rot,indices_pen_vel,indices_pen_rotvel]
     # goal_spaces_names = ["hand_pos","hand_vel","pen_pos","pen_rot","pen_vel","pen_rotvel"]
     goal_spaces_names = ["pen_pos","pen_rot","pen_vel","pen_rotvel"]
+    goal_precisions = [0.1, 0.5, 1.0, 5.0, 10.0]
+    goal_spaces_indices = [goal_spaces_indices[i] for i,g in enumerate(goal_spaces_names) for p in goal_precisions]
+    goal_spaces_names = [goal_space_name+"_"+"{0:1}".format(precision) for goal_space_name in goal_spaces_names for precision in goal_precisions]
     n_goal_spaces = len(goal_spaces_indices)
 
-    #used for find_memory
+    #outcome is a flattned (row-major) version of an array of dimensions (observation_dim,n_steps)
+
+    # goal_reward_vectorized = np.vectorize(goal_reward)
+    def reward_funs(goal_space):
+        precision = float(goal_spaces_names[goal_space].split("_")[-1])
+        def reward_fun(context, outcomes, goal):
+            outcome_slice = slice(goal_spaces_indices[goal_space].start,goal_spaces_indices[goal_space].stop)
+            outcomes = outcomes[:,outcome_slice]
+            return goal_reward(goal_space, goal, outcomes, context, precision)
+        return reward_fun
+
+    def find_memory_by_reward(context, goal_space, goal):
+        outcomes = database[:,context_dim:-action_dim]
+        rewards = reward_funs(goal_space)(context,outcomes,goal)
+        # print("AAA", rewards.shape)
+        goodness = -np.linalg.norm(database[:,:context_dim]-context,axis=1) + rewards
+        index_of_memory = np.argmax(goodness,axis=0)
+        return index_of_memory, goodness[index_of_memory]
+
     default_mask = np.zeros(memory_dim)
     default_mask[:context_dim] = 1
-    def find_memory(context, goal_space, goal, action=None, mask=default_mask):
-        outcome_slice = goal_spaces_indices[goal_space]
-        return find_memory_by_slice(context, outcome_slice, goal, action=None, mask=default_mask)
-
     def find_memory_by_slice(context, outcome_slice, goal, action=None, mask=default_mask):
         #TODO: This is a very hacky function, that is very specific to our implementation, rather than being general
         #it works because the goal and outcomes spaces are the same, but it's fine.
@@ -312,6 +359,7 @@ def main(argv):
     size = comm.Get_size()
 
     if evaluating: assert size == 1
+    if not evaluating: assert size == 2
 
     #initialize NN
     from meta_policy_neural_net import make_meta_policy_nn_model
@@ -333,6 +381,7 @@ def main(argv):
         files = [os.path.join("memories", f) for f in files] # add path to each file
         files.sort(key=lambda x: os.path.getmtime(x),reverse=True)
         MAX_MEMORY_SIZE = 10000
+        # MAX_MEMORY_SIZE = 100000
         if len(files)>1:
             for ii,filename in enumerate(files):
                 if ii==0:
@@ -403,7 +452,7 @@ def main(argv):
                     update_exploration_policy(context, outcome, action_parameter)
         else:
             memories = database.shape[0]
-            comm.send(True, dest=1, tag=11) #signal to send to consolidation code to continue going on
+            if not evaluating: comm.send(True, dest=1, tag=11) #signal to send to consolidation code to continue going on
 
         '''TRAINING LOOP'''
         print("active goal babbling")
@@ -428,11 +477,13 @@ def main(argv):
 
             observations = []
             for i in range(n_simulation_steps):
+                # print(context.shape)
                 action = action_rollout(context,action_parameter, i)
                 results = env.step(action)
                 if rendering:
                     env.render()
                 obs = results[0]["observation"]
+                # print(obs)
                 done = results[2]
                 if done:
                     print("reseting environment")
@@ -450,28 +501,27 @@ def main(argv):
 
             if reset_env:
                 reset_env = False
-                continue
+                # continue
             else:
                 memories += 1
-            outcome = np.reshape(np.stack(observations).T, (outcome_dim))
+                outcome = np.reshape(np.stack(observations).T, (outcome_dim))
 
+                if not evaluating:
+                    intrinsic_rewards = update_intrinsic_reward(intrinsic_rewards, goal_space, goal, context, outcome)
+                    print(goal_spaces_names)
+                    print(intrinsic_rewards)
+                    sys.stdout.flush()
 
+                if not evaluating:
+                    update_exploration_policy(context, outcome, action_parameter)
+                    update_goal_space_policy()
             if not evaluating:
-                intrinsic_rewards = update_intrinsic_reward(intrinsic_rewards, goal_space, goal, context, outcome)
-                print(goal_spaces_names)
-                print(intrinsic_rewards)
-                sys.stdout.flush()
-
-
-            if not evaluating:
-                update_exploration_policy(context, outcome, action_parameter)
-                update_goal_space_policy()
                 if iteration % save_freq == save_freq - 1:
                     print("Saving new batch of memories")
                     sys.stdout.flush()
                     # pickle.dump(database, open("database.p","wb"))
-                    database = database[-1000:]
-                    np.save("memories/database_"+str(iteration)+".npy",database)
+                    database = database[-MAX_MEMORY_SIZE:]
+                    np.save("memories/database_"+str(iteration)+".npy",database[-save_freq:])
                     pickle.dump(intrinsic_rewards, open("intrinsic_rewards.p","wb"))
                     comm.send(True, dest=1, tag=11) #signal to send to consolidation code to continue going on
             context = observations[-1]

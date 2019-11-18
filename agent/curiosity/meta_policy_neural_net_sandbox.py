@@ -15,6 +15,9 @@ import tensorflow.keras as keras
 # CuDNNLSTM
 
 # layer = keras.layers.LSTM(1,return_sequences=True)
+n_steps=10
+context_dim=64
+n_actuators=20
 
 inputs = keras.layers.Input(shape=(n_steps+2,context_dim))
 input_context = keras.layers.Input(shape=(context_dim,))
@@ -29,6 +32,16 @@ output1 = layer1(inputs)
 output = layer2(output1)
 
 model = keras.models.Model(inputs = inputs, outputs = output)
+
+weights = np.concatenate([x.flatten() for x in model.get_weights()])
+
+perturbed_weights = []
+for weight in model.get_weights():
+    perturbed_weights.append(weight+0.1*np.random.randn(*weight.shape))
+
+model.set_weights(perturbed_weights)
+
+x in model.get_weights()
 
 import numpy as np
 
