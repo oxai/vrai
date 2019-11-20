@@ -9,7 +9,20 @@ from torch.nn import functional as F
 
 def repackage_var(h):
     """Wraps h in new Variables, to detach them from their history."""
-    return Variable(h.data) if type(h) == Variable else tuple(repackage_var(v) for v in h)
+    return Variable(h.data) if type(h) == torch.Tensor else tuple(repackage_var(v) for v in h)
+
+import os,sys
+
+
+# THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+THIS_DIR = "."
+ROOT_DIR = os.path.abspath(os.path.join(os.path.join(THIS_DIR, os.pardir), os.pardir))
+AGENT_DIR = os.path.join(ROOT_DIR, 'agent')
+MEMORIES_DIR = os.path.join(THIS_DIR,"memories")
+# ENVIRONMENT_DIR = os.path.join(ROOT_DIR, 'environment')
+# EXPERIMENTS_DIR = os.path.join(ROOT_DIR, 'experiments')
+sys.path.append(ROOT_DIR)
+sys.path.append(AGENT_DIR)
 
 #%%
 
@@ -30,16 +43,27 @@ from torch.distributions.multivariate_normal import MultivariateNormal
 #
 # m.log_prob(torch.zeros(2))
 
+def MLP(input_dim, output_dim, number_layers=2, hidden_dim=None):
+    if hidden_dim is None:
+        hidden_dim = max(input_dim,output_dim)
+    layers = sum(
+        [[nn.Linear(input_dim, hidden_dim), nn.ReLU()]]
+        + [[nn.Linear(hidden_dim, hidden_dim), nn.ReLU()] for i in range(number_layers-2)]
+        + [[nn.Linear(hidden_dim, output_dim)]]
+        , [])
+
+    return nn.Sequential(*layers)
+
 class GOALRNN(nn.Module):
     def __init__(self, bs, nl, observation_dim, action_dim, goal_dim, n_hidden = 128):
         super().__init__()
         self.nl = nl
         self.n_hidden = n_hidden
         self.rnn = nn.LSTM(observation_dim, n_hidden, nl)
-        self.goal_decoder = nn.Linear(n_hidden, goal_dim)
-        self.action_decoder = nn.Linear(n_hidden+observation_dim, action_dim)
-        self.value_decoder = nn.Linear(n_hidden+observation_dim, 1)
-        self.lp_decoder = nn.Linear(n_hidden+observation_dim, 1)
+        self.goal_decoder = MLP(n_hidden, goal_dim)
+        self.action_decoder = MLP(n_hidden+observation_dim, action_dim)
+        self.value_decoder = MLP(n_hidden+observation_dim, 1)
+        self.lp_decoder = MLP(n_hidden+observation_dim, 1)
         self.init_hidden(bs)
 
     def forward(self, observations):
@@ -67,13 +91,13 @@ class GOALRNN(nn.Module):
                   Variable(torch.zeros(self.nl, bs, self.n_hidden)))
 
     def forget(self):
-        self.h = repackage_var(h)
+        self.h = repackage_var(self.h)
 
 
 
 import gym
 env=gym.make("HandManipulatePen-v0")
-env.reset()
+env.reset();
 env.observation_space["observation"].shape[0]
 
 #%%
@@ -108,15 +132,22 @@ alpha = 0.1
 env.relative_control = True
 
 from dmp import DMP
-
+n_simulation_steps=25
 dmp = DMP(10,n_simulation_steps,n_actuators)
 
 #%%
 
 n_simulation_steps=25
-rendering = True
+# rendering = True
+rendering = False
+save_freq = 300
+forget_freq = 300
+# forget_freq = 2
 
-for itertion in range(10000):
+if os.path.isfile("lprnn.pt"):
+    net = torch.load("lprnn.pt")
+
+for iteration in range(10000):
 
     action, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations)
     goal = Variable(goal.data, requires_grad=True)
@@ -165,29 +196,40 @@ for itertion in range(10000):
 
     optimizer.zero_grad()
     goal_reward = goal_loss(observations,goal)
+    print("goal_reward",goal_reward)
 
-    delta = goal_reward - average_reward_estimate + value.detach() - previous_value
-    average_reward_estimate = average_reward_estimate + alpha*delta.detach()
+    # delta = goal_reward - average_reward_estimate + value.detach() - previous_value
+    delta = goal_reward - value.detach()
+    # average_reward_estimate = average_reward_estimate + alpha*delta.detach()
     loss_value_fun = 0.5*delta**2
     partial_backprop(loss_value_fun,[net.goal_decoder,net.value_decoder])
 
-    loss_goal_policy = delta.detach()*log_prob_action
-    partial_backprop(loss_goal_policy,[net.goal_decoder,net.value_decoder])
+    loss_policy = delta.detach()*log_prob_action
+    partial_backprop(loss_policy,[net.goal_decoder,net.value_decoder])
 
-    learning_progress = nn.ReLU()(goal_reward-previous_goal_reward)
+    # learning_progress = nn.ReLU()(goal_reward-previous_goal_reward)
+    # learning_progress = torch.abs(goal_reward-previous_goal_reward)
+    learning_progress = torch.abs(delta)
 
-    delta = learning_progress - average_reward_estimate + value.detach() - previous_value
-    average_reward_estimate = average_reward_estimate + alpha*delta.detach()
+    delta = learning_progress - average_lp_estimate + value.detach() - previous_value
+    average_lp_estimate = average_lp_estimate + alpha*delta.detach()
 
-    loss_value_fun = 0.5*delta**2
-    partial_backprop(loss_value_fun,[net.goal_decoder,net.action_decoder])
+    loss_lp_value_fun = 0.5*delta**2
+    partial_backprop(loss_lp_value_fun,[net.goal_decoder,net.action_decoder])
 
     loss_goal_policy = delta.detach()*log_prob_goal
     partial_backprop(loss_goal_policy,[net.goal_decoder,net.value_decoder,net.action_decoder])
     optimizer.step()
 
     previous_goal_reward = goal_reward
-    previous_value = value
+    # previous_value = value
+
+    if iteration % save_freq == save_freq -1:
+        torch.save(net, "lprnn.pt")
+
+    if iteration % forget_freq == forget_freq -1:
+        net.forget()
+
 
     # from rlpyt.envs.atari.atari_env import AtariEnv
     # AtariEnv("pong").action_space
