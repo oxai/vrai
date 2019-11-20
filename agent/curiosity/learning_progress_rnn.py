@@ -137,9 +137,9 @@ dmp = DMP(10,n_simulation_steps,n_actuators)
 
 #%%
 
-n_simulation_steps=25
-# rendering = True
-rendering = False
+save_goals = False
+rendering = True
+# rendering = False
 save_freq = 300
 forget_freq = 300
 # forget_freq = 2
@@ -147,7 +147,10 @@ forget_freq = 300
 if os.path.isfile("lprnn.pt"):
     net = torch.load("lprnn.pt")
 
-for iteration in range(10000):
+rewards = []
+lps = []
+
+for iteration in range(1000000):
 
     action, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations)
     goal = Variable(goal.data, requires_grad=True)
@@ -195,8 +198,9 @@ for iteration in range(10000):
                 parameter.requires_grad = True
 
     optimizer.zero_grad()
-    goal_reward = goal_loss(observations,goal)
+    goal_reward = -goal_loss(observations,goal)
     print("goal_reward",goal_reward)
+    rewards.append(goal_reward)
 
     # delta = goal_reward - average_reward_estimate + value.detach() - previous_value
     delta = goal_reward - value.detach()
@@ -210,6 +214,7 @@ for iteration in range(10000):
     # learning_progress = nn.ReLU()(goal_reward-previous_goal_reward)
     # learning_progress = torch.abs(goal_reward-previous_goal_reward)
     learning_progress = torch.abs(delta)
+    lps.append(learning_progress)
 
     delta = learning_progress - average_lp_estimate + value.detach() - previous_value
     average_lp_estimate = average_lp_estimate + alpha*delta.detach()
@@ -225,7 +230,20 @@ for iteration in range(10000):
     # previous_value = value
 
     if iteration % save_freq == save_freq -1:
+        print("Saving stuff")
         torch.save(net, "lprnn.pt")
+        with open("rewards.txt","a") as f:
+            f.write("\n".join([str(r) for r in rewards]))
+        rewards = []
+        with open("learning_progresses.txt","a") as f:
+            f.write("\n".join([str(lp) for lp in lps]))
+        lps = []
+
+    if save_goals:
+        if iteration == 0:
+            goals = np.expand_dims(goal,0)
+        else:
+            goals = np.concatenate([goals,np.expand_dims(goal,0)],axis=0)
 
     if iteration % forget_freq == forget_freq -1:
         net.forget()
@@ -235,3 +253,8 @@ for iteration in range(10000):
     # AtariEnv("pong").action_space
     # import rlpyt
     # from rlpyt.algos.pg.a2c import A2C
+
+#TODO
+'''
+more general goal specifier, which is just a parametrizer of reward given sequence of observations.
+'''
