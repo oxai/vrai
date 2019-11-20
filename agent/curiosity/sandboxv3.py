@@ -5,7 +5,17 @@ Using a neural network for metapolicy, in parallel to fast memory-based metapoli
 import pickle
 from absl import app
 import matplotlib.pyplot as plt
-import os
+import os,sys
+
+THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.abspath(os.path.join(os.path.join(THIS_DIR, os.pardir), os.pardir))
+AGENT_DIR = os.path.join(ROOT_DIR, 'agent')
+MEMORIES_DIR = os.path.join(THIS_DIR,"memories")
+# ENVIRONMENT_DIR = os.path.join(ROOT_DIR, 'environment')
+# EXPERIMENTS_DIR = os.path.join(ROOT_DIR, 'experiments')
+sys.path.append(ROOT_DIR)
+sys.path.append(AGENT_DIR)
+
 import sys
 # %matplotlib inline
 import numpy as np
@@ -15,110 +25,35 @@ import gym
 env=gym.make("HandManipulatePen-v0")
 env.reset()
 env.observation_space["observation"]
+env.relative_control = True
+from robot_hand_utils import get_actuator_center
 
 from absl import flags
 
 FLAGS = flags.FLAGS
-flags.DEFINE_integer("n_dmp_basis",5,"number of basis functions used in the dynamical movement primitive")
-flags.DEFINE_integer("n_simulation_steps",50,"number of simulation steps of each individual action rollout")
-flags.DEFINE_integer("outcome_sampling_frequency",10,"frequency of observations which are saved into the outcome vector")
+flags.DEFINE_integer("n_dmp_basis",20,"number of basis functions used in the dynamical movement primitive")
+flags.DEFINE_integer("n_simulation_steps",80,"number of simulation steps of each individual action rollout")
+flags.DEFINE_integer("outcome_sampling_frequency",4,"frequency of observations which are saved into the outcome vector")
 flags.DEFINE_bool("rendering",False,"whether to render the environment or not")
 flags.DEFINE_bool("evaluating",False,"whether we are evaluating on the target goals, or still learning/exploring")
 flags.DEFINE_integer("save_freq",1000,"the frequency by which to save memories")
 
 
-#%%
-# context_dim = env.observation_space["observation"].shape[0]
-# n_steps = n_simulation_steps//outcome_sampling_frequency
-# n_actuators = env.action_space.shape[0]
-# action_dim = n_actuators*(n_dmp_basis+1) # +1 for target position, in dmp parametrization
-# outcome_dim = context_dim*n_steps
-# memory_dim = context_dim+outcome_dim+action_dim
-
-# env.action_space.shape[0]
-# env.observation_space["observation"].shape[0]
-#
-# # context_dim =
-#
-# context_dim = env.observation_space["observation"].shape[0]
-# # n_simulation_steps = 200
-# # outcome_sampling_frequency=10
-# n_steps = n_simulation_steps//outcome_sampling_frequency
-# n_actuators = env.action_space.shape[0]
-# # n_dmp_basis = 20
-# # # action_dim = n_steps*env.action_space.shape[0]
-# action_dim = n_actuators*(n_dmp_basis+1) # +1 for target position, in dmp parametrization
-# outcome_dim = context_dim*n_steps
-# memory_dim = context_dim+outcome_dim+action_dim
-# # rendering = False
-# # evaluating = False
-# # save_freq = 1000
-
-# outcome = []
-# for i in range(10):
-#     action = env.action_space.sample()
-#     results = env.step(action)
-#     obs = results[0]["observation"]
-#     outcome.append(obs)
-#     # env.render()
-
-# outcome = np.stack(outcome)
-####
-# env.action_space.low
-#
-# env.env.sim.model.joint_name2id(env.env.sim.model.joint_names[2])
-#
-# sim = env.env.sim
-# joints = env.env.sim.model.joint_names
-# n_joints = len(joints)
-sim = env.env.sim
-# sim.data.ctrl
-#
-#
-# # joints
-#
-#
-# # sim.data.get_joint_qpos("object:joint").shape
-# #
-# for i in range(n_joints):
-#     print(sim.data.get_joint_qpos(env.env.sim.model.joint_names[i]))
-#     print(sim.data.get_joint_qvel(env.env.sim.model.joint_names[i]))
-
-
-# goal_outcomes = []
-# for indices in goal_spaces_indices:
-#     goal_outcomes.append(outcome[:,indices])
-
-action = env.action_space.sample()
-def get_actuator_center():
-    ctrlrange = sim.model.actuator_ctrlrange
-    actuation_range = (ctrlrange[:, 1] - ctrlrange[:, 0]) / 2.
-    actuation_center = np.zeros_like(action)
-    for i in range(sim.data.ctrl.shape[0]):
-        actuation_center[i] = sim.data.get_joint_qpos(
-        sim.model.actuator_names[i].replace(':A_', ':'))
-        for joint_name in ['FF', 'MF', 'RF', 'LF']:
-            act_idx = sim.model.actuator_name2id(
-            'robot0:A_{}J1'.format(joint_name))
-            actuation_center[act_idx] += sim.data.get_joint_qpos(
-            'robot0:{}J0'.format(joint_name))
-    return actuation_center
-
 def goal_reward(goal_space, goal, outcome, context, precision=1.0):
     # return np.tanh(-precision*(np.linalg.norm(goal - outcome))**2/goal.shape[0])
-    a = 5.0
+    a = 0.5
     x = (np.linalg.norm(goal - outcome))**2/goal.shape[0]
-    return -np.tanh(a*x-a*precision)
+    return -np.tanh(a*precision*x-1/precision)
 
 def goal_policy(goal_space, context):
     #goal is of size len(goal_spaces_indices[goal_space])
     indices = goal_spaces_indices[goal_space]
-    # TODO: check ranges are right
     goal_dim = (indices.stop-indices.start)
-    # return 2*np.random.rand(goal_dim)-1
+    #observation space has limits between -inf and inf (see env.observation_space.high and low)
     return np.random.randn(goal_dim)
 
 def goal_space_probabilities(intrinsic_rewards):
+    #TODO: check if there are better bandit algorithms
     # probs = np.exp(intrinsic_rewards*(intrinsic_rewards>0)-np.Inf*(intrinsic_rewards<=0))
     # probs = np.exp(intrinsic_rewards/np.sum(intrinsic_rewards))*(intrinsic_rewards>0)
     # probs = np.exp(intrinsic_rewards/(np.sum(intrinsic_rewards)+0.01))*(intrinsic_rewards>0)
@@ -135,8 +70,10 @@ def goal_space_policy(context):
         return np.random.choice(range(n_goal_spaces), p=goal_space_probs)
     return None
 
-
+# The function that takes a goal and returns an action_parameter to perform
 def meta_policy_inner(goal_space, goal, context, goodness_threshold=-1):
+    # if evaluating then the goal is special, it's the both the pen and position and rotation
+    used_neural_net = False
     if evaluating:
         ###different types of evaluation###
         indices_pen_pos = slice(48*n_steps,51*n_steps)
@@ -152,7 +89,7 @@ def meta_policy_inner(goal_space, goal, context, goodness_threshold=-1):
         mask[:context_dim] = 1
         index_of_memory, goodness = find_memory_by_slice(context, outcome_slice, goal, mask=mask)
         print("goodness", goodness)
-        if goodness > 2:
+        if goodness > 5:
             outcome_slice = slice(indices_pen_pos.start,indices_pen_rot.stop)
             # outcome_slice = slice(goal_spaces_indices[3].start,goal_spaces_indices[3].stop)
             memory_slice = slice(outcome_slice.start,outcome_slice.stop)
@@ -166,12 +103,15 @@ def meta_policy_inner(goal_space, goal, context, goodness_threshold=-1):
             outcomes = outcomes.transpose(0,2,1)
             action = meta_policy_nn_model(outcomes.astype("float32")).numpy()[0,1:,:].transpose(1,0).reshape((-1,))
             print(action.shape)
+            used_neural_net = True
         else:
             action = database[index_of_memory,-action_dim:]
     else:
         index_of_memory, goodness = find_memory_by_reward(context, goal_space, goal)
         print("goodness",goodness)
         p = 0.05
+        # with probability p or if goodness of the memory-based learner action is good, then use that
+        # otherwise use the neural net
         if not np.random.rand() < p and goodness < goodness_threshold:
             outcome_slice = goal_spaces_indices[goal_space]
             memory_slice = slice(outcome_slice.start,outcome_slice.stop)
@@ -190,45 +130,53 @@ def meta_policy_inner(goal_space, goal, context, goodness_threshold=-1):
             action = meta_policy_nn_model(outcomes.astype("float32")).numpy()[0,1:,:].transpose(1,0).reshape((-1,))
             meta_policy_nn_model.set_weights(old_weights)
             # print(action.shape)
+            used_neural_net = True
         else:
             action = database[index_of_memory,-action_dim:]
 
     action[:-n_actuators] = np.clip(action[:-n_actuators], -1, 1)
-    actuator_center = get_actuator_center()
+    actuator_center = get_actuator_center(env)
     action[-n_actuators:] = np.clip(action[-n_actuators:], -1 - actuator_center, 1 - actuator_center)
-    return action, goodness
+    return action, goodness, used_neural_net
 
+# this is to perform parameter noise (as opposed to adding noise to actions)
 def perturb_weights(old_weights):
     perturbed_weights = []
     for weight in old_weights:
         perturbed_weights.append(weight+0.1*np.random.randn(*weight.shape))
     return perturbed_weights
 
+#wrapper when goodness needs not be returned
 def meta_policy(goal_space,goal,context):
     return meta_policy_inner(goal_space, goal, context)[0]
 
 def exploration_meta_policy(goal_space, goal, context):
     # goodness_threshold = -1
-    goodness_threshold = -1
-    action, goodness = meta_policy_inner(goal_space, goal, context, goodness_threshold)
-    if goodness > goodness_threshold: #you used memory-based learning
+    goodness_threshold = -1.5
+    action, goodness, used_neural_net = meta_policy_inner(goal_space, goal, context, goodness_threshold)
+    if used_neural_net: #you used memory-based learning, so add noise to actions (as opposed to to parameters when using the neural net)
         action += 0.1*np.random.randn(*action.shape)
     #clipping so that the added noise doesn't exceed the limits of the actuators
     action[:-n_actuators] = np.clip(action[:-n_actuators], -1, 1)
-    actuator_center = get_actuator_center()
+    actuator_center = get_actuator_center(env)
     action[-n_actuators:] = np.clip(action[-n_actuators:], -1 - actuator_center, 1 - actuator_center)
     return action
 
 # running_average_window_size = 5
-running_average_weighting = 0.95
+running_average_weighting = 0.9
 def update_intrinsic_reward(intrinsic_rewards, goal_space, goal, context, outcome):
     index_of_memory,_ = find_memory_by_reward(context, goal_space, goal)
     old_outcomes = database[index_of_memory,context_dim:-action_dim:]
     old_outcome_for_goal_space = np.expand_dims(old_outcomes,0)
     current_outcome_for_goal_space = np.expand_dims(outcome,0)
     # old_outcomes.shape
-    learning_progress = reward_funs(goal_space)(context,current_outcome_for_goal_space,goal) - reward_funs(goal_space)(context,old_outcome_for_goal_space,goal)
-    print(learning_progress)
+    current_reward = reward_funs(goal_space)(context,current_outcome_for_goal_space,goal)
+    previous_reward = reward_funs(goal_space)(context,old_outcome_for_goal_space,goal)
+    # learning_progress = current_reward - previous_reward
+    learning_progress = np.abs(current_reward - previous_reward)
+    print("current_reward",current_reward)
+    print("previous_reward",previous_reward)
+    print("absolute learning_progress",learning_progress)
     w = running_average_weighting
     r = intrinsic_rewards[goal_space]
     intrinsic_rewards[goal_space] = r*w + learning_progress*(1-w)
@@ -242,11 +190,6 @@ def update_goal_space_policy():
     global goal_space_probs
     goal_space_probs = goal_space_probabilities(intrinsic_rewards)
 
-
-env.relative_control = True
-from dmp import DMP
-dmp = DMP(n_dmp_basis,num_steps,n_actuators)
-action_rollout = dmp.action_rollout
 
 def main(argv):
 
@@ -281,11 +224,18 @@ def main(argv):
     # goal_spaces_indices = [indices_hand_pos,indices_hand_vel,indices_pen_pos,indices_pen_rot,indices_pen_vel,indices_pen_rotvel]
     goal_spaces_indices = [indices_pen_pos,indices_pen_rot,indices_pen_vel,indices_pen_rotvel]
     # goal_spaces_names = ["hand_pos","hand_vel","pen_pos","pen_rot","pen_vel","pen_rotvel"]
-    goal_spaces_names = ["pen_pos","pen_rot","pen_vel","pen_rotvel"]
-    goal_precisions = [0.1, 0.5, 1.0, 5.0, 10.0]
+    # goal_spaces_names = ["pen_pos","pen_rot","pen_vel","pen_rotvel"]
+    goal_spaces_names = ["pen_pos","pen_rot"]
+    goal_precisions = [0.7, 1.0, 2.0, 3.0, 10.0]
     goal_spaces_indices = [goal_spaces_indices[i] for i,g in enumerate(goal_spaces_names) for p in goal_precisions]
     goal_spaces_names = [goal_space_name+"_"+"{0:1}".format(precision) for goal_space_name in goal_spaces_names for precision in goal_precisions]
     n_goal_spaces = len(goal_spaces_indices)
+
+    env.relative_control = True
+    from dmp import DMP
+    dmp = DMP(n_dmp_basis,n_simulation_steps,n_actuators)
+    action_rollout = dmp.action_rollout
+
 
     #outcome is a flattned (row-major) version of an array of dimensions (observation_dim,n_steps)
 
@@ -338,8 +288,8 @@ def main(argv):
     global meta_policy_nn_model
     meta_policy_nn_model = make_meta_policy_nn_model(FLAGS)
 
-    if os.path.exists("model_weights.p"):
-        updated_model_weigths = pickle.load(open("model_weights.p","rb"))
+    if os.path.exists(os.path.join(THIS_DIR,"model_weights.p")):
+        updated_model_weigths = pickle.load(open(os.path.join(THIS_DIR,"model_weights.p"),"rb"))
         meta_policy_nn_model.set_weights(updated_model_weigths)
 
     if rank == 0:
@@ -347,13 +297,14 @@ def main(argv):
         global database
         global intrinsic_rewards
         global goal_space_probs
-        files = os.listdir("memories")
+        files = os.listdir(MEMORIES_DIR)
         # print(list(files))
-        files = [os.path.join("memories", f) for f in files] # add path to each file
+        files = [os.path.join(MEMORIES_DIR, f) for f in files] # add path to each file
         files.sort(key=lambda x: os.path.getmtime(x),reverse=True)
         MAX_MEMORY_SIZE = 10000
         # MAX_MEMORY_SIZE = 100000
-        if len(files)>1:
+        print(files)
+        if len(files)>0:
             for ii,filename in enumerate(files):
                 if ii==0:
                     database = np.load(filename)
@@ -363,10 +314,10 @@ def main(argv):
                     break
         else:
             database = None
-        if os.path.exists("intrinsic_rewards.p"):
-            intrinsic_rewards = pickle.load(open("intrinsic_rewards.p","rb"))
+        if os.path.exists(os.path.join(THIS_DIR,"intrinsic_rewards.p")):
+            intrinsic_rewards = pickle.load(open(os.path.join(THIS_DIR,"intrinsic_rewards.p"),"rb"))
         else:
-            intrinsic_rewards = np.array([0.1 for index in goal_spaces_indices],dtype=np.float32)
+            intrinsic_rewards = np.array([0.01 for index in goal_spaces_indices],dtype=np.float32)
         goal_space_probs = goal_space_probabilities(intrinsic_rewards)
 
         '''INITIALIZE ENVIRONMENT'''
@@ -413,6 +364,7 @@ def main(argv):
                     continue
                 else:
                     print("Adding memory")
+                    sys.stdout.flush()
                     memories+=1
 
                 outcome = np.reshape(np.stack(observations).T, (outcome_dim))
@@ -492,8 +444,8 @@ def main(argv):
                     sys.stdout.flush()
                     # pickle.dump(database, open("database.p","wb"))
                     database = database[-MAX_MEMORY_SIZE:]
-                    np.save("memories/database_"+str(iteration)+".npy",database[-save_freq:])
-                    pickle.dump(intrinsic_rewards, open("intrinsic_rewards.p","wb"))
+                    np.save(os.path.join(MEMORIES_DIR,"database_"+str(iteration)+".npy"),database[-save_freq:])
+                    pickle.dump(intrinsic_rewards, open(os.path.join(THIS_DIR,"intrinsic_rewards.p"),"wb"))
                     comm.send(True, dest=1, tag=11) #signal to send to consolidation code to continue going on
             context = observations[-1]
 
@@ -503,9 +455,9 @@ def main(argv):
         while comm.recv(source=0, tag=11):
         # while True:
             # files = filter(os.path.isfile, os.listdir("memories"))
-            files = os.listdir("memories")
+            files = os.listdir(MEMORIES_DIR)
             # print(list(files))
-            files = [os.path.join("memories", f) for f in files] # add path to each file
+            files = [os.path.join(MEMORIES_DIR, f) for f in files] # add path to each file
             files.sort(key=lambda x: os.path.getmtime(x),reverse=True)
             # print(files)
             sys.stdout.flush()
@@ -519,7 +471,7 @@ def main(argv):
                     # sys.stdout.flush()
                     updated_model_weigths = meta_policy_nn_model.get_weights()
                     comm.send(updated_model_weigths, dest=0, tag=12)
-                    pickle.dump(updated_model_weigths, open("model_weights.p","wb"))
+                    pickle.dump(updated_model_weigths, open(os.path.join(THIS_DIR,"model_weights.p"),"wb"))
                 else:
                     break
 

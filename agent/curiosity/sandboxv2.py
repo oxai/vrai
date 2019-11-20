@@ -28,6 +28,7 @@ flags.DEFINE_integer("save_freq",1000,"the frequency by which to save memories")
 
 
 #%%
+# env.observation_space["observation"].low
 # context_dim = env.observation_space["observation"].shape[0]
 # n_steps = n_simulation_steps//outcome_sampling_frequency
 # n_actuators = env.action_space.shape[0]
@@ -135,7 +136,8 @@ def goal_space_policy(context):
 def meta_policy(goal_space, goal, context):
     if evaluating:
         ###different types of evaluation###
-        outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[3].stop)
+        # outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[3].stop)
+        outcome_slice = slice(goal_spaces_indices[0].start,goal_spaces_indices[1].stop)
         # outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[2].stop)
         # outcome_slice_one_time = slice(goal_spaces_indices[2].start//n_steps,goal_spaces_indices[2].stop//n_steps)
         # outcome_slice = slice(goal_spaces_indices[3].start,goal_spaces_indices[3].stop)
@@ -147,7 +149,8 @@ def meta_policy(goal_space, goal, context):
         index_of_memory, distance = find_memory_by_slice(context, outcome_slice, goal, mask=mask)
         print("distance", distance)
         if distance > 2.0:
-            outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[3].stop)
+            outcome_slice = slice(goal_spaces_indices[0].start,goal_spaces_indices[1].stop)
+            # outcome_slice = slice(goal_spaces_indices[2].start,goal_spaces_indices[3].stop)
             # outcome_slice = slice(goal_spaces_indices[3].start,goal_spaces_indices[3].stop)
             memory_slice = slice(outcome_slice.start,outcome_slice.stop)
             outcomes = np.zeros(outcome_dim)
@@ -404,7 +407,7 @@ def main(argv):
                     update_exploration_policy(context, outcome, action_parameter)
         else:
             memories = database.shape[0]
-            comm.send(True, dest=1, tag=11) #signal to send to consolidation code to continue going on
+            if not evaluating: comm.send(True, dest=1, tag=11) #signal to send to consolidation code to continue going on
 
         '''TRAINING LOOP'''
         print("active goal babbling")
@@ -451,22 +454,21 @@ def main(argv):
 
             if reset_env:
                 reset_env = False
-                continue
+                # continue
             else:
                 memories += 1
-            outcome = np.reshape(np.stack(observations).T, (outcome_dim))
+                outcome = np.reshape(np.stack(observations).T, (outcome_dim))
 
+                if not evaluating:
+                    intrinsic_rewards = update_intrinsic_reward(intrinsic_rewards, goal_space, goal, context, outcome)
+                    print(goal_spaces_names)
+                    print(intrinsic_rewards)
+                    sys.stdout.flush()
 
+                if not evaluating:
+                    update_exploration_policy(context, outcome, action_parameter)
+                    update_goal_space_policy()
             if not evaluating:
-                intrinsic_rewards = update_intrinsic_reward(intrinsic_rewards, goal_space, goal, context, outcome)
-                print(goal_spaces_names)
-                print(intrinsic_rewards)
-                sys.stdout.flush()
-
-
-            if not evaluating:
-                update_exploration_policy(context, outcome, action_parameter)
-                update_goal_space_policy()
                 if iteration % save_freq == save_freq - 1:
                     print("Saving new batch of memories")
                     sys.stdout.flush()
