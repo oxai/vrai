@@ -4,3 +4,6 @@ agent/curiosity/old_memories
 agent/curiosity/pybullet-gym
 **/__pycache__/*
 agent/curiosity/__pycache__/
+agent/curiosity/learning_progresses.txt
+agent/curiosity/rewards.txt
+agent/curiosity/lprnn.pt
