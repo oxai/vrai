@@ -123,7 +123,7 @@ observations = np.expand_dims(np.expand_dims(observation,0),0)
 observations = torch.Tensor(observations)
 
 previous_goal_reward = torch.Tensor([-10])
-previous_value = torch.zeros(1)
+# previous_value = torch.zeros(1)
 previous_lp_value = torch.zeros(1)
 average_reward_estimate = 0
 average_lp_estimate = 0
@@ -199,34 +199,35 @@ for iteration in range(1000000):
 
     optimizer.zero_grad()
     goal_reward = -goal_loss(observations,goal)
-    print("goal_reward",goal_reward)
-    rewards.append(goal_reward)
+    print("goal_reward",goal_reward.data)
+    rewards.append(goal_reward.data)
 
     # delta = goal_reward - average_reward_estimate + value.detach() - previous_value
-    delta = goal_reward - value.detach()
+    delta = goal_reward.detach() - value
     # average_reward_estimate = average_reward_estimate + alpha*delta.detach()
-    loss_value_fun = 0.5*delta**2
-    partial_backprop(loss_value_fun,[net.goal_decoder,net.value_decoder])
+    reward_value_fun = 0.5*delta**2
+    partial_backprop(reward_value_fun,[net.goal_decoder])
 
     loss_policy = delta.detach()*log_prob_action
-    partial_backprop(loss_policy,[net.goal_decoder,net.value_decoder])
+    partial_backprop(loss_policy,[net.goal_decoder])
 
     # learning_progress = nn.ReLU()(goal_reward-previous_goal_reward)
     # learning_progress = torch.abs(goal_reward-previous_goal_reward)
     learning_progress = torch.abs(delta)
     lps.append(learning_progress)
 
-    delta = learning_progress - average_lp_estimate + value.detach() - previous_value
+    delta = learning_progress.detach() - average_lp_estimate + lp_value.detach() - previous_lp_value
     average_lp_estimate = average_lp_estimate + alpha*delta.detach()
 
     loss_lp_value_fun = 0.5*delta**2
-    partial_backprop(loss_lp_value_fun,[net.goal_decoder,net.action_decoder])
+    partial_backprop(loss_lp_value_fun,[net.goal_decoder])
 
     loss_goal_policy = delta.detach()*log_prob_goal
-    partial_backprop(loss_goal_policy,[net.goal_decoder,net.value_decoder,net.action_decoder])
+    partial_backprop(loss_goal_policy,[net.goal_decoder])
     optimizer.step()
 
-    previous_goal_reward = goal_reward
+    # previous_goal_reward = goal_reward
+    previous_lp_value = lp_value
     # previous_value = value
 
     if iteration % save_freq == save_freq -1:
