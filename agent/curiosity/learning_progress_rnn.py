@@ -59,17 +59,19 @@ class GOALRNN(nn.Module):
         super().__init__()
         self.nl = nl
         self.n_hidden = n_hidden
-        self.rnn = nn.LSTM(observation_dim, n_hidden, nl)
+        # print(observation_dim+1)
+        self.rnn = nn.LSTM(observation_dim+1, n_hidden, nl)
         self.goal_decoder = MLP(n_hidden, goal_dim)
         self.action_decoder = MLP(n_hidden+observation_dim, action_dim)
         self.value_decoder = MLP(n_hidden+observation_dim, 1)
         self.lp_decoder = MLP(n_hidden+observation_dim, 1)
         self.init_hidden(bs)
 
-    def forward(self, observations):
+    def forward(self, observations, lps):
         bs = observations[0].size(0)
         if self.h[0].size(1) != bs: self.init_hidden(bs)
-        latents,h = self.rnn(observations, self.h) #(seq_len, batch, input_size) -> (seq_len, batch, num_directions * hidden_size), (num_layers * num_directions, batch, hidden_size):
+        # print(torch.cat([observations,lps],dim=2).shape)
+        latents,h = self.rnn(torch.cat([observations,lps],dim=2), self.h) #(seq_len, batch, input_size) -> (seq_len, batch, num_directions * hidden_size), (num_layers * num_directions, batch, hidden_size):
         latent_and_observation = torch.cat([latents, observations], dim=2)
         goal_means = self.goal_decoder(latents)
         m = MultivariateNormal(goal_means, torch.eye(goal_dim))
@@ -110,7 +112,10 @@ goal_dim = observation_dim
 
 batch_size = 1
 number_layers = 2
+print(observation_dim)
 net = GOALRNN(batch_size, number_layers, observation_dim, action_dim, goal_dim)
+
+# net.rnn
 
 from torch import optim
 optimizer = optim.SGD(net.parameters(), lr=1e-4, momentum=0.9)
@@ -125,6 +130,7 @@ observations = torch.Tensor(observations)
 previous_goal_reward = torch.Tensor([-10])
 previous_value = torch.zeros(1)
 previous_lp_value = torch.zeros(1)
+learning_progress = torch.zeros(1)
 average_reward_estimate = 0
 average_lp_estimate = 0
 alpha = 0.1
@@ -138,8 +144,8 @@ dmp = DMP(10,n_simulation_steps,n_actuators)
 #%%
 
 save_goals = False
-rendering = True
-# rendering = False
+# rendering = True
+rendering = False
 save_freq = 300
 forget_freq = 300
 # forget_freq = 2
@@ -152,7 +158,7 @@ lps = []
 
 for iteration in range(1000000):
 
-    action, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations)
+    action, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations, learning_progress.unsqueeze(0).unsqueeze(0))
     goal = Variable(goal.data, requires_grad=True)
     action_parameters, log_prob_action, goal, log_prob_goal, value, lp_value = action[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
     action_parameters = action_parameters.detach().numpy()
@@ -214,7 +220,8 @@ for iteration in range(1000000):
     # learning_progress = nn.ReLU()(goal_reward-previous_goal_reward)
     # learning_progress = torch.abs(goal_reward-previous_goal_reward)
     learning_progress = torch.abs(delta)
-    lps.append(learning_progress)
+    lps.append(learning_progress.data.item())
+
 
     delta = learning_progress - average_lp_estimate + value.detach() - previous_value
     average_lp_estimate = average_lp_estimate + alpha*delta.detach()
