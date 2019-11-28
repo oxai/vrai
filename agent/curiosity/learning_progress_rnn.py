@@ -205,8 +205,8 @@ for iteration in range(1000000):
 
     optimizer.zero_grad()
     goal_reward = -goal_loss(observations,goal)
-    print("goal_reward",goal_reward.data)
-    rewards.append(goal_reward.data)
+    print("goal_reward",goal_reward.data.item())
+    rewards.append(goal_reward.data.item())
 
     # delta = goal_reward - average_reward_estimate + value.detach() - previous_value
     delta = goal_reward.detach() - value
@@ -226,8 +226,9 @@ for iteration in range(1000000):
     delta = learning_progress.detach() - average_lp_estimate + lp_value.detach() - previous_lp_value
     average_lp_estimate = average_lp_estimate + alpha*delta.detach()
 
-    loss_lp_value_fun = 0.5*delta**2
-    partial_backprop(loss_lp_value_fun,[net.goal_decoder])
+    if iteration>0:
+        loss_lp_value_fun = 0.5*delta**2
+        partial_backprop(loss_lp_value_fun,[net.goal_decoder])
 
     loss_goal_policy = delta.detach()*log_prob_goal
     partial_backprop(loss_goal_policy,[net.goal_decoder])
