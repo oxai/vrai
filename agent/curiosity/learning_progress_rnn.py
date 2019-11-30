@@ -62,6 +62,7 @@ class GOALRNN(nn.Module):
         # print(observation_dim+1)
         self.rnn = nn.LSTM(observation_dim+1, n_hidden, nl)
         self.goal_decoder = MLP(n_hidden, goal_dim)
+        self.goal_encoder = MLP(goal_dim, n_hidden)
         self.action_decoder = MLP(n_hidden+observation_dim, action_dim)
         self.value_decoder = MLP(n_hidden+observation_dim, 1)
         self.lp_decoder = MLP(n_hidden+observation_dim, 1)
@@ -88,6 +89,14 @@ class GOALRNN(nn.Module):
         # return F.log_softmax(self.l_out(outp), dim=-1).view(-1, self.vocab_size)
         return actions, log_prob_actions, goals, log_prob_goals, values, lp_values
 
+    def autoencode_goal(self, goal):
+        latent = self.goal_encoder(goal)
+        return self.goal_decoder(latent)
+
+    def predict_action(self, goal):
+        latent = self.goal_encoder(goal)
+        return self.action_decoder(latent)
+
     def init_hidden(self, bs):
         self.h = (Variable(torch.zeros(self.nl, bs, self.n_hidden)),
                   Variable(torch.zeros(self.nl, bs, self.n_hidden)))
@@ -99,7 +108,7 @@ class GOALRNN(nn.Module):
 
 import gym
 env=gym.make("HandManipulatePen-v0")
-env.reset();
+results = env.reset();
 env.observation_space["observation"].shape[0]
 
 #%%
@@ -123,11 +132,6 @@ optimizer = optim.SGD(net.parameters(), lr=1e-4, momentum=0.9)
 
 goal_loss = nn.MSELoss()
 
-action = env.action_space.sample()
-observation = env.step(action)[0]["observation"]
-observations = np.expand_dims(np.expand_dims(observation,0),0)
-observations = torch.Tensor(observations)
-
 previous_goal_reward = torch.Tensor([-10])
 # previous_value = torch.zeros(1)
 previous_lp_value = torch.zeros(1)
@@ -147,9 +151,20 @@ dmp = DMP(10,n_simulation_steps,n_actuators)
 save_goals = False
 #rendering = True
 rendering = False
+evaluating = False
 save_freq = 300
 forget_freq = 300
 # forget_freq = 2
+
+action = env.action_space.sample()
+observation = env.step(action)[0]["observation"]
+observations = np.expand_dims(np.expand_dims(observation,0),0)
+observations = torch.Tensor(observations)
+
+if evaluating:
+    pen_goal = results["desired_goal"]
+    goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
+    goal = np.reshape(goal.T,(-1))
 
 if os.path.isfile("lprnn.pt"):
     net = torch.load("lprnn.pt")
@@ -159,14 +174,22 @@ lps = []
 
 for iteration in range(1000000):
 
-    action, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations, learning_progress.detach().unsqueeze(0).unsqueeze(0))
-    goal = Variable(goal.data, requires_grad=True)
-    action_parameters, log_prob_action, goal, log_prob_goal, value, lp_value = action[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
+    if not evaluating:
+        action, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations, learning_progress.detach().unsqueeze(0).unsqueeze(0))
+        goal = Variable(goal.data, requires_grad=True)
+        action_parameters, log_prob_action, goal, log_prob_goal, value, lp_value = action[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
+    else:
+        action_parameters = net.predict_action(goal)
+        print(action_parameters.shape)
     action_parameters = action_parameters.detach().numpy()
     for i in range(n_simulation_steps):
         # print(context.shape)
         action = dmp.action_rollout(None,action_parameters,i)
         results = env.step(action)
+        if evaluating:
+            pen_goal = results["desired_goal"]
+            goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
+            goal = np.reshape(goal.T,(-1))
         if rendering:
             env.render()
         obs = results[0]["observation"]
@@ -195,65 +218,66 @@ for iteration in range(1000000):
     observations = np.expand_dims(np.expand_dims(obs,0),0)
     observations = torch.Tensor(observations)
 
-    def partial_backprop(loss,parts_to_ignore):
-        for part in parts_to_ignore:
-            for parameter in part.parameters():
-                parameter.requires_grad = False
-        loss.backward(retain_graph=True)
-        for part in parts_to_ignore:
-            for parameter in part.parameters():
-                parameter.requires_grad = True
+    if not evaluating:
+        def partial_backprop(loss,parts_to_ignore):
+            for part in parts_to_ignore:
+                for parameter in part.parameters():
+                    parameter.requires_grad = False
+            loss.backward(retain_graph=True)
+            for part in parts_to_ignore:
+                for parameter in part.parameters():
+                    parameter.requires_grad = True
 
-    optimizer.zero_grad()
-    goal_reward = -goal_loss(observations[0,0,48:55],goal)
-    print("goal_reward",goal_reward.data.item())
-    rewards.append(goal_reward.data.item())
+        optimizer.zero_grad()
+        goal_reward = -goal_loss(observations[0,0,48:55],goal)
+        print("goal_reward",goal_reward.data.item())
+        rewards.append(goal_reward.data.item())
 
-    # delta = goal_reward - average_reward_estimate + value.detach() - previous_value
-    delta = goal_reward.detach() - value
-    # average_reward_estimate = average_reward_estimate + alpha*delta.detach()
-    reward_value_fun = 0.5*delta**2
-    partial_backprop(reward_value_fun,[net.goal_decoder])
+        # delta = goal_reward - average_reward_estimate + value.detach() - previous_value
+        delta = goal_reward.detach() - value
+        # average_reward_estimate = average_reward_estimate + alpha*delta.detach()
+        reward_value_fun = 0.5*delta**2
+        partial_backprop(reward_value_fun,[net.goal_decoder])
 
-    loss_policy = delta.detach()*log_prob_action
-    partial_backprop(loss_policy,[net.goal_decoder])
+        loss_policy = delta.detach()*log_prob_action
+        partial_backprop(loss_policy,[net.goal_decoder])
 
-    # learning_progress = nn.ReLU()(goal_reward-previous_goal_reward)
-    # learning_progress = torch.abs(goal_reward-previous_goal_reward)
-    learning_progress = torch.abs(delta)
-    lps.append(learning_progress.data.item())
+        # learning_progress = nn.ReLU()(goal_reward-previous_goal_reward)
+        # learning_progress = torch.abs(goal_reward-previous_goal_reward)
+        learning_progress = torch.abs(delta)
+        lps.append(learning_progress.data.item())
 
 
-    delta = learning_progress.detach() - average_lp_estimate + lp_value.detach() - previous_lp_value
-    average_lp_estimate = average_lp_estimate + alpha*delta.detach()
+        delta = learning_progress.detach() - average_lp_estimate + lp_value.detach() - previous_lp_value
+        average_lp_estimate = average_lp_estimate + alpha*delta.detach()
 
-    if iteration>0:
-        loss_lp_value_fun = 0.5*delta**2
-        partial_backprop(loss_lp_value_fun,[net.goal_decoder])
+        if iteration>0:
+            loss_lp_value_fun = 0.5*delta**2
+            partial_backprop(loss_lp_value_fun,[net.goal_decoder])
 
-    loss_goal_policy = delta.detach()*log_prob_goal
-    partial_backprop(loss_goal_policy,[net.goal_decoder])
-    optimizer.step()
+        loss_goal_policy = delta.detach()*log_prob_goal
+        partial_backprop(loss_goal_policy,[net.goal_decoder])
+        optimizer.step()
 
-    # previous_goal_reward = goal_reward
-    previous_lp_value = lp_value
-    # previous_value = value
+        # previous_goal_reward = goal_reward
+        previous_lp_value = lp_value
+        # previous_value = value
 
-    if iteration % save_freq == save_freq -1:
-        print("Saving stuff")
-        torch.save(net, "lprnn.pt")
-        with open("rewards.txt","a") as f:
-            f.write("\n".join([str(r) for r in rewards]))
-        rewards = []
-        with open("learning_progresses.txt","a") as f:
-            f.write("\n".join([str(lp) for lp in lps]))
-        lps = []
+        if iteration % save_freq == save_freq -1:
+            print("Saving stuff")
+            torch.save(net, "lprnn.pt")
+            with open("rewards.txt","a") as f:
+                f.write("\n".join([str(r) for r in rewards]))
+            rewards = []
+            with open("learning_progresses.txt","a") as f:
+                f.write("\n".join([str(lp) for lp in lps]))
+            lps = []
 
-    if save_goals:
-        if iteration == 0:
-            goals = np.expand_dims(goal,0)
-        else:
-            goals = np.concatenate([goals,np.expand_dims(goal,0)],axis=0)
+        if save_goals:
+            if iteration == 0:
+                goals = np.expand_dims(goal,0)
+            else:
+                goals = np.concatenate([goals,np.expand_dims(goal,0)],axis=0)
 
     if iteration % forget_freq == forget_freq -1:
         net.forget()
