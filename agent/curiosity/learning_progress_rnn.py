@@ -108,7 +108,8 @@ observation_dim = env.observation_space["observation"].shape[0]
 n_actuators = env.action_space.shape[0]
 n_dmp_basis = 10
 action_dim = n_actuators*(n_dmp_basis+1)
-goal_dim = observation_dim
+#goal_dim = observation_dim
+goal_dim = 7
 
 batch_size = 1
 number_layers = 2
@@ -144,7 +145,7 @@ dmp = DMP(10,n_simulation_steps,n_actuators)
 #%%
 
 save_goals = False
-# rendering = True
+#rendering = True
 rendering = False
 save_freq = 300
 forget_freq = 300
@@ -158,7 +159,7 @@ lps = []
 
 for iteration in range(1000000):
 
-    action, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations, learning_progress.unsqueeze(0).unsqueeze(0))
+    action, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations, learning_progress.detach().unsqueeze(0).unsqueeze(0))
     goal = Variable(goal.data, requires_grad=True)
     action_parameters, log_prob_action, goal, log_prob_goal, value, lp_value = action[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
     action_parameters = action_parameters.detach().numpy()
@@ -204,7 +205,7 @@ for iteration in range(1000000):
                 parameter.requires_grad = True
 
     optimizer.zero_grad()
-    goal_reward = -goal_loss(observations,goal)
+    goal_reward = -goal_loss(observations[0,0,48:55],goal)
     print("goal_reward",goal_reward.data.item())
     rewards.append(goal_reward.data.item())
 
