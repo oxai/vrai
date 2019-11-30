@@ -93,9 +93,13 @@ class GOALRNN(nn.Module):
         latent = self.goal_encoder(goal)
         return self.goal_decoder(latent)
 
-    def predict_action(self, goal):
+    def predict_action(self, goal, observation):
         latent = self.goal_encoder(goal)
-        return self.action_decoder(latent)
+        latent_and_observation = torch.cat([latent, observation], dim=0)
+        action_means = self.action_decoder(latent_and_observation)
+        m = MultivariateNormal(action_means, torch.eye(action_dim))
+        actions = m.sample()
+        return actions
 
     def init_hidden(self, bs):
         self.h = (Variable(torch.zeros(self.nl, bs, self.n_hidden)),
@@ -152,20 +156,23 @@ dmp = DMP(10,n_simulation_steps,n_actuators)
 save_goals = False
 #rendering = True
 rendering = False
+#evaluating = True
 evaluating = False
 save_freq = 300
 forget_freq = 300
 # forget_freq = 2
 
 action = env.action_space.sample()
-observation = env.step(action)[0]["observation"]
+results = env.step(action)
+observation = results[0]["observation"]
 observations = np.expand_dims(np.expand_dims(observation,0),0)
 observations = torch.Tensor(observations)
 
 if evaluating:
-    pen_goal = results["desired_goal"]
-    goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
-    goal = np.reshape(goal.T,(-1))
+    pen_goal = results[0]["desired_goal"]
+    #goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
+    #goal = np.reshape(goal.T,(-1))
+    goal = torch.Tensor(pen_goal)
 
 if os.path.isfile("lprnn.pt"):
     net = torch.load("lprnn.pt")
@@ -180,7 +187,7 @@ for iteration in range(1000000):
         goal = Variable(goal.data, requires_grad=True)
         action_parameters, log_prob_action, goal, log_prob_goal, value, lp_value = action[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
     else:
-        action_parameters = net.predict_action(goal)
+        action_parameters = net.predict_action(goal,observations[0,0,:])
         print(action_parameters.shape)
     action_parameters = action_parameters.detach().numpy()
     for i in range(n_simulation_steps):
@@ -188,9 +195,10 @@ for iteration in range(1000000):
         action = dmp.action_rollout(None,action_parameters,i)
         results = env.step(action)
         if evaluating:
-            pen_goal = results["desired_goal"]
-            goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
-            goal = np.reshape(goal.T,(-1))
+            pen_goal = results[0]["desired_goal"]
+            #goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
+            #goal = np.reshape(goal.T,(-1))
+            goal = torch.Tensor(pen_goal)
         if rendering:
             env.render()
         obs = results[0]["observation"]

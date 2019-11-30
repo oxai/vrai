@@ -1,5 +1,6 @@
 agent/curiosity/engineered_goal_spaces/memories
 agent/curiosity/engineered_goal_spaces/old_memories
+agent/curiosity/old_memories
 **/*.p
 agent/curiosity/pybullet-gym
 **/__pycache__/*
@@ -7,3 +8,6 @@ agent/curiosity/__pycache__/
 agent/curiosity/engineered_goal_spaces/learning_progresses.txt
 agent/curiosity/engineered_goal_spaces/rewards.txt
 agent/curiosity/engineered_goal_spaces/lprnn.pt
+agent/curiosity/rewards.txt
+agent/curiosity/learning_progresses.txt
+agent/curiosity/lprnn.pt
