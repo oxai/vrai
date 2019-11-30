@@ -131,6 +131,7 @@ from torch import optim
 optimizer = optim.SGD(net.parameters(), lr=1e-4, momentum=0.9)
 
 goal_loss = nn.MSELoss()
+goal_reconstruction_loss = nn.MSELoss()
 
 previous_goal_reward = torch.Tensor([-10])
 # previous_value = torch.zeros(1)
@@ -219,6 +220,7 @@ for iteration in range(1000000):
     observations = torch.Tensor(observations)
 
     if not evaluating:
+
         def partial_backprop(loss,parts_to_ignore):
             for part in parts_to_ignore:
                 for parameter in part.parameters():
@@ -229,6 +231,11 @@ for iteration in range(1000000):
                     parameter.requires_grad = True
 
         optimizer.zero_grad()
+        reconstructed_goal = net.autoencode_goal(goal)
+        loss = goal_reconstruction_loss(goal, reconstructed_goal)
+        print("goal_reconstruction_loss", loss.data.item())
+        partial_backprop(loss,[])
+
         goal_reward = -goal_loss(observations[0,0,48:55],goal)
         print("goal_reward",goal_reward.data.item())
         rewards.append(goal_reward.data.item())
