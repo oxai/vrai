@@ -111,6 +111,28 @@ env=gym.make("HandManipulatePen-v0")
 results = env.reset();
 env.observation_space["observation"].shape[0]
 
+# env.target_rotation
+# env.render()
+goal = np.concatenate([1.0+0.02*(2*np.random.rand(2)-1), 0.15+0.02*(2*np.random.rand(1)-1), (2*np.random.rand(4)-1)])
+# goal = results["desired_goal"]
+goal.shape
+import mujoco_py
+env.sim.data.set_joint_qpos('target:joint', goal)
+env.sim.data.set_joint_qvel('target:joint', np.zeros(6))
+if 'object_hidden' in env.sim.model.geom_names:
+    hidden_id = env.sim.model.geom_name2id('object_hidden')
+    env.sim.model.geom_rgba[hidden_id, 3] = 1.
+env.sim.forward()
+env.viewer = mujoco_py.MjViewer(env.sim)
+body_id = env.sim.model.body_name2id('robot0:palm')
+lookat = env.sim.data.body_xpos[body_id]
+for idx, value in enumerate(lookat):
+    env.viewer.cam.lookat[idx] = value
+env.viewer.cam.distance = 0.5
+env.viewer.cam.azimuth = 55.
+env.viewer.cam.elevation = -25.
+env.viewer.render()
+
 #%%
 
 observation_dim = env.observation_space["observation"].shape[0]
