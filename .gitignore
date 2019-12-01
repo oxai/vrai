@@ -5,9 +5,10 @@ agent/curiosity/old_memories
 agent/curiosity/pybullet-gym
 **/__pycache__/*
 agent/curiosity/__pycache__/
-agent/curiosity/engineered_goal_spaces/learning_progresses.txt
-agent/curiosity/engineered_goal_spaces/rewards.txt
-agent/curiosity/engineered_goal_spaces/lprnn.pt
-agent/curiosity/rewards.txt
-agent/curiosity/learning_progresses.txt
-agent/curiosity/lprnn.pt
+agent/curiosity/engineered_goal_spaces/learning_progresses*.txt
+agent/curiosity/engineered_goal_spaces/rewards*.txt
+agent/curiosity/engineered_goal_spaces/lprnn*.pt
+agent/curiosity/engineered_goal_spaces/lprnn_weights*.pt
+agent/curiosity/rewards*.txt
+agent/curiosity/learning_progresses*.txt
+agent/curiosity/lprnn*.pt
