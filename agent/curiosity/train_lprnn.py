@@ -19,7 +19,7 @@ sys.path.append(AGENT_DIR)
 from absl import flags
 
 flags.DEFINE_integer("save_freq",300,"frequency at which we save stuff: model, rewards, LPs")
-flags.DEFINE_integer("forget_freq",300,"frequency at which we reset the backpropagation thru time. TODO: fix this")
+flags.DEFINE_integer("forget_freq",100,"frequency at which we reset the backpropagation thru time. TODO: fix this")
 flags.DEFINE_bool("rendering",False,"whether to render the environment or not")
 flags.DEFINE_bool("evaluating",False,"whether we are evaluating on the target goals, or still learning/exploring")
 flags.DEFINE_bool("save_goals",False,"whether to save goals")
@@ -58,7 +58,7 @@ def main(argv):
     '''NET'''
 
     from learning_progress_rnn import GOALRNN
-    net = GOALRNN(batch_size, number_layers, observation_dim, action_dim, goal_dim)
+    net = GOALRNN(batch_size, number_layers, observation_dim, action_dim, goal_dim, n_hidden=256)
 
     # load rnn if saved. TODO: save only weights maybe to avoid bugs after we change architecture..
     if os.path.isfile("lprnn"+experiment_name+".pt"):
@@ -110,9 +110,10 @@ def main(argv):
                 parameter.requires_grad = True
 
     for iteration in range(1000000):
+        #print(observations)
         if evaluating: #if evaluating we just use the action prediction part of the network
             action_parameters = net.predict_action(goal,observations[0,0,:])
-            print(action_parameters.shape)
+            #print(action_parameters.shape)
         else:
             #feed observations to net, get desired goal, actions (and their probabilities), and predicted value of action, and goal
             action, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations, learning_progress.detach().unsqueeze(0).unsqueeze(0))
@@ -123,6 +124,7 @@ def main(argv):
                 action_parameters, log_prob_action, _, _, value, lp_value = action[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
 
         action_parameters = action_parameters.detach().numpy()
+        #print(action_parameters)
         #run action using DMP
         for i in range(n_simulation_steps):
             # print(context.shape)
@@ -144,21 +146,21 @@ def main(argv):
                 results = env.reset()
                 reset_env = True
                 break
-        observations = np.expand_dims(np.expand_dims(obs,0),0)
-        observations = torch.Tensor(observations)
+        new_observations = np.expand_dims(np.expand_dims(obs,0),0)
+        new_observations = torch.Tensor(new_observations)
 
         if not evaluating: #if not evaluating, then train
             optimizer.zero_grad()
 
             # train policy to maximize goal reward (which is -goal_loss, which is -|observation-goal|^2) Here we are only looking at pen part of observation
-            goal_reward = -goal_loss(observations[0,0,48:55],goal)
+            goal_reward = -goal_loss(new_observations[0,0,48:55],goal)
             print("goal_reward",goal_reward.data.item())
             rewards.append(goal_reward.data.item())
 
-            hindsight_goal = observations[0,0,48:55]
+            hindsight_goal = new_observations[0,0,48:55]
             # we train for the goal reconstruction part of the network
             # we use the hindsight_goal (the outcome of our action, to ensure we autoencode reachable goals, and explore more effectively
-            reconstructed_goal = net.autoencode_goal(hindsight_goal)
+            reconstructed_goal = net.autoencode_goal(hindsight_goal+0.01*torch.randn_like(hindsight_goal))
             loss = goal_reconstruction_loss(goal, reconstructed_goal)
             print("goal_reconstruction_loss", loss.data.item())
             partial_backprop(loss)
@@ -167,7 +169,7 @@ def main(argv):
             # this is called hindsight experience replay
             predicted_action_parameters = net.predict_action(hindsight_goal,observations[0,0,:])
             loss = action_reconstruction_loss(predicted_action_parameters, torch.Tensor(action_parameters))
-            partial_backprop(loss)
+            partial_backprop(loss, [net.goal_encoder])
 
             # we update the policy and value function following a non-bootstraped actor-critic approach
             # we update the state-action value function by computing delta,

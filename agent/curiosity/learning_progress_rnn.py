@@ -35,9 +35,9 @@ class GOALRNN(nn.Module):
         self.goal_dim = goal_dim
         self.action_dim = action_dim
         self.rnn = nn.LSTM(observation_dim+1, n_hidden, nl)
-        self.goal_decoder = MLP(n_hidden, goal_dim)
+        self.goal_decoder = MLP(n_hidden, 2*goal_dim)
         self.goal_encoder = MLP(goal_dim, n_hidden)
-        self.action_decoder = MLP(n_hidden+observation_dim, action_dim)
+        self.action_decoder = MLP(n_hidden+observation_dim, 2*action_dim)
         self.value_decoder = MLP(n_hidden+observation_dim, 1)
         self.lp_decoder = MLP(n_hidden+observation_dim, 1)
         self.init_hidden(bs)
@@ -47,12 +47,12 @@ class GOALRNN(nn.Module):
         if self.h[0].size(1) != bs: self.init_hidden(bs)
         latents,h = self.rnn(torch.cat([observations,lps],dim=2), self.h) #(seq_len, batch, input_size) -> (seq_len, batch, num_directions * hidden_size), (num_layers * num_directions, batch, hidden_size):
         latent_and_observation = torch.cat([latents, observations], dim=2)
-        goal_means = self.goal_decoder(latents)
-        m = MultivariateNormal(goal_means, torch.eye(self.goal_dim))
+        goal_means, goal_stds = torch.split(self.goal_decoder(latents), self.goal_dim, dim=2)
+        m = MultivariateNormal(goal_means, (goal_stds)**2*torch.eye(self.goal_dim)) # squaring stds so as to be positive
         goals = m.sample()
         log_prob_goals = m.log_prob(goals)
-        action_means = self.action_decoder(latent_and_observation)
-        m = MultivariateNormal(action_means, torch.eye(self.action_dim))
+        action_means, action_stds = torch.split(self.action_decoder(latent_and_observation), self.action_dim, dim=2)
+        m = MultivariateNormal(action_means, (action_stds)**2*torch.eye(self.action_dim))
         actions = m.sample()
         log_prob_actions = m.log_prob(action_means)
         values = self.value_decoder(latent_and_observation)
@@ -61,12 +61,13 @@ class GOALRNN(nn.Module):
 
     def autoencode_goal(self, goal):
         latent = self.goal_encoder(goal)
-        return self.goal_decoder(latent)
+        goal_means, goal_stds = torch.split(self.goal_decoder(latent), self.goal_dim, dim=0)
+        return goal_means
 
     def predict_action(self, goal, observation):
         latent = self.goal_encoder(goal)
         latent_and_observation = torch.cat([latent, observation], dim=0)
-        action_means = self.action_decoder(latent_and_observation)
+        action_means, action_stds = torch.split(self.action_decoder(latent_and_observation), self.action_dim, dim=0)
         #m = MultivariateNormal(action_means, torch.eye(self.action_dim))
         #actions = m.sample()
         actions = action_means
