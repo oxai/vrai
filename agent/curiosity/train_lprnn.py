@@ -13,6 +13,7 @@ MEMORIES_DIR = os.path.join(THIS_DIR,"memories")
 sys.path.append(ROOT_DIR)
 sys.path.append(AGENT_DIR)
 
+from robot_hand_utils import render_with_target, setup_render
 
 #%%
 # training/eval arguments
@@ -70,7 +71,8 @@ def main(argv):
 
     # optimizer and losses
     from torch import optim
-    optimizer = optim.SGD(net.parameters(), lr=1e-4, momentum=0.9)
+    #optimizer = optim.SGD(net.parameters(), lr=1e-4, momentum=0.9)
+    optimizer = optim.RMSprop(net.parameters())
     goal_loss = nn.MSELoss()
     goal_reconstruction_loss = nn.MSELoss()
     action_reconstruction_loss = nn.MSELoss()
@@ -96,6 +98,8 @@ def main(argv):
         #goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
         #goal = np.reshape(goal.T,(-1))
         goal = torch.Tensor(pen_goal)
+    if rendering:
+        setup_render(env)
 
     rewards = []
     lps = []
@@ -109,14 +113,22 @@ def main(argv):
             for parameter in part.parameters():
                 parameter.requires_grad = True
 
+    pen_vars_slice = slice(54,61)
+    pen_pos_center = torch.Tensor([1.0,0.90,0.15]).unsqueeze(0).unsqueeze(0)
+    print(observations.shape)
+    reset_env = False
     for iteration in range(1000000):
         #print(observations)
         if evaluating: #if evaluating we just use the action prediction part of the network
-            action_parameters = net.predict_action(goal,observations[0,0,:])
+            print(goal, observations)
+            action_parameters,_ = net.predict_action(goal.unsqueeze(0).unsqueeze(0),observations)
+            action_parameters = action_parameters[0,0,:]
             #print(action_parameters.shape)
         else:
             #feed observations to net, get desired goal, actions (and their probabilities), and predicted value of action, and goal
             action, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations, learning_progress.detach().unsqueeze(0).unsqueeze(0))
+            pen_pos = observations[:,:,pen_vars_slice][...,:3]
+            goal = torch.cat([(goal[:,:,:3]-pen_pos)*0.02+pen_pos,goal[:,:,3:]], dim=2)
             goal = Variable(goal.data, requires_grad=True)
             if lp_training:
                 action_parameters, log_prob_action, goal, log_prob_goal, value, lp_value = action[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
@@ -138,7 +150,8 @@ def main(argv):
                 if evaluating:
                     print(results[1])
             if rendering:
-                env.render()
+                #env.render()
+                render_with_target(env,goal.detach().numpy())
             obs = results[0]["observation"]
             done = results[2]
             if done:
@@ -149,15 +162,49 @@ def main(argv):
         new_observations = np.expand_dims(np.expand_dims(obs,0),0)
         new_observations = torch.Tensor(new_observations)
 
+        if not evaluating:
+            # saving rewards, learning progresses, etc
+            if iteration % save_freq == save_freq -1:
+                print("Saving stuff")
+                #torch.save(net, "lprnn.pt")
+                torch.save(net.state_dict(), "lprnn_weights"+experiment_name+".pt")
+                with open("rewards"+experiment_name+".txt","a") as f:
+                    f.write("\n".join([str(r) for r in rewards]))
+                rewards = []
+                with open("learning_progresses"+experiment_name+".txt","a") as f:
+                    f.write("\n".join([str(lp) for lp in lps]))
+                lps = []
+
+            if save_goals:
+                if iteration == 0:
+                    goals = np.expand_dims(goal,0)
+                else:
+                    goals = np.concatenate([goals,np.expand_dims(goal,0)],axis=0)
+
+
+        # we detach the RNN every so often, to determine how far to backpropagate through time
+        # TODO: do this in a way that doesn't start from scratch, but instead backpropagates forget_freq many iterations in the past
+        # at *every* time step!!
+        if iteration % forget_freq == forget_freq -1:
+            net.forget()
+
+        if reset_env:
+            observations = new_observations
+            reset_env = False
+            continue
+
         if not evaluating: #if not evaluating, then train
             optimizer.zero_grad()
 
             # train policy to maximize goal reward (which is -goal_loss, which is -|observation-goal|^2) Here we are only looking at pen part of observation
-            goal_reward = -goal_loss(new_observations[0,0,48:55],goal)
-            print("goal_reward",goal_reward.data.item())
-            rewards.append(goal_reward.data.item())
+            #goal_reward = -1*goal_loss(new_observations[0,0,pen_vars_slice],goal)
+            #goal_reward = goal_reward*(goal_reward>-1)
+            goal_reward = env.compute_reward(new_observations[0,0,pen_vars_slice].numpy(), goal.detach().numpy(), None)
+            print(new_observations[0,0,pen_vars_slice], goal)
+            print("goal_reward",goal_reward)
+            rewards.append(goal_reward)
 
-            hindsight_goal = new_observations[0,0,48:55]
+            hindsight_goal = new_observations[:,:,pen_vars_slice]
             # we train for the goal reconstruction part of the network
             # we use the hindsight_goal (the outcome of our action, to ensure we autoencode reachable goals, and explore more effectively
             reconstructed_goal = net.autoencode_goal(hindsight_goal+0.01*torch.randn_like(hindsight_goal))
@@ -166,23 +213,33 @@ def main(argv):
             partial_backprop(loss)
 
             # we also learn to predict the actions we just performed when goal is the observed outcome
-            # this is called hindsight experience replay
-            predicted_action_parameters = net.predict_action(hindsight_goal,observations[0,0,:])
-            loss = action_reconstruction_loss(predicted_action_parameters, torch.Tensor(action_parameters))
-            partial_backprop(loss, [net.goal_encoder])
+            # this is called hindsight experience replay (but this is a version that doesnt seem to work well)
+            #predicted_action_parameters,_ = net.predict_action(hindsight_goal,observations, output_mean=True)
+            #loss = action_reconstruction_loss(predicted_action_parameters, torch.Tensor(action_parameters))
+            #partial_backprop(loss, [net.goal_encoder])
 
             # we update the policy and value function following a non-bootstraped actor-critic approach
             # we update the state-action value function by computing delta,
             # delta is an unbiased estimator of the difference between the predicted value `value` and
             # the true expected reward (estimated by the observed `goal_reward`)
             # we train the value function to minimize their squared difference delta**2
-            delta = goal_reward.detach() - value
+            delta = goal_reward - value
             reward_value_fun = 0.5*delta**2
             partial_backprop(reward_value_fun,[net.goal_decoder])
 
             # then we update the policy using a policy gradient update
             # where delta is used as the advantage
             # note that we detach delta, so that it becomes a scalar, and gradients aren't backpropagated through it anymore
+            loss_policy = delta.detach()*log_prob_action
+            partial_backprop(loss_policy,[net.goal_decoder])
+
+            #Hindsight Experience Replay
+            value = net.compute_value(hindsight_goal, new_observations)[0,0,:]
+            goal_reward = env.compute_reward(new_observations[0,0,pen_vars_slice].numpy(), hindsight_goal[0,0,:].detach().numpy(), None)
+            delta = goal_reward - value
+            reward_value_fun = 0.5*delta**2
+            partial_backprop(reward_value_fun,[net.goal_decoder])
+
             loss_policy = delta.detach()*log_prob_action
             partial_backprop(loss_policy,[net.goal_decoder])
 
@@ -231,35 +288,7 @@ def main(argv):
 
             previous_lp_value = lp_value
 
-            # saving rewards, learning progresses, etc
-            if iteration % save_freq == save_freq -1:
-                print("Saving stuff")
-                #torch.save(net, "lprnn.pt")
-                torch.save(net.state_dict(), "lprnn_weights"+experiment_name+".pt")
-                with open("rewards"+experiment_name+".txt","a") as f:
-                    f.write("\n".join([str(r) for r in rewards]))
-                rewards = []
-                with open("learning_progresses"+experiment_name+".txt","a") as f:
-                    f.write("\n".join([str(lp) for lp in lps]))
-                lps = []
-
-            if save_goals:
-                if iteration == 0:
-                    goals = np.expand_dims(goal,0)
-                else:
-                    goals = np.concatenate([goals,np.expand_dims(goal,0)],axis=0)
-
-        # we detach the RNN every so often, to determine how far to backpropagate through time
-        # TODO: do this in a way that doesn't start from scratch, but instead backpropagates forget_freq many iterations in the past
-        # at *every* time step!!
-        if iteration % forget_freq == forget_freq -1:
-            net.forget()
-
-
-        # from rlpyt.envs.atari.atari_env import AtariEnv
-        # AtariEnv("pong").action_space
-        # import rlpyt
-        # from rlpyt.algos.pg.a2c import A2C
+        observations = new_observations
 
 from absl import app
 if __name__ == '__main__':

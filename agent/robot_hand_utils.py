@@ -16,14 +16,24 @@ def get_actuator_center(env):
             'robot0:{}J0'.format(joint_name))
     return actuation_center
 
+import mujoco_py
 def render_with_target(env, target):
-    import mujoco_py
     env.sim.data.set_joint_qpos('target:joint', target)
     env.sim.data.set_joint_qvel('target:joint', np.zeros(6))
     if 'object_hidden' in env.sim.model.geom_names:
         hidden_id = env.sim.model.geom_name2id('object_hidden')
         env.sim.model.geom_rgba[hidden_id, 3] = 1.
     env.sim.forward()
+    body_id = env.sim.model.body_name2id('robot0:palm')
+    lookat = env.sim.data.body_xpos[body_id]
+    for idx, value in enumerate(lookat):
+        env.viewer.cam.lookat[idx] = value
+    env.viewer.cam.distance = 0.5
+    env.viewer.cam.azimuth = 55.
+    env.viewer.cam.elevation = -25.
+    env.viewer.render()
+
+def setup_render(env):
     env.viewer = mujoco_py.MjViewer(env.sim)
     body_id = env.sim.model.body_name2id('robot0:palm')
     lookat = env.sim.data.body_xpos[body_id]
