@@ -52,7 +52,7 @@ class GOALRNN(nn.Module):
         latents = latents[:,:,:self.n_hidden]
         latent_and_observation = torch.cat([latents, observations], dim=2)
         goal_means, goal_stds = torch.split(self.goal_decoder(latents), self.goal_dim, dim=2)
-        goal_means, goal_stds = 2*torch.tanh(goal_means), torch.tanh(goal_stds)
+        goal_means, goal_stds = 100*torch.tanh(goal_means*0.001), torch.tanh(goal_stds)
         m = MultivariateNormal(goal_means, (goal_stds**2+0.001)*torch.eye(self.goal_dim)) # squaring stds so as to be positive
         goals = m.sample()
         log_prob_goals = m.log_prob(goals)
