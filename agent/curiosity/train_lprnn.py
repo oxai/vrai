@@ -208,13 +208,13 @@ def main(argv):
 
             hindsight_goal = new_observations[:,:,pen_vars_slice]
 
-            if iteration <= 100000
-            # we train for the goal reconstruction part of the network
-            # we use the hindsight_goal (the outcome of our action, to ensure we autoencode reachable goals, and explore more effectively
-            reconstructed_goal = net.autoencode_goal(hindsight_goal+0.01*torch.randn_like(hindsight_goal))
-            loss = goal_reconstruction_loss(goal, reconstructed_goal)
-            print("goal_reconstruction_loss", loss.data.item())
-            partial_backprop(loss)
+            #if iteration <= 100000:
+            #    # we train for the goal reconstruction part of the network
+            #    # we use the hindsight_goal (the outcome of our action, to ensure we autoencode reachable goals, and explore more effectively
+            #    reconstructed_goal = net.autoencode_goal(hindsight_goal+0.01*torch.randn_like(hindsight_goal))
+            #    loss = goal_reconstruction_loss(goal, reconstructed_goal)
+            #    print("goal_reconstruction_loss", loss.data.item())
+            #    partial_backprop(loss)
 
             # we also learn to predict the actions we just performed when goal is the observed outcome
             # this is called hindsight experience replay (but this is a version that doesnt seem to work well)
@@ -288,7 +288,7 @@ def main(argv):
                 # after the autoencoder has trained well, then each latent vector represents 1-to-1 a goal
                 # and the action can learn to map to the actions corresponding to that goal
                 # if we kept changing the goal_decoder, then the action decoder may "get confused" as its actual goal is changing even for fixed input latent vector
-                partial_backprop(loss_goal_policy,[net.goal_decoder])
+                partial_backprop(loss_goal_policy,[])
                 optimizer.step()
 
             previous_lp_value = lp_value
