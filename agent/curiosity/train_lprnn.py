@@ -13,7 +13,7 @@ MEMORIES_DIR = os.path.join(THIS_DIR,"memories")
 sys.path.append(ROOT_DIR)
 sys.path.append(AGENT_DIR)
 
-from robot_hand_utils import render_with_target, setup_render
+from agent.robot_hand_utils import render_with_target, setup_render
 
 #%%
 # training/eval arguments
