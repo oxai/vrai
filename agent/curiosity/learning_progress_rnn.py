@@ -47,6 +47,7 @@ class GOALRNN(nn.Module):
         bs = observations[0].size(0)
         if self.h[0].size(1) != bs: self.init_hidden(bs)
         latents,self.h = self.rnn(torch.cat([observations,lps],dim=2), self.h) #(seq_len, batch, input_size) -> (seq_len, batch, num_directions * hidden_size), (num_layers * num_directions, batch, hidden_size):
+        #print(self.h)
         latents = latents[:,:,:self.n_hidden]
         latent_and_observation = torch.cat([latents, observations], dim=2)
         goal_means, goal_stds = torch.split(self.goal_decoder(latents), self.goal_dim, dim=2)

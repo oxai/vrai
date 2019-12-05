@@ -78,10 +78,10 @@ def main(argv):
     action_reconstruction_loss = nn.MSELoss()
 
     # initial values of several variables
-    previous_goal_reward = torch.Tensor([-10])
+    previous_goal_reward = torch.Tensor([-1.0])
     previous_lp_value = torch.zeros(1)
     learning_progress = torch.zeros(1)
-    average_reward_estimate = 0
+    #average_reward_estimate = 0
     average_lp_estimate = 0
 
     #initial run
@@ -127,8 +127,10 @@ def main(argv):
         else:
             #feed observations to net, get desired goal, actions (and their probabilities), and predicted value of action, and goal
             action, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations, learning_progress.detach().unsqueeze(0).unsqueeze(0))
+            value = value - 1 # learn the difference between the value and -1, because at the beginning most values will be close to -1
             pen_pos = observations[:,:,pen_vars_slice][...,:3]
-            goal = torch.cat([(goal[:,:,:3]-pen_pos)*0.02+pen_pos,goal[:,:,3:]], dim=2)
+            rot_goal = goal[:,:,3:]
+            goal = torch.cat([(goal[:,:,:3]-pen_pos)*0.02+pen_pos,rot_goal/np.linalg.norm(rot_goal)], dim=2)
             goal = Variable(goal.data, requires_grad=True)
             if lp_training:
                 action_parameters, log_prob_action, goal, log_prob_goal, value, lp_value = action[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
@@ -205,6 +207,8 @@ def main(argv):
             rewards.append(goal_reward)
 
             hindsight_goal = new_observations[:,:,pen_vars_slice]
+
+            if iteration <= 100000
             # we train for the goal reconstruction part of the network
             # we use the hindsight_goal (the outcome of our action, to ensure we autoencode reachable goals, and explore more effectively
             reconstructed_goal = net.autoencode_goal(hindsight_goal+0.01*torch.randn_like(hindsight_goal))
@@ -225,23 +229,24 @@ def main(argv):
             # we train the value function to minimize their squared difference delta**2
             delta = goal_reward - value
             reward_value_fun = 0.5*delta**2
-            partial_backprop(reward_value_fun,[net.goal_decoder])
+            partial_backprop(reward_value_fun,[net.goal_decoder, net.rnn])
 
             # then we update the policy using a policy gradient update
             # where delta is used as the advantage
             # note that we detach delta, so that it becomes a scalar, and gradients aren't backpropagated through it anymore
             loss_policy = delta.detach()*log_prob_action
-            partial_backprop(loss_policy,[net.goal_decoder])
+            partial_backprop(loss_policy,[net.goal_decoder, net.rnn])
 
             #Hindsight Experience Replay
             value = net.compute_value(hindsight_goal, new_observations)[0,0,:]
+            value = value - 1
             goal_reward = env.compute_reward(new_observations[0,0,pen_vars_slice].numpy(), hindsight_goal[0,0,:].detach().numpy(), None)
-            delta = goal_reward - value
-            reward_value_fun = 0.5*delta**2
-            partial_backprop(reward_value_fun,[net.goal_decoder])
+            delta2 = goal_reward - value
+            reward_value_fun = 0.5*delta2**2
+            partial_backprop(reward_value_fun,[net.goal_decoder, net.rnn])
 
             loss_policy = delta.detach()*log_prob_action
-            partial_backprop(loss_policy,[net.goal_decoder])
+            partial_backprop(loss_policy,[net.goal_decoder, net.rnn])
 
             # we define absolute learning progress as the absolute value of the "Bellman" error, `delta`
             # If delta is high, that means that the reward we got was significantly different from our expectations
