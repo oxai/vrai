@@ -4,20 +4,20 @@ using UnityEngine;
 using MLAgents;
 
 public class SeekerHiderAI : Agent{
-    Rigidbody rb;
-    public List<float> VectorActs = new List<float> {0,0,0};
-    public List<float> Inputs = new List<float>();
-    public bool Seeker = true;
-    bool Seeking = false;
-    public SeekerHiderAI Enemy;
-    float Speed = 10;
+    Rigidbody rb; 
+    public List<float> VectorActs = new List<float> {0,0,0}; // Actions output by NN 
+    public List<float> Inputs = new List<float>(); // Inputs to NN (Unsure if still in use)
+    public bool Seeker = true; // Determine whether agent is th seeker 
+    bool Seeking = false; // Whether game is in seeking mode 
+    public SeekerHiderAI Enemy; // Refernce to your enemy 
+    float Speed = 10; // Current speed 
 
     // Start is called before the first frame update
     void Start(){
-        if (Seeker)
+        if (Seeker) // Seeker moves faster? 
             Speed = 12;
-        rb = GetComponent<Rigidbody>();
-        for (int i = 0; i<20; i++) {
+        rb = GetComponent<Rigidbody>(); 
+        for (int i = 0; i<20; i++) { // Set all inputs to zero 
             Inputs.Add(0);
         }
     }
@@ -28,19 +28,19 @@ public class SeekerHiderAI : Agent{
         //Inputs[2] = transform.localPosition.x / 50f;
         //Inputs[3] = transform.localPosition.z / 50f;
         //Inputs[4] = (transform.eulerAngles.y > 180 ? transform.eulerAngles.y - 360f : transform.eulerAngles.y)/180f;
-        if (!Seeking&& GetStepCount()<240) {
+        if (!Seeking&& GetStepCount()<240) { // While not in seeking mode, set 0th index to count-down  
             Inputs[0] = (240 - GetStepCount()) / 240f;
             AddVectorObs((240 - GetStepCount()) / 240f);
         } else {
-            AddVectorObs(0);
+            AddVectorObs(0); // While in seeking mode, set 0th index to 0 
             Inputs[0] = 0;
         }
-        AddVectorObs(rb.velocity.x / 10f);
+        AddVectorObs(rb.velocity.x / 10f); // Transform variables 
         AddVectorObs(rb.velocity.z / 10f);
         AddVectorObs(transform.localPosition.x / 50f);
         AddVectorObs(transform.localPosition.z / 50f);
         AddVectorObs((transform.eulerAngles.y > 180 ? transform.eulerAngles.y - 360f : transform.eulerAngles.y)/180f);
-        for (int i = 0; i<5; i++) {
+        for (int i = 0; i<5; i++) { // Ray cast for either wall or other agent 
             float Wall = 0;
             float HiderOrSeeker = 0;
             float Distance = 1f;
@@ -67,13 +67,15 @@ public class SeekerHiderAI : Agent{
             //Inputs[5 + i * 3] = Wall;
             //Inputs[6 + i * 3] = HiderOrSeeker;
             //Inputs[7 + i * 3] = Distance;
-            AddVectorObs(Wall);
-            AddVectorObs(HiderOrSeeker);
-            AddVectorObs(Distance);
+            AddVectorObs(Wall);  // If wall found 
+            AddVectorObs(HiderOrSeeker); // If hider or seeker found 
+            AddVectorObs(Distance); // Distance to object
         }
     }
 
-    public override void AgentReset() {
+    public override void AgentReset() { // End of episode 
+
+        // TODO: Can we set the values within each agent instead of doing Enemy.<>?
         if (!Seeker) {
             Seeking = false;
             transform.localPosition = new Vector3(Random.Range(0f,14f),0,Random.Range(11f,-11f));
@@ -89,25 +91,25 @@ public class SeekerHiderAI : Agent{
     }
 
     public override void AgentAction(float[] vectorAction, string textAction) {
-        if (Seeker && !Seeking)
+        if (Seeker && !Seeking) // Do nothing when not seeking as the seeker
             return;
         for (int i = 0; i<vectorAction.Length; i++) {
             VectorActs[i] = Mathf.Clamp(vectorAction[i],-1.0f,1.0f);
         }
-        if (Seeking) {
-            if (Seeker) {
-                AddReward(-0.002f);
+        if (Seeking) { // In seeking mode 
+            if (Seeker) { 
+                AddReward(-0.002f); // Negative survival 
             } else {
-                AddReward(0.002f);
+                AddReward(0.002f); // Positive survival 
             }
         } else {
-            if (GetStepCount() >= 240) {
+            if (GetStepCount() >= 240) {   // Wait until seeking mode 
                 Seeking = true;
                 Enemy.Seeking = true;
             }
         }
-        if (GetStepCount()>1500) {
-            AddReward(1f);
+        if (GetStepCount()>1500) { // Stop game after 1500 steps 
+            AddReward(1f); // TODO: What? 
             Enemy.AddReward(-1f);
             Enemy.Done();
             Done();
@@ -115,8 +117,9 @@ public class SeekerHiderAI : Agent{
     }
 
     private void FixedUpdate() {
-        if (Seeker && !Seeking)
+        if (Seeker && !Seeking) // Do nothing when not seeking as the seeker 
             return;
+        // Convert NN output to action 
         rb.velocity = Vector3.Lerp(rb.velocity,Speed*VectorActs[0]*new Vector3(Mathf.Sin(VectorActs[1]*Mathf.PI),0, Mathf.Cos(VectorActs[1] * Mathf.PI)),Time.deltaTime*10);
         transform.rotation = Quaternion.Lerp(transform.rotation,Quaternion.Euler(new Vector3(0, VectorActs[2] * 180f,0)),Time.deltaTime*5);
     }
@@ -131,7 +134,7 @@ public class SeekerHiderAI : Agent{
         return new Vector3(x, 0f, z);
     }
 
-    private void OnCollisionEnter(Collision collision) {
+    private void OnCollisionEnter(Collision collision) { // Rewards for being caught
         if (Seeking&&collision.transform.CompareTag("agent")&&!Seeker) {
             AddReward(-1f);
             Enemy.AddReward(1f);
