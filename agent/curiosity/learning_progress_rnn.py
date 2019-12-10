@@ -38,8 +38,8 @@ class GOALRNN(nn.Module):
         self.rnn = nn.LSTM(observation_dim+1, n_hidden+n_hidden2, nl)
         self.goal_decoder = MLP(n_hidden, 2*goal_dim)
         self.goal_encoder = MLP(goal_dim, n_hidden)
-        self.action_decoder = MLP(goal_dim+observation_dim, 2*action_dim)
-        self.value_decoder = MLP(goal_dim+observation_dim, 1)
+        self.action_decoder = MLP(goal_dim+observation_dim, 2*action_dim, hidden_dim=1024)
+        self.value_decoder = MLP(goal_dim+observation_dim, 1, hidden_dim=1024)
         self.lp_decoder = MLP(n_hidden+n_hidden2+observation_dim, 1)
         self.init_hidden(bs)
 
@@ -53,7 +53,7 @@ class GOALRNN(nn.Module):
         latent_and_observation = torch.cat([latents, observations], dim=2)
         goal_means, goal_stds = torch.split(self.goal_decoder(latents), self.goal_dim, dim=2)
         goal_means, goal_stds = 100*torch.tanh(goal_means*0.001), torch.tanh(goal_stds)
-        m = MultivariateNormal(goal_means, (goal_stds**2+0.001)*torch.eye(self.goal_dim)) # squaring stds so as to be positive
+        m = MultivariateNormal(goal_means, (goal_stds**2+0.01)*torch.eye(self.goal_dim)) # squaring stds so as to be positive
         goals = m.sample()
         log_prob_goals = m.log_prob(goals)
         actions, log_prob_actions = self.predict_action(goals, observations)
@@ -72,6 +72,13 @@ class GOALRNN(nn.Module):
         values = self.value_decoder(latent_and_observation)
         return values
 
+    def get_log_prob_action(self, goals, observations, actions):
+        latent_and_observation = torch.cat([goals, observations], dim=2)
+        action_means, action_stds = torch.split(self.action_decoder(latent_and_observation), self.action_dim, dim=2)
+        m = MultivariateNormal(action_means, (10*action_stds**2+0.001)*torch.eye(self.action_dim))
+        log_prob_actions = m.log_prob(actions)
+        return log_prob_actions
+
     def predict_action(self, goals, observations, output_mean=False):
         #latents = self.goal_encoder(goals)
         latent_and_observation = torch.cat([goals, observations], dim=2)
@@ -80,7 +87,7 @@ class GOALRNN(nn.Module):
             actions = action_means
             log_prob_actions = -1
         else:
-            m = MultivariateNormal(action_means, (action_stds**2+0.001)*torch.eye(self.action_dim))
+            m = MultivariateNormal(action_means, (10*action_stds**2+0.001)*torch.eye(self.action_dim))
             actions = m.sample()
             log_prob_actions = m.log_prob(actions)
         return actions, log_prob_actions

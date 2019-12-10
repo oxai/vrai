@@ -67,6 +67,7 @@ def main(argv):
         net.load_state_dict(temp_net.state_dict())
 
     if os.path.isfile("lprnn_weights"+experiment_name+".pt"):
+        print("LOADING WEIGHTS")
         net.load_state_dict(torch.load("lprnn_weights"+experiment_name+".pt"))
 
     # optimizer and losses
@@ -126,18 +127,19 @@ def main(argv):
             #print(action_parameters.shape)
         else:
             #feed observations to net, get desired goal, actions (and their probabilities), and predicted value of action, and goal
-            action, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations, learning_progress.detach().unsqueeze(0).unsqueeze(0))
+            actions, log_prob_action, goal, log_prob_goal, value, lp_value = net(observations, learning_progress.detach().unsqueeze(0).unsqueeze(0))
             value = value - 1 # learn the difference between the value and -1, because at the beginning most values will be close to -1
             pen_pos = observations[:,:,pen_vars_slice][...,:3]
             pen_rot = observations[:,:,pen_vars_slice][...,3:]
             rot_goal = goal[:,:,3:]
-            rel_rot_goal = (rot_goal-pen_rot)*0.01+pen_rot
-            goal = torch.cat([(goal[:,:,:3]-pen_pos)*0.0002+pen_pos,(rel_rot_goal)/np.linalg.norm(rel_rot_goal)], dim=2)
+            rel_rot_goal = (rot_goal-pen_rot)*0.1+pen_rot
+            goal = torch.cat([(goal[:,:,:3]-pen_pos)*0.002+pen_pos,(rel_rot_goal)/np.linalg.norm(rel_rot_goal)], dim=2)
+            #goal += 0.05*torch.randn_like(goal)
             goal = Variable(goal.data, requires_grad=True)
             if lp_training:
-                action_parameters, log_prob_action, goal, log_prob_goal, value, lp_value = action[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
+                action_parameters, log_prob_action, goal, log_prob_goal, value, lp_value = actions[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
             else: # if we are not training goal policy then ignore the goal policy variables. We'll us the goal provided by openaigym
-                action_parameters, log_prob_action, _, _, value, lp_value = action[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
+                action_parameters, log_prob_action, _, _, value, lp_value = actions[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
 
         action_parameters = action_parameters.detach().numpy()
         #print(action_parameters)
@@ -162,6 +164,8 @@ def main(argv):
             if done:
                 print("reseting environment")
                 results = env.reset()
+                #print(results)
+                obs = results["observation"]
                 reset_env = True
                 break
         new_observations = np.expand_dims(np.expand_dims(obs,0),0)
@@ -200,6 +204,9 @@ def main(argv):
 
         if reset_env:
             observations = new_observations
+            if not evaluating and lp_training:
+                previous_lp_value = lp_value
+                learning_progress = Variable(torch.zeros_like(learning_progress))
             reset_env = False
             continue
 
@@ -236,31 +243,34 @@ def main(argv):
             # the true expected reward (estimated by the observed `goal_reward`)
             # we train the value function to minimize their squared difference delta**2
             delta = goal_reward - value
+            print("value", value.data.item())
             reward_value_fun = 0.5*delta**2
-            partial_backprop(reward_value_fun,[net.goal_decoder, net.rnn])
+            partial_backprop(reward_value_fun,[])
 
             # then we update the policy using a policy gradient update
             # where delta is used as the advantage
             # note that we detach delta, so that it becomes a scalar, and gradients aren't backpropagated through it anymore
-            loss_policy = delta.detach()*log_prob_action
-            partial_backprop(loss_policy,[net.goal_decoder, net.rnn])
+            loss_policy = -delta.detach()*log_prob_action
+            partial_backprop(loss_policy)
 
-            ##Hindsight Experience Replay
-            #value = net.compute_value(hindsight_goal, new_observations)[0,0,:]
+            ###Hindsight Experience Replay
+            #value = net.compute_value(hindsight_goal, observations)[0,0,:]
             #value = value - 1
+            #log_prob_action = net.get_log_prob_action(hindsight_goal, observations, actions)
             #goal_reward = env.compute_reward(new_observations[0,0,pen_vars_slice].numpy(), hindsight_goal[0,0,:].detach().numpy(), None)
             #delta2 = goal_reward - value
             #reward_value_fun = 0.5*delta2**2
-            #partial_backprop(reward_value_fun,[net.goal_decoder, net.rnn])
+            #partial_backprop(reward_value_fun)
 
-            #loss_policy = delta.detach()*log_prob_action
-            #partial_backprop(loss_policy,[net.goal_decoder, net.rnn])
+            #loss_policy = -delta2.detach()*log_prob_action
+            #partial_backprop(loss_policy)
 
             # we define absolute learning progress as the absolute value of the "Bellman" error, `delta`
             # If delta is high, that means that the reward we got was significantly different from our expectations
             # which means we updated our policy a lot
             # which I am interpreting as "you have learned a lot" -- you have made significant learning progress
             # on the other hand if delta is very small, you didn't learn anything you didn't already know.
+            #learning_progress = torch.abs(delta+delta2)
             learning_progress = torch.abs(delta)
             lps.append(learning_progress.data.item())
 
@@ -291,13 +301,14 @@ def main(argv):
                 partial_backprop(loss_lp_value_fun,[net.goal_decoder])
 
                 # update goal policy using policy gradient
-                loss_goal_policy = delta.detach()*log_prob_goal
+                loss_goal_policy = -delta.detach()*log_prob_goal
                 # we don't update the goal_decoder because that way we are just training the RNN to produce certain action vectors
                 # after the autoencoder has trained well, then each latent vector represents 1-to-1 a goal
                 # and the action can learn to map to the actions corresponding to that goal
                 # if we kept changing the goal_decoder, then the action decoder may "get confused" as its actual goal is changing even for fixed input latent vector
                 partial_backprop(loss_goal_policy,[])
-                optimizer.step()
+
+            optimizer.step()
 
             previous_lp_value = lp_value
 
