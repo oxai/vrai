@@ -120,7 +120,7 @@ def main(argv):
     for iteration in range(1000000):
         #print(observations)
         if evaluating: #if evaluating we just use the action prediction part of the network
-            print(goal, observations)
+            #print(goal, observations)
             action_parameters,_ = net.predict_action(goal.unsqueeze(0).unsqueeze(0),observations)
             action_parameters = action_parameters[0,0,:]
             #print(action_parameters.shape)
@@ -153,6 +153,7 @@ def main(argv):
                 goal = torch.Tensor(pen_goal)
                 if evaluating:
                     print(results[1])
+                    rewards.append(results[1])
             if rendering:
                 #env.render()
                 render_with_target(env,goal.detach().numpy())
@@ -184,6 +185,11 @@ def main(argv):
                     goals = np.expand_dims(goal,0)
                 else:
                     goals = np.concatenate([goals,np.expand_dims(goal,0)],axis=0)
+        else:
+            if iteration % save_freq == save_freq -1:
+                with open("test_rewards"+experiment_name+".txt","a") as f:
+                    f.write("\n".join([str(r) for r in rewards]))
+                rewards = []
 
 
         # we detach the RNN every so often, to determine how far to backpropagate through time
