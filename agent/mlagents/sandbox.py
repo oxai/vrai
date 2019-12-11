@@ -75,7 +75,7 @@ Once we restart an environment, we can step the environment forward and provide 
 Once this cell is executed, 10 messages will be printed that detail how much reward will be accumulated for the next 10 episodes. The Unity environment will then pause, waiting for further signals telling it what to do next. Thus, not seeing any animation is expected when running this cell.
 '''
 
-for episode in range(10):
+for episode in range(1):
     env.reset()
     step_result = env.get_step_result(group_name)
     done = False
