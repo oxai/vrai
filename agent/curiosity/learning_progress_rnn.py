@@ -82,7 +82,7 @@ class GOALRNN(nn.Module):
         else:
             m = MultivariateNormal(action_means, (action_stds**2+0.001)*torch.eye(self.action_dim))
             actions = m.sample()
-            log_prob_actions = m.log_prob(action_means)
+            log_prob_actions = m.log_prob(actions)
         return actions, log_prob_actions
 
     def init_hidden(self, bs):
