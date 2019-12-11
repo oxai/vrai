@@ -102,4 +102,4 @@ for episode in range(1):
 '''
 When we are finished using an environment, we can close it with the function below.
 '''
-# env.close()
+env.close()
