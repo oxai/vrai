@@ -85,12 +85,15 @@ for episode in range(1):
         if group_spec.is_action_continuous():
             action = np.random.randn(step_result.n_agents(), group_spec.action_size)
 
-        if group_spec.is_action_discrete():
-            branch_size = group_spec.discrete_action_branches
-            action = np.column_stack([np.random.randint(0, branch_size[i], size=(step_result.n_agents())) for i in range(len(branch_size))])
+        # if group_spec.is_action_discrete():
+        #     branch_size = group_spec.discrete_action_branches
+        #     action = np.column_stack([np.random.randint(0, branch_size[i], size=(step_result.n_agents())) for i in range(len(branch_size))])
         env.set_actions(group_name, action)
         env.step()
         step_result = env.get_step_result(group_name)
+        step_result.obs[0].shape
+        # step_result.get_agent_step_result(step_result.agent_id[0])
+        step_result.get_agent_step_result(step_result.agent_id[0])
         episode_rewards += step_result.reward[0]
         done = step_result.done[0]
     print("Total reward this episode: {}".format(episode_rewards))
@@ -99,4 +102,4 @@ for episode in range(1):
 '''
 When we are finished using an environment, we can close it with the function below.
 '''
-env.close()
+# env.close()
