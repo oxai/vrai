@@ -61,11 +61,6 @@ def main(argv):
     from learning_progress_ddpg import GOALRNN
     net = GOALRNN(batch_size, number_layers, observation_dim, action_dim, goal_dim, n_hidden=256)
 
-    # load rnn if saved. TODO: save only weights maybe to avoid bugs after we change architecture..
-    if os.path.isfile("lprnn"+experiment_name+".pt"):
-        temp_net = torch.load("lprnn"+experiment_name+".pt")
-        net.load_state_dict(temp_net.state_dict())
-
     if os.path.isfile("lprnn_weights"+experiment_name+".pt"):
         print("LOADING WEIGHTS")
         net.load_state_dict(torch.load("lprnn_weights"+experiment_name+".pt"))
@@ -82,8 +77,6 @@ def main(argv):
     previous_goal_reward = torch.Tensor([-1.0])
     previous_lp_value = torch.zeros(1)
     learning_progress = torch.zeros(1)
-    #average_reward_estimate = 0
-    average_lp_estimate = 0
 
     #initial run
     action = env.action_space.sample()
@@ -96,8 +89,6 @@ def main(argv):
         net.eval()
     if evaluating or not lp_training:
         pen_goal = results[0]["desired_goal"]
-        #goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
-        #goal = np.reshape(goal.T,(-1))
         goal = torch.Tensor(pen_goal)
     if rendering:
         setup_render(env)
@@ -114,58 +105,40 @@ def main(argv):
             for parameter in part.parameters():
                 parameter.requires_grad = True
 
-    pen_vars_slice = slice(54,61)
-    pen_pos_center = torch.Tensor([1.0,0.90,0.15]).unsqueeze(0).unsqueeze(0)
     print(observations.shape)
     reset_env = False
     for iteration in range(1000000):
-        #print(observations)
         if evaluating: #if evaluating we just use the action prediction part of the network
-            #print(goal, observations)
             action_parameters,_ = net.compute_actions(goal.unsqueeze(0).unsqueeze(0),observations)
             action_parameters = action_parameters[0,0,:]
-            #print(action_parameters.shape)
         else:
             #feed observations to net, get desired goal, actions (and their probabilities), and predicted value of action, and goal
-            actions, goals, values, lp_values = net(observations)
-            values = values - 1 # learn the difference between the value and -1, because at the beginning most values will be close to -1
-            pen_pos = observations[:,:,pen_vars_slice][...,:3]
-            pen_rot = observations[:,:,pen_vars_slice][...,3:]
-            rot_goal = goals[:,:,3:]
-            rel_rot_goal = (rot_goal-pen_rot)*0.1+pen_rot
-            goals = torch.cat([(goals[:,:,:3]-pen_pos)*0.002+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
-            #goal += 0.05*torch.randn_like(goal)
-            goals = Variable(goals.data, requires_grad=True)
+            actions, noisy_actions, goals, noisy_goals, values, lp_values = net(observations)
+            #goals = Variable(goals.data, requires_grad=True)
             if lp_training:
-                action_parameters, goal, value, lp_value = actions[0,0,:], goals[0,0,:], values[0,0,:], lp_values[0,0,:]
+                action_parameters, goal, value, lp_value = noisy_actions[0,0,:], noisy_goals[0,0,:], values[0,0,:], lp_values[0,0,:]
             else: # if we are not training goal policy then ignore the goal policy variables. We'll us the goal provided by openaigym
                 #action_parameters, log_prob_action, _, _, value, lp_value = actions[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
                 pass
 
         action_parameters = action_parameters.detach().numpy()
-        #print(action_parameters)
         #run action using DMP
         for i in range(n_simulation_steps):
-            # print(context.shape)
             action = dmp.action_rollout(None,action_parameters,i)
             results = env.step(action)
             if evaluating or not lp_training:
                 pen_goal = results[0]["desired_goal"]
-                #goal = np.tile(np.expand_dims(pen_goal,0),(n_steps,1))
-                #goal = np.reshape(goal.T,(-1))
                 goal = torch.Tensor(pen_goal)
                 if evaluating:
                     print(results[1])
                     rewards.append(results[1])
             if rendering:
-                #env.render()
                 render_with_target(env,goal.detach().numpy())
             obs = results[0]["observation"]
             done = results[2]
             if done:
                 print("reseting environment")
                 results = env.reset()
-                #print(results)
                 obs = results["observation"]
                 reset_env = True
                 break
@@ -176,7 +149,6 @@ def main(argv):
             # saving rewards, learning progresses, etc
             if iteration % save_freq == save_freq -1:
                 print("Saving stuff")
-                #torch.save(net, "lprnn.pt")
                 torch.save(net.state_dict(), "lprnn_weights"+experiment_name+".pt")
                 with open("rewards"+experiment_name+".txt","a") as f:
                     f.write("\n".join([str(r) for r in rewards]))
@@ -207,20 +179,18 @@ def main(argv):
         if not evaluating: #if not evaluating, then train
             optimizer.zero_grad()
 
-            # train policy to maximize goal reward (which is -goal_loss, which is -|observation-goal|^2) Here we are only looking at pen part of observation
-            #goal_reward = -1*goal_loss(new_observations[0,0,pen_vars_slice],goal)
-            #goal_reward = goal_reward*(goal_reward>-1)
+            pen_vars_slice = slice(54,61)
             goal_reward = env.compute_reward(new_observations[0,0,pen_vars_slice].numpy(), goal.detach().numpy(), None)
             print(new_observations[0,0,pen_vars_slice], goal)
             print("goal_reward",goal_reward)
             rewards.append(goal_reward)
 
             delta = goal_reward - value
-            print("value", value.data.item())
+            print("q-value", value.data.item())
             reward_value_fun = 0.5*delta**2
             partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
 
-            loss_policy = -net.compute_q_value(goals.detach(), observations, actions)
+            loss_policy = -net.compute_q_value(noisy_goals.detach(), observations, actions)
             partial_backprop(loss_policy, [net.q_value_decoder])
 
             learning_progress = torch.abs(delta)
