@@ -67,8 +67,8 @@ def main(argv):
 
     # optimizer and losses
     from torch import optim
-    #optimizer = optim.SGD(net.parameters(), lr=1e-4, momentum=0.9)
-    optimizer = optim.RMSprop(net.parameters())
+    optimizer = optim.SGD(net.parameters(), lr=1e-4, momentum=0.9)
+    #optimizer = optim.RMSprop(net.parameters())
     goal_loss = nn.MSELoss()
     goal_reconstruction_loss = nn.MSELoss()
     action_reconstruction_loss = nn.MSELoss()
@@ -152,9 +152,11 @@ def main(argv):
                 torch.save(net.state_dict(), "lprnn_weights"+experiment_name+".pt")
                 with open("rewards"+experiment_name+".txt","a") as f:
                     f.write("\n".join([str(r) for r in rewards]))
+                    f.write("\n")
                 rewards = []
                 with open("learning_progresses"+experiment_name+".txt","a") as f:
                     f.write("\n".join([str(lp) for lp in lps]))
+                    f.write("\n")
                 lps = []
 
             if save_goals:
