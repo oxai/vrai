@@ -39,14 +39,27 @@ class GOALRNN(nn.Module):
         self.qlp_decoder = MLP(observation_dim+goal_dim, 1)
 
     def forward(self, observations):
+        pen_vars_slice = slice(54,61)
+        pen_pos_center = torch.Tensor([1.0,0.90,0.15]).unsqueeze(0).unsqueeze(0)
         goals = self.goal_decoder(observations)
-        actions = self.compute_actions(goals, observations)
-        values = self.compute_q_value(goals, observations, actions)
-        lp_values = self.compute_qlp(observations, goals)
-        return actions, goals, values, lp_values
+        goals = 100*torch.tanh(goals*0.001)
+        pen_pos = observations[:,:,pen_vars_slice][...,:3]
+        pen_rot = observations[:,:,pen_vars_slice][...,3:]
+        rot_goal = goals[:,:,3:]
+        rel_rot_goal = (rot_goal-pen_rot)*0.1+pen_rot
+        goals = torch.cat([(goals[:,:,:3]-pen_pos)*0.002+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
+
+        noisy_goals = goals + 0.01*torch.randn_like(goals)
+
+        actions = self.compute_actions(noisy_goals, observations)
+        noisy_actions = actions + 0.01*torch.randn_like(actions)
+        values = self.compute_q_value(goals, observations, noisy_actions)
+        lp_values = self.compute_qlp(observations, noisy_goals)
+        return actions, noisy_actions, goals, noisy_goals, values, lp_values
 
     def compute_q_value(self, goals, observations, actions):
         values = self.q_value_decoder(torch.cat([goals,observations,actions], dim=2))
+        values = values - 1 # learn the difference between the value and -1, because at the beginning most values will be close to -1
         return values
 
     def compute_qlp(self, observations, goals):
