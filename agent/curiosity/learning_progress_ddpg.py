@@ -47,7 +47,7 @@ class GOALRNN(nn.Module):
         #print(observations,noisy_goals)
         actions = self.compute_actions(noisy_goals, observations)
         #print(actions)
-        if np.random.rand() < 0.1:
+        if np.random.rand() < 0.2:
             noisy_actions = actions + 5*torch.randn_like(actions)
         else:
             noisy_actions = actions + 0.1*torch.randn_like(actions)
@@ -64,7 +64,7 @@ class GOALRNN(nn.Module):
         pen_rot = observations[:,:,pen_vars_slice][...,3:]
         rot_goal = goals[:,:,3:]
         rel_rot_goal = (rot_goal-pen_rot)*0.1+pen_rot
-        goals = torch.cat([(goals[:,:,:3]-pen_pos)*0.002+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
+        goals = torch.cat([(goals[:,:,:3]-pen_pos)*0.01+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
         return goals
     
     def compute_noisy_goals(self,observations):
