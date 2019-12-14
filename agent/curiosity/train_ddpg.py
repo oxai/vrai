@@ -189,17 +189,21 @@ def main(argv):
             print("sparse_goal_reward",sparse_goal_reward)
             rewards.append(sparse_goal_reward)
 
+            total_delta = 0
             for i in range(5):
                 optimizer.zero_grad()
                 value = net.compute_q_value(noisy_goals, observations, noisy_actions)
                 delta = goal_reward - value
+                total_delta += torch.abs(delta)
                 reward_value_fun = 0.5*delta**2
                 partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
-
-                new_actions = net.compute_actions(noisy_goals.detach(),observations)
-                loss_policy = -net.compute_q_value(noisy_goals.detach(), observations, new_actions)
-                partial_backprop(loss_policy, [net.q_value_decoder])
                 optimizer.step()
+
+            optimizer.zero_grad()
+            new_actions = net.compute_actions(noisy_goals.detach(),observations)
+            loss_policy = -net.compute_q_value(noisy_goals.detach(), observations, new_actions)
+            partial_backprop(loss_policy, [net.q_value_decoder])
+            optimizer.step()
 
             new_actions = net.compute_actions(noisy_goals,observations)
             print("q-value", value.data.item())
@@ -208,7 +212,8 @@ def main(argv):
             action_difference = torch.norm(new_actions-actions)/torch.norm(actions)
             print("action difference", action_difference)
             #learning_progress = torch.abs(delta) + action_difference
-            learning_progress = action_difference
+            #learning_progress = torch.max(total_delta,action_difference)
+            learning_progress = 0.1*total_delta+action_difference
             print("learning progress", learning_progress.data.item())
             lps.append(learning_progress.data.item())
 
@@ -221,10 +226,12 @@ def main(argv):
 
                     loss_lp_value_fun = 0.5*delta**2
                     partial_backprop(loss_lp_value_fun, [net.goal_decoder])
-
-                    loss_goal_policy = -net.compute_qlp(observations, net.compute_goals(observations))
-                    partial_backprop(loss_goal_policy, [net.qlp_decoder])
                     optimizer.step()
+
+                optimizer.zero_grad()
+                loss_goal_policy = -net.compute_qlp(observations, net.compute_goals(observations))
+                partial_backprop(loss_goal_policy, [net.qlp_decoder])
+                optimizer.step()
 
             #print("lp value", previous_lp_value.data.item())
 
