@@ -13,3 +13,6 @@ agent/curiosity/rewards*.txt
 agent/curiosity/learning_progresses*.txt
 agent/curiosity/lprnn*.pt
 environment/HideAndSeekv12/Library/PackageCache
+**/*UnityTempFile-*
+../../environment/HideAndSeekv12/Library/metadata/*
+../../environment/HideAndSeekv12/Library/*

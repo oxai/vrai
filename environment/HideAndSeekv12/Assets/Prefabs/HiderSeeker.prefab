@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
   m_BehaviorType: 0
-  m_BehaviorName: Seeker
+  m_BehaviorName: HiderSeeker
 --- !u!114 &1563603403485714469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,11 +229,10 @@ MonoBehaviour:
     maxStep: 0
     resetOnDone: 1
     onDemandDecision: 0
-    numberOfActionsBetweenDecisions: 1
+    numberOfActionsBetweenDecisions: 10
   VectorActs:
   - 0
   - 0
   - 0
   Inputs: []
   Seeker: 1
-  Enemy: {fileID: 0}

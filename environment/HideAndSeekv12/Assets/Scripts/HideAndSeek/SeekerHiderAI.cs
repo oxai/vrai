@@ -7,17 +7,27 @@ public class SeekerHiderAI : Agent{
     Rigidbody rb; 
     public List<float> VectorActs = new List<float> {0,0,0}; // Actions output by NN 
     public List<float> Inputs = new List<float>(); // Debugging variables to mointor inputs to NN I think
-    public bool Seeker = true; // Determine whether agent is th seeker 
+    public bool Seeker = true; // Determine whether agent is the seeker 
     bool Seeking = false; // Whether game is in seeking mode 
-    public SeekerHiderAI Enemy; // Refernce to your enemy 
     float Speed = 10; // Current speed 
+    bool hiderLearning = true; 
+    bool seekerLearning = true;
 
     // Start is called before the first frame update
     void Start(){
-        if (Seeker) // Seeker moves faster? 
+        if (Seeker) {// Seeker moves faster? 
             Speed = 12;
-        else
+        } else {
             Speed = 10;
+            // Sometimes one agent learns, sometimes the other learns. Hmm, I guess this could help give either hider and seekers, an advantage
+            // if (Random.value < 0.5) {
+            //     hiderLearning = false;
+            //     seekerLearning = true;
+            // } else {
+            //     hiderLearning = true;
+            //     seekerLearning = false;
+            // }
+        }
         rb = GetComponent<Rigidbody>(); 
         for (int i = 0; i<20; i++) { // Set all inputs to zero 
             Inputs.Add(0);
@@ -31,7 +41,9 @@ public class SeekerHiderAI : Agent{
         //Inputs[2] = transform.localPosition.x / 50f;
         //Inputs[3] = transform.localPosition.z / 50f;
         //Inputs[4] = (transform.eulerAngles.y > 180 ? transform.eulerAngles.y - 360f : transform.eulerAngles.y)/180f;
-        AddVectorObs(Seeker); //Input to indicate to neural whether this is hider or seeker
+        float seekerIndicator = 0;
+        if (Seeker) seekerIndicator = 1f;
+        AddVectorObs(seekerIndicator); //Input to indicate to neural whether this is hider or seeker
         if (!Seeking&& GetStepCount()<240) { // While not in seeking mode, set 0th index to count-down  
             Inputs[0] = (240 - GetStepCount()) / 240f;
             AddVectorObs((240 - GetStepCount()) / 240f);
@@ -95,26 +107,25 @@ public class SeekerHiderAI : Agent{
     }
 
     public override void AgentAction(float[] vectorAction) {
-        if (Seeker && !Seeking) // Do nothing when not seeking as the seeker
-            return;
-        for (int i = 0; i<vectorAction.Length; i++) {
-            VectorActs[i] = Mathf.Clamp(vectorAction[i],-1.0f,1.0f);
-        }
         if (Seeking) { // In seeking mode 
-            if (Seeker) { 
+            if (Seeker && seekerLearning) { 
                 AddReward(-0.002f); // Negative survival 
-            } else {
+            } else if (hiderLearning) {
                 AddReward(0.002f); // Positive survival 
             }
         } else {
             if (GetStepCount() >= 240) {   // Wait until seeking mode 
                 Seeking = true;
-                Enemy.Seeking = true;
             }
         }
+        if (Seeker && !Seeking) // Do nothing when not seeking as the seeker
+            return;
+        for (int i = 0; i<vectorAction.Length; i++) {
+            VectorActs[i] = Mathf.Clamp(vectorAction[i],-1.0f,1.0f);
+        }
         if (GetStepCount()>1500) { // Stop game after 1500 steps 
-            if (Seeker) AddReward(-1f);
-            else AddReward(-1f);
+            if (Seeker && seekerLearning) AddReward(-1f);
+            else if (hiderLearning) AddReward(1f);
             Done();
         }
     }
