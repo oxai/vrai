@@ -14,3 +14,5 @@ where `/usr/local/lib/python3.6/dist-packages/mlagents/` may be different in you
 I am using the unreleased master-branch version of mlagents_envs because the documentation that is currently being written is for this version, plus it has a new neat feature (side_channels) which allow to set extra information to/from Unity (other than Observations/Actions).
 
 See new jupyter notebook [here](https://github.com/Unity-Technologies/ml-agents/blob/master/notebooks/getting-started.ipynb), the new API documentation [here](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Python-API.md). There's also a Gym wrapper [here](https://github.com/Unity-Technologies/ml-agents/blob/master/gym-unity/README.md), but I haven't tested it.
+
+PS also make sure to use Python 3.6 as Tensorflow doesn't work or work well with 3.7 or 3.8.
