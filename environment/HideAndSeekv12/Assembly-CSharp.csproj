@@ -111,12 +111,12 @@
      <Compile Include="Assets\ML-Agents\Scripts\Timer.cs" />
      <Compile Include="Assets\ML-Agents\Scripts\UnityAgentsException.cs" />
      <Compile Include="Assets\ML-Agents\Scripts\Utilities.cs" />
-     <Compile Include="Assets\Scripts\ArchAcademy.cs" />
-     <Compile Include="Assets\Scripts\ArcherAI.cs" />
-     <Compile Include="Assets\Scripts\ArrowLogic.cs" />
+     <Compile Include="Assets\Scripts\Archer\ArchAcademy.cs" />
+     <Compile Include="Assets\Scripts\Archer\ArcherAI.cs" />
+     <Compile Include="Assets\Scripts\Archer\ArrowLogic.cs" />
+     <Compile Include="Assets\Scripts\Archer\RandomBlocks.cs" />
      <Compile Include="Assets\Scripts\HideAndSeek\HideAndSeekAcademy.cs" />
      <Compile Include="Assets\Scripts\HideAndSeek\SeekerHiderAI.cs" />
-     <Compile Include="Assets\Scripts\RandomBlocks.cs" />
      <None Include="Assets\ML-Agents\Plugins\ProtoBuffer\link.xml" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>/home/guillefix/code/ai/vrai/environment/HideAndSeekv12/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
