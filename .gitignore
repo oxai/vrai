@@ -20,3 +20,4 @@ agent/mlagents/summaries/*
 agent/mlagents/models/*
 ../../environment/HideAndSeekv12/Library/ScriptAssemblies/*
 ../../environment/HideAndSeekv12/Library/PlayerDataCache/*
+**/*.x86_64
