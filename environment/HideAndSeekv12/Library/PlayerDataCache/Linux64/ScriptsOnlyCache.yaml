@@ -2,9 +2,9 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - HideAndSeekAcademy
+    - HiderSeekerAgent
     - MLAgents.BehaviorParameters
     - RandomBlocks
-    - SeekerHiderAI
     Unity.2D.Tilemap.Editor.dll:
     - UnityEditor.Tilemaps.GridPaintingState
     - UnityEditor.Tilemaps.GridPaletteBrushes
@@ -70,8 +70,6 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10224}
     - Class: 114
-      Script: {instanceID: 10876}
-    - Class: 114
       Script: {instanceID: 10964}
     - Class: 114
       Script: {instanceID: 11430}
@@ -79,6 +77,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 11432}
     - Class: 114
       Script: {instanceID: 11676}
+    - Class: 114
+      Script: {instanceID: 17988}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 135
@@ -732,7 +732,13 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 3e106ea0eae8c2b163b340c95c20170c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: HiderSeekerAgent
   platform: 24
   scenePathNames:
   - Assets/Scenes/HideAndSeekSimple.unity
-  playerPath: /home/guillefix/code/ai/vrai/environment/HideAndSeekv12/hide_and_seek_built.x86_64
+  playerPath: /home/guillefix/code/ai/vrai/environment/HideAndSeekv12/hide_and_seek_built3.x86_64

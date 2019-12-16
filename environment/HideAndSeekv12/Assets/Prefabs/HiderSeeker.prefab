@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 1563603403485714464}
   - component: {fileID: 1563603403485714471}
   - component: {fileID: 1563603403485714468}
-  - component: {fileID: 1563603403485714469}
+  - component: {fileID: 1097325101327069041}
   m_Layer: 0
   m_Name: HiderSeeker
   m_TagString: agent
@@ -204,16 +204,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    vectorObservationSize: 22
+    vectorObservationSize: 21
     numStackedVectorObservations: 1
-    vectorActionSize: 03000000
+    vectorActionSize: 06000000
     vectorActionDescriptions: []
     vectorActionSpaceType: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: HiderSeeker
---- !u!114 &1563603403485714469
+--- !u!114 &1097325101327069041
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -222,14 +222,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1563603403485714494}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4902f777925609d4ca1c3f7c60c20ef5, type: 3}
+  m_Script: {fileID: 11500000, guid: a0a2631297b06dd10a0105117dfa7f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   agentParameters:
     maxStep: 0
     resetOnDone: 1
     onDemandDecision: 0
-    numberOfActionsBetweenDecisions: 10
+    numberOfActionsBetweenDecisions: 1
   VectorActs:
   - 0
   - 0

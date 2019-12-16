@@ -16,3 +16,7 @@ environment/HideAndSeekv12/Library/PackageCache
 **/*UnityTempFile-*
 ../../environment/HideAndSeekv12/Library/metadata/*
 ../../environment/HideAndSeekv12/Library/*
+agent/mlagents/summaries/*
+agent/mlagents/models/*
+../../environment/HideAndSeekv12/Library/ScriptAssemblies/*
+../../environment/HideAndSeekv12/Library/PlayerDataCache/*

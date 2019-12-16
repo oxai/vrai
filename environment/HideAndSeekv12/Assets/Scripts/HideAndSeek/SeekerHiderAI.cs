@@ -41,9 +41,15 @@ public class SeekerHiderAI : Agent{
         //Inputs[2] = transform.localPosition.x / 50f;
         //Inputs[3] = transform.localPosition.z / 50f;
         //Inputs[4] = (transform.eulerAngles.y > 180 ? transform.eulerAngles.y - 360f : transform.eulerAngles.y)/180f;
-        float seekerIndicator = 0;
-        if (Seeker) seekerIndicator = 1f;
-        AddVectorObs(seekerIndicator); //Input to indicate to neural whether this is hider or seeker
+        // float seekerIndicator = 0;
+        // if (Seeker) seekerIndicator = 1f;
+        // If seeker we add 0 elements to first half
+        if (Seeker) {
+            for (int i = 0; i< 21; i++) {
+                AddVectorObs(0);
+            }
+        }
+        // AddVectorObs(seekerIndicator); //Input to indicate to neural whether this is hider or seeker
         if (!Seeking&& GetStepCount()<240) { // While not in seeking mode, set 0th index to count-down  
             Inputs[0] = (240 - GetStepCount()) / 240f;
             AddVectorObs((240 - GetStepCount()) / 240f);
@@ -86,6 +92,12 @@ public class SeekerHiderAI : Agent{
             AddVectorObs(Wall);  // If wall found 
             AddVectorObs(HiderOrSeeker); // If hider or seeker found 
             AddVectorObs(Distance); // Distance to object
+        }
+        // If not seeker we add zero elements to second half
+        if (!Seeker) {
+            for (int i = 0; i< 21; i++) {
+                AddVectorObs(0);
+            }
         }
     }
 
