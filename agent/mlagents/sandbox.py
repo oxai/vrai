@@ -7,7 +7,7 @@ sys.version
 from mlagents.envs.environment import UnityEnvironment
 import mlagents
 # mlagents.__spec__
-# mlagents.__path__
+mlagents.__path__
 from mlagents import envs
 import mlagents.envs.side_channel
 from mlagents.envs.side_channel.engine_configuration_channel import EngineConfig, EngineConfigurationChannel
