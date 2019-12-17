@@ -182,30 +182,41 @@ def main(argv):
         if not evaluating: #if not evaluating, then train
 
             pen_vars_slice = slice(54,61)
-            sparse_goal_reward = env.compute_reward(new_observations[0,0,pen_vars_slice].numpy(), goal.detach().numpy(), None)
-            goal_reward = -torch.norm(new_observations[0,0,pen_vars_slice] - goal.detach())**2
+            hindsight_goal = new_observations[0,0,pen_vars_slice]
+            hindsight_goals = hindsight_goal.unsqueeze(0).unsqueeze(0)
+            sparse_goal_reward = env.compute_reward(hindsight_goal.numpy(), goal.detach().numpy(), None)
+            goal_reward = torch.clamp(-torch.norm(hindsight_goal - goal.detach()), -1, 1)
             print(new_observations[0,0,pen_vars_slice], goal)
             print("goal_reward",goal_reward)
             print("sparse_goal_reward",sparse_goal_reward)
             rewards.append(sparse_goal_reward)
 
             total_delta = 0
-            for i in range(5):
-                optimizer.zero_grad()
-                value = net.compute_q_value(noisy_goals, observations, noisy_actions)
-                delta = goal_reward - value
-                total_delta += torch.abs(delta)
-                reward_value_fun = 0.5*delta**2
-                partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
-                optimizer.step()
 
             optimizer.zero_grad()
-            new_actions = net.compute_actions(noisy_goals.detach(),observations)
-            loss_policy = -net.compute_q_value(noisy_goals.detach(), observations, new_actions)
+            value = net.compute_q_value(noisy_goals, observations, noisy_actions)
+            delta = goal_reward - value
+            total_delta += delta
+            reward_value_fun = 0.5*delta**2
+            partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
+            optimizer.step()
+
+            goal_reward = 0.0
+            optimizer.zero_grad()
+            value = net.compute_q_value(hindsight_goals, observations, noisy_actions)
+            delta = goal_reward - value
+            total_delta += delta
+            reward_value_fun = 0.5*delta**2
+            partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
+            optimizer.step()
+
+            optimizer.zero_grad()
+            actions = net.compute_actions(hindsight_goals.detach(),observations)
+            loss_policy = -net.compute_q_value(hindsight_goals.detach(), observations, new_actions)
             partial_backprop(loss_policy, [net.q_value_decoder])
             optimizer.step()
 
-            new_actions = net.compute_actions(noisy_goals,observations)
+            new_actions = net.compute_actions(hindsight_goals,observations)
             print("q-value", value.data.item())
 
 
@@ -213,14 +224,14 @@ def main(argv):
             print("action difference", action_difference)
             #learning_progress = torch.abs(delta) + action_difference
             #learning_progress = torch.max(total_delta,action_difference)
-            learning_progress = 0.1*total_delta+action_difference
+            learning_progress = 0.1*torch.abs(total_delta)+2*action_difference
             print("learning progress", learning_progress.data.item())
             lps.append(learning_progress.data.item())
 
             if iteration>0 and lp_training: #only do this once we have a previous_lp_value
                 for i in range(5):
                     optimizer.zero_grad()
-                    previous_lp_value = net.compute_qlp(observations, noisy_goals)
+                    previous_lp_value = net.compute_qlp(observations, hindsight_goals)
                     delta = learning_progress.detach() + gamma*net.compute_qlp(new_observations, net.compute_noisy_goals(new_observations)).detach() - previous_lp_value
                     #print(delta, learning_progress, lp_value, previous_lp_value)
 
