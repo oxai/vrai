@@ -1,0 +1,2 @@
+#!/bin/bash
+mlagents-learn trainer_config.yaml --run-id=hs_simple --train
