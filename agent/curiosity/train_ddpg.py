@@ -37,7 +37,7 @@ def main(argv):
     import gym
     env=gym.make("HandManipulatePen-v0")
     results = env.reset();
-    env.observation_space["observation"].shape[0]
+    #env.observation_space["observation"].shape[0]
     observation_dim = env.observation_space["observation"].shape[0]
     n_actuators = env.action_space.shape[0]
     n_dmp_basis = 10
@@ -71,12 +71,8 @@ def main(argv):
     optimizer = optim.SGD(net.parameters(), lr=1e-4, momentum=0.9)
     #optimizer = optim.Adam(net.parameters())
     #optimizer = optim.RMSprop(net.parameters())
-    goal_loss = nn.MSELoss()
-    goal_reconstruction_loss = nn.MSELoss()
-    action_reconstruction_loss = nn.MSELoss()
 
     # initial values of several variables
-    previous_goal_reward = torch.Tensor([-1.0])
     learning_progress = torch.zeros(1)
 
     #initial run
@@ -108,22 +104,22 @@ def main(argv):
 
     print(observations.shape)
     reset_env = False
+    '''TRAINING LOOP'''
+    # using DDPG on-olicy (without memory buffer for now. TODO: have memory buffer
     for iteration in range(1000000):
         if evaluating: #if evaluating we just use the action prediction part of the network
             action_parameters = net.compute_actions(goal.unsqueeze(0).unsqueeze(0),observations)
             action_parameters = action_parameters[0,0,:]
         else:
-            #feed observations to net, get desired goal, actions (and their probabilities), and predicted value of action, and goal
+            #feed observations to net, get desired goal, actions, and predicted value of action, and goal
             actions, noisy_actions, noisy_goals = net(observations)
             #goals = Variable(goals.data, requires_grad=True)
             if lp_training:
                 action_parameters, goal = noisy_actions[0,0,:], noisy_goals[0,0,:]
             else: # if we are not training goal policy then ignore the goal policy variables. We'll us the goal provided by openaigym
-                #action_parameters, log_prob_action, _, _, value, lp_value = actions[0,0,:], log_prob_action[0,0], goal[0,0,:], log_prob_goal[0,0], value[0,0,:], lp_value[0,0,:]
-                pass
+                action_parameters = noisy_actions[0,0,:]
 
         action_parameters = action_parameters.detach().numpy()
-        #print(action_parameters)
         #run action using DMP
         for i in range(n_simulation_steps):
             action = dmp.action_rollout(None,action_parameters,i)
@@ -193,6 +189,7 @@ def main(argv):
 
             total_delta = 0
 
+            # update q value network on desired goal
             optimizer.zero_grad()
             value = net.compute_q_value(noisy_goals, observations, noisy_actions)
             delta = goal_reward - value
@@ -201,6 +198,8 @@ def main(argv):
             partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
             optimizer.step()
 
+            # update q value network on hindsight goal
+            # by definition we have achieved the hindsight goal, so reward is 0.0 (achieved goal)
             goal_reward = 0.0
             optimizer.zero_grad()
             value = net.compute_q_value(hindsight_goals, observations, noisy_actions)
@@ -210,17 +209,25 @@ def main(argv):
             partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
             optimizer.step()
 
+            # update policy to achieve actions with higher q value
+            # this is good to make sure we learn about actions for goals which are achievable
             optimizer.zero_grad()
-            actions = net.compute_actions(hindsight_goals.detach(),observations)
-            loss_policy = -net.compute_q_value(hindsight_goals.detach(), observations, new_actions)
+            # find the actions the policy predicts for hindsight goal
+            hindsight_actions = net.compute_actions(hindsight_goals.detach(),observations)
+            # TODO: Alternative to try: because in this environment having several actions that lead to same outcome is probably not very likely, then we can train the action decoder directly too on hindsight goal
+            # without  any problem for intrisic motivation I think
+            #action_reconstruction_loss = 0.5*(actions.detach() - hindsight_actions)**2
+            loss_policy = -net.compute_q_value(hindsight_goals.detach(), observations, hindsight_actions)
             partial_backprop(loss_policy, [net.q_value_decoder])
             optimizer.step()
 
+
+            '''COMPUTE LEARNING PROGRESS'''
             new_actions = net.compute_actions(hindsight_goals,observations)
             print("q-value", value.data.item())
 
 
-            action_difference = torch.norm(new_actions-actions)/torch.norm(actions)
+            action_difference = torch.norm(new_actions-hindsight_actions)/torch.norm(actions)
             print("action difference", action_difference)
             #learning_progress = torch.abs(delta) + action_difference
             #learning_progress = torch.max(total_delta,action_difference)
@@ -228,7 +235,9 @@ def main(argv):
             print("learning progress", learning_progress.data.item())
             lps.append(learning_progress.data.item())
 
+            '''TRAIN GOAL POLICY'''
             if iteration>0 and lp_training: #only do this once we have a previous_lp_value
+                # im doing 5 training iterations to make sure goal policy updates kinda quick, and is able to adapt to the learning of the agent
                 for i in range(5):
                     optimizer.zero_grad()
                     previous_lp_value = net.compute_qlp(observations, hindsight_goals)
