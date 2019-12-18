@@ -50,7 +50,7 @@ class GOALRNN(nn.Module):
         if np.random.rand() < 0.2:
             noisy_actions = actions + 5*torch.randn_like(actions)
         else:
-            noisy_actions = actions + torch.randn_like(actions)
+            noisy_actions = actions + 0.1*torch.randn_like(actions)
         #noisy_actions = actions
         #values = self.compute_q_value(noisy_goals, observations, noisy_actions)
         #lp_values = self.compute_qlp(observations, noisy_goals)
@@ -89,5 +89,6 @@ class GOALRNN(nn.Module):
 
     def compute_actions(self, goals, observations):
         actions = self.action_decoder(torch.cat([goals, observations], dim=2))
+        actions = torch.tanh(actions)
         #print(actions)
         return actions
