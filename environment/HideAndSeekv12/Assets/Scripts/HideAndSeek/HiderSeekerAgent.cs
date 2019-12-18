@@ -12,9 +12,17 @@ public class HiderSeekerAgent : Agent{
     float Speed = 10; // Current speed 
     bool hiderLearning = true; 
     bool seekerLearning = true;
+    HideAndSeekAcademy m_Academy;
+    float seekerFloat;
 
     // Start is called before the first frame update
     void Start(){
+        m_Academy = FindObjectOfType<HideAndSeekAcademy>();
+        if (Seeker) seekerFloat = 1f;
+        else seekerFloat = 0f;
+        seekerFloat = m_Academy.FloatProperties.GetPropertyWithDefault("seeker",seekerFloat);
+        if (seekerFloat == 1f) Seeker = true;
+        else if (seekerFloat == 0f) Seeker = false;
         if (Seeker) {// Seeker moves faster? 
             Speed = 12;
         } else {
@@ -88,7 +96,6 @@ public class HiderSeekerAgent : Agent{
             AddVectorObs(HiderOrSeeker); // If hider or seeker found 
             AddVectorObs(Distance); // Distance to object
         }
-        // If not seeker we add zero elements to second half
     }
 
     public override void AgentReset() { // End of episode 
@@ -122,15 +129,20 @@ public class HiderSeekerAgent : Agent{
         }
         if (Seeker && !Seeking) // Do nothing when not seeking as the seeker
             return;
-        if (Seeker) {
-            for (int i = 0; i<vectorAction.Length/2; i++) {
-                VectorActs[i] = Mathf.Clamp(vectorAction[i],-1.0f,1.0f);
-            }
-        } else {
-            for (int i = vectorAction.Length/2; i<vectorAction.Length; i++) {
-                VectorActs[i-vectorAction.Length/2] = Mathf.Clamp(vectorAction[i],-1.0f,1.0f);
-            }
+        for (int i = 0; i<vectorAction.Length/2; i++) {
+            VectorActs[i] = Mathf.Clamp(vectorAction[i],-1.0f,1.0f);
         }
+        
+        // if (Seeker) {
+        //     for (int i = 0; i<vectorAction.Length/2; i++) {
+        //         VectorActs[i] = Mathf.Clamp(vectorAction[i],-1.0f,1.0f);
+        //     }
+        // } else {
+        //     for (int i = vectorAction.Length/2; i<vectorAction.Length; i++) {
+        //         VectorActs[i-vectorAction.Length/2] = Mathf.Clamp(vectorAction[i],-1.0f,1.0f);
+        //     }
+        // }
+        
         if (GetStepCount()>1500) { // Stop game after 1500 steps 
             if (Seeker && seekerLearning) AddReward(-1f);
             else if (hiderLearning) AddReward(1f);

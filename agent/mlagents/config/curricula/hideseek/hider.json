@@ -1,0 +1,10 @@
+{
+    "measure" : "progress",
+    "thresholds" : [0.1],
+    "min_lesson_length" : 100,
+    "signal_smoothing" : true,
+    "parameters" :
+    {
+        "seeker" : [1.0,0.0]
+    }
+}

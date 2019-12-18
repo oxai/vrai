@@ -1,6 +1,10 @@
 #!/bin/bash
 #mlagents-learn trainer_config.yaml --run-id=hs_simple --train
 #mlagents-learn trainer_config.yaml --env=../../environment/HideAndSeekv12/hide_and_seek_built1.x86_64 --run-id=hs_simple1 --train
-#mlagents-learn trainer_config.yaml --env=../../environment/HideAndSeekv12/hide_and_seek_built2.x86_64 --run-id=hs_simple2 --train --base-port 5006
-mlagents-learn trainer_config.yaml --env=../../environment/HideAndSeekv12/hide_and_seek_built3.x86_64 --run-id=hs_simple3b --train
+#mlagents-learn trainer_config.yaml --env=../../environment/HideAndSeekv12/hide_and_seek_built2.x86_64 --run-id=hs_simple2 --train --base-port 5006 --load
+#mlagents-learn trainer_config.yaml --env=../../environment/HideAndSeekv12/hide_and_seek_built3.x86_64 --run-id=hs_simple3 --train --load
+#mlagents-learn trainer_config.yaml --env=../../environment/HideAndSeekv12/hide_and_seek_built_hetero.x86_64 --run-id=hs_hetero --train #--load
+rm -r summaries/test*
+rm -r models/test*
+mlagents-learn trainer_config.yaml --env=../../environment/HideAndSeekv12/hide_and_seek_built_curriculum.x86_64 --num-envs=8 --curriculum=config/curricula/hideseek/ --run-id=test --train #--load
 #tensorboard --logdir=summaries --port 6006

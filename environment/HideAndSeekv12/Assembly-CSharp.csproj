@@ -107,6 +107,10 @@
      <Compile Include="Assets\ML-Agents\Scripts\Sensor\StackingSensor.cs" />
      <Compile Include="Assets\ML-Agents\Scripts\Sensor\VectorSensor.cs" />
      <Compile Include="Assets\ML-Agents\Scripts\Sensor\WriteAdapter.cs" />
+     <Compile Include="Assets\ML-Agents\Scripts\SideChannel\EngineConfigurationChannel.cs" />
+     <Compile Include="Assets\ML-Agents\Scripts\SideChannel\FloatPropertiesChannel.cs" />
+     <Compile Include="Assets\ML-Agents\Scripts\SideChannel\RawBytesChannel.cs" />
+     <Compile Include="Assets\ML-Agents\Scripts\SideChannel\SideChannel.cs" />
      <Compile Include="Assets\ML-Agents\Scripts\Startup.cs" />
      <Compile Include="Assets\ML-Agents\Scripts\Timer.cs" />
      <Compile Include="Assets\ML-Agents\Scripts\UnityAgentsException.cs" />

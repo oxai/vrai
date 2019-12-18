@@ -774,12 +774,17 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 320d64f090c14c602804f88c760b8032, type: 2}
-    - target: {fileID: 1563603403485714469, guid: 2c84645155d685a38b3540f62f3b80a7,
+    - target: {fileID: 1563603403485714468, guid: 2c84645155d685a38b3540f62f3b80a7,
+        type: 3}
+      propertyPath: m_BehaviorName
+      value: Hider
+      objectReference: {fileID: 0}
+    - target: {fileID: 1097325101327069041, guid: 2c84645155d685a38b3540f62f3b80a7,
         type: 3}
       propertyPath: Seeker
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1097325101327069041, guid: 2c84645155d685a38b3540f62f3b80a7,
+    - target: {fileID: 1563603403485714469, guid: 2c84645155d685a38b3540f62f3b80a7,
         type: 3}
       propertyPath: Seeker
       value: 0
@@ -864,6 +869,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 7cfb9846ab3e4e7ef86cdc19d8b4bf73, type: 2}
+    - target: {fileID: 1563603403485714468, guid: 2c84645155d685a38b3540f62f3b80a7,
+        type: 3}
+      propertyPath: m_BehaviorName
+      value: Seeker
+      objectReference: {fileID: 0}
     - target: {fileID: 1563603403485714469, guid: 2c84645155d685a38b3540f62f3b80a7,
         type: 3}
       propertyPath: Seeker
