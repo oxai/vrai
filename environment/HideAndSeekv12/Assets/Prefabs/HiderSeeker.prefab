@@ -230,10 +230,11 @@ MonoBehaviour:
     maxStep: 0
     resetOnDone: 1
     onDemandDecision: 0
-    numberOfActionsBetweenDecisions: 1
+    numberOfActionsBetweenDecisions: 10
   VectorActs:
   - 0
   - 0
   - 0
   Inputs: []
   Seeker: 1
+  Enemy: {fileID: 0}

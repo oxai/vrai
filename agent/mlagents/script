@@ -1,4 +1,4 @@
 #!/bin/bash
 #mlagents-learn trainer_config.yaml --run-id=hs_simple --train
 #mlagents-learn trainer_config.yaml --env=../../environment/HideAndSeekv12/hide_and_seek_built_hetero.x86_64 --curriculum=config/curricula/hideseek --run-id=curriculum --train
-mlagents-learn trainer_config.yaml --curriculum=config/curricula/hideseek --run-id=curriculum --train $@
+mlagents-learn trainer_config.yaml --curriculum=config/curricula/hideseek --run-id=uwu --train $@

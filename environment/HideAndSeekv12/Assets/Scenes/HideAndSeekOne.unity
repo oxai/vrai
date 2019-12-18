@@ -405,20 +405,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42544e9ce91e61241abc5e682b7a68dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TrainingConfiguration:
-    width: 1280
-    height: 720
-    qualityLevel: 0
-    timeScale: 60
-    targetFrameRate: 30
-  m_InferenceConfiguration:
-    width: 1280
-    height: 720
-    qualityLevel: 5
-    timeScale: 1
-    targetFrameRate: 60
-  resetParameters:
-    m_ResetParameters: []
 --- !u!1001 &685774577
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -899,6 +885,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5395323464312672176, guid: 59cb328641d03324bbc07957877d129f,
+        type: 3}
+      propertyPath: agentParameters.numberOfActionsBetweenDecisions
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59cb328641d03324bbc07957877d129f, type: 3}

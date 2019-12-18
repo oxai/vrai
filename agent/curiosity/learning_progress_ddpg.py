@@ -48,7 +48,7 @@ class GOALRNN(nn.Module):
         actions = self.compute_actions(noisy_goals, observations)
         #print(actions)
         if np.random.rand() < 0.2:
-            noisy_actions = actions + 2*torch.randn_like(actions)
+            noisy_actions = actions + 5*torch.randn_like(actions)
         else:
             noisy_actions = actions + torch.randn_like(actions)
         #noisy_actions = actions

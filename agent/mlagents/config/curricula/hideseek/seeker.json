@@ -1,6 +1,6 @@
 {
     "measure" : "progress",
-    "thresholds" : [0.1],
+    "thresholds" : [0.0005],
     "min_lesson_length" : 100,
     "signal_smoothing" : true,
     "parameters" :

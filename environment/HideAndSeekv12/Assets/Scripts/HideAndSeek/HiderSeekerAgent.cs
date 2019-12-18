@@ -75,7 +75,7 @@ public class HiderSeekerAgent : Agent{
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.TransformDirection(PolarToCartesian(142, 70 + i * 10)), out hit, 142f)) {
                 if (hit.transform.tag == "agent") {
-                    Debug.Log("Saw enemy");
+                    // Debug.Log("Saw enemy");
                     HiderOrSeeker = 1;
                     sawEnemy = true;
                 } else {
@@ -107,6 +107,7 @@ public class HiderSeekerAgent : Agent{
         sawEnemy = false;
 
         seekerFloat = m_Academy.FloatProperties.GetPropertyWithDefault("seeker",seekerFloat);
+        print(seekerFloat);
         waitPeriod = m_Academy.FloatProperties.GetPropertyWithDefault("waitPeriod",240);
         if (seekerFloat == 1f) Seeker = true;
         else if (seekerFloat == 0f) Seeker = false;

@@ -120,7 +120,7 @@ def main(argv):
                 action_parameters = noisy_actions[0,0,:]
 
         action_parameters = action_parameters.detach().numpy()
-        #print(action_parameters)
+        print(action_parameters)
         #run action using DMP
         for i in range(n_simulation_steps):
             action = dmp.action_rollout(None,action_parameters,i)
