@@ -68,8 +68,8 @@ def main(argv):
 
     # optimizer and losses
     from torch import optim
-    optimizer = optim.SGD(net.parameters(), lr=1e-4, momentum=0.9)
-    #optimizer = optim.Adam(net.parameters())
+    #optimizer = optim.SGD(net.parameters(), lr=1e-4, momentum=0.9)
+    optimizer = optim.Adam(net.parameters())
     #optimizer = optim.RMSprop(net.parameters())
 
     # initial values of several variables
