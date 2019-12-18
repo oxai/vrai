@@ -120,6 +120,7 @@ def main(argv):
                 action_parameters = noisy_actions[0,0,:]
 
         action_parameters = action_parameters.detach().numpy()
+        #print(action_parameters)
         #run action using DMP
         for i in range(n_simulation_steps):
             action = dmp.action_rollout(None,action_parameters,i)
@@ -216,9 +217,12 @@ def main(argv):
             hindsight_actions = net.compute_actions(hindsight_goals.detach(),observations)
             # TODO: Alternative to try: because in this environment having several actions that lead to same outcome is probably not very likely, then we can train the action decoder directly too on hindsight goal
             # without  any problem for intrisic motivation I think
-            #action_reconstruction_loss = 0.5*(actions.detach() - hindsight_actions)**2
-            loss_policy = -net.compute_q_value(hindsight_goals.detach(), observations, hindsight_actions)
-            partial_backprop(loss_policy, [net.q_value_decoder])
+            if np.random.rand() < 0.5:
+                action_reconstruction_loss = 0.5*torch.norm(actions.detach() - hindsight_actions)**2
+                partial_backprop(action_reconstruction_loss)
+            else:
+                loss_policy = -net.compute_q_value(hindsight_goals.detach(), observations, hindsight_actions)
+                partial_backprop(loss_policy, [net.q_value_decoder])
             optimizer.step()
 
 
