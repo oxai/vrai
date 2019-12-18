@@ -65,7 +65,7 @@ class GOALRNN(nn.Module):
         pen_rot = observations[:,:,pen_vars_slice][...,3:]
         rot_goal = goals[:,:,3:]
         rel_rot_goal = rot_goal*0.1+pen_rot
-        goals = torch.cat([(goals[:,:,:3])*0.01+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
+        goals = torch.cat([(goals[:,:,:3])*0.1+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
         return goals
     
     def compute_noisy_goals(self,observations):

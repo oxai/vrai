@@ -13,7 +13,10 @@ public class HiderSeekerAgent : Agent{
     bool hiderLearning = true; 
     bool seekerLearning = true;
     HideAndSeekAcademy m_Academy;
+    public HiderSeekerAgent Enemy; // Refernce to your enemy 
     float seekerFloat;
+    bool sawEnemy = false;
+    float waitPeriod = 240;
 
     // Start is called before the first frame update
     void Start(){
@@ -72,7 +75,9 @@ public class HiderSeekerAgent : Agent{
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.TransformDirection(PolarToCartesian(142, 70 + i * 10)), out hit, 142f)) {
                 if (hit.transform.tag == "agent") {
+                    Debug.Log("Saw enemy");
                     HiderOrSeeker = 1;
+                    sawEnemy = true;
                 } else {
                     Wall = 1;
                 }
@@ -99,6 +104,12 @@ public class HiderSeekerAgent : Agent{
     }
 
     public override void AgentReset() { // End of episode 
+        sawEnemy = false;
+
+        seekerFloat = m_Academy.FloatProperties.GetPropertyWithDefault("seeker",seekerFloat);
+        waitPeriod = m_Academy.FloatProperties.GetPropertyWithDefault("waitPeriod",240);
+        if (seekerFloat == 1f) Seeker = true;
+        else if (seekerFloat == 0f) Seeker = false;
 
         Seeking = false;
         // Reset agent to its spawn point
@@ -123,13 +134,13 @@ public class HiderSeekerAgent : Agent{
                 AddReward(0.002f); // Positive survival 
             }
         } else {
-            if (GetStepCount() >= 240) {   // Wait until seeking mode 
+            if (GetStepCount() >= waitPeriod) {   // Wait until seeking mode 
                 Seeking = true;
             }
         }
         if (Seeker && !Seeking) // Do nothing when not seeking as the seeker
             return;
-        for (int i = 0; i<vectorAction.Length/2; i++) {
+        for (int i = 0; i<vectorAction.Length; i++) {
             VectorActs[i] = Mathf.Clamp(vectorAction[i],-1.0f,1.0f);
         }
         
@@ -142,6 +153,15 @@ public class HiderSeekerAgent : Agent{
         //         VectorActs[i-vectorAction.Length/2] = Mathf.Clamp(vectorAction[i],-1.0f,1.0f);
         //     }
         // }
+
+        if (sawEnemy) {
+            if (!Seeker) AddReward(-1f);
+            else AddReward(1f);
+            if (!Enemy.Seeker) Enemy.AddReward(-1f);
+            else Enemy.AddReward(1f);
+            Done();
+            Enemy.Done();
+        }
         
         if (GetStepCount()>1500) { // Stop game after 1500 steps 
             if (Seeker && seekerLearning) AddReward(-1f);

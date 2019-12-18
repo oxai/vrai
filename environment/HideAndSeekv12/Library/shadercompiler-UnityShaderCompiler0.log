@@ -1,2 +1,8 @@
 Base path: '/home/guillefix/Unity/Hub/Editor/2019.2.13f1/Editor/Data', plugins path '/home/guillefix/Unity/Hub/Editor/2019.2.13f1/Editor/Data/PlaybackEngines'
 Cmd: initializeCompiler
+Cmd: preprocess
+  insize=1828 outsize=677 ok=1
+Cmd: preprocess
+  insize=2009 outsize=2184 ok=1
+Cmd: preprocess
+  insize=4400 outsize=1843 ok=1

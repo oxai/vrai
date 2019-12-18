@@ -200,16 +200,16 @@ def main(argv):
             partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
             optimizer.step()
 
-            # update q value network on hindsight goal
-            # by definition we have achieved the hindsight goal, so reward is 0.0 (achieved goal)
-            goal_reward = 0.0
-            optimizer.zero_grad()
-            value = net.compute_q_value(hindsight_goals, observations, noisy_actions)
-            delta = goal_reward - value
-            total_delta += delta
-            reward_value_fun = 0.5*delta**2
-            partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
-            optimizer.step()
+            ## update q value network on hindsight goal
+            ## by definition we have achieved the hindsight goal, so reward is 0.0 (achieved goal)
+            #goal_reward = 0.0
+            #optimizer.zero_grad()
+            #value = net.compute_q_value(hindsight_goals, observations, noisy_actions)
+            #delta = goal_reward - value
+            #total_delta += delta
+            #reward_value_fun = 0.5*delta**2
+            #partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
+            #optimizer.step()
 
             # update policy to achieve actions with higher q value
             # this is good to make sure we learn about actions for goals which are achievable

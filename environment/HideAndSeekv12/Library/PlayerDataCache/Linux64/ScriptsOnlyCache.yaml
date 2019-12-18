@@ -56,29 +56,29 @@ ScriptsOnlyBuild:
     - Class: 109
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9778}
+      Script: {instanceID: 9834}
     - Class: 114
-      Script: {instanceID: 9878}
+      Script: {instanceID: 9934}
     - Class: 114
-      Script: {instanceID: 9880}
+      Script: {instanceID: 9936}
     - Class: 114
-      Script: {instanceID: 9954}
+      Script: {instanceID: 10010}
     - Class: 114
-      Script: {instanceID: 9984}
+      Script: {instanceID: 10040}
     - Class: 114
-      Script: {instanceID: 10028}
+      Script: {instanceID: 10128}
     - Class: 114
-      Script: {instanceID: 10074}
+      Script: {instanceID: 10280}
     - Class: 114
-      Script: {instanceID: 10226}
+      Script: {instanceID: 11020}
     - Class: 114
-      Script: {instanceID: 10966}
+      Script: {instanceID: 11486}
     - Class: 114
-      Script: {instanceID: 11432}
+      Script: {instanceID: 11488}
     - Class: 114
-      Script: {instanceID: 11434}
+      Script: {instanceID: 11732}
     - Class: 114
-      Script: {instanceID: 11678}
+      Script: {instanceID: 12538}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 135
@@ -192,12 +192,6 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner.Callbacks
     className: TestResultRendererCallback
-  - hash:
-      serializedVersion: 2
-      Hash: 3e106ea0eae8c2b163b340c95c20170c
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: HiderSeekerAgent
   - hash:
       serializedVersion: 2
       Hash: 234235b9fb07320d11497e08a726cc56
@@ -422,7 +416,7 @@ ScriptsOnlyBuild:
     className: AnalyticsEventTrackerEditor
   - hash:
       serializedVersion: 2
-      Hash: 3e106ea0eae8c2b163b340c95c20170c
+      Hash: 1b7e389d787a32b409ea2c154e2b1080
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SeekerHiderAI
@@ -738,7 +732,325 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: b63d254d16971fb7f8eec28f06227945
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: HiderSeekerAgent
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: CrawlerAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: e39fce190aae542d4b73a5eb5fa44097
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TennisAgent
+  - hash:
+      serializedVersion: 2
+      Hash: bd5e949bb3077173b9674c3b889ef8fb
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SoccerFieldArea
+  - hash:
+      serializedVersion: 2
+      Hash: 8717dc35db89dcad114287b2d32b2b30
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Ball3DHardAgent
+  - hash:
+      serializedVersion: 2
+      Hash: a2d4f8a2ac979089923687e6f4ed4b7c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GridAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: BouncerTarget
+  - hash:
+      serializedVersion: 2
+      Hash: 2792ff68c75c2cfed05354f5418129d0
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PushAgentBasic
+  - hash:
+      serializedVersion: 2
+      Hash: e857a906b1f25ac241b2456813ef22a8
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: FoodCollectorAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Ball3DAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: 43a305cd1f9367c99edb33fc39365eac
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GridAgent
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: MLAgents
+    className: RayPerception3D
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: WalkerAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ReacherAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: a1ec435616f7033c362e5fbfe41492c7
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PyramidArea
+  - hash:
+      serializedVersion: 2
+      Hash: b1a500449f4ef21f31d1802f6b38e368
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: MLAgents
+    className: TargetContact
+  - hash:
+      serializedVersion: 2
+      Hash: 4378e1f3f3d1ab5b2b7462ca8cfa270b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: FoodCollectorAgent
+  - hash:
+      serializedVersion: 2
+      Hash: e02729d655cb2eae1abc4a4f7a37af8d
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GridArea
+  - hash:
+      serializedVersion: 2
+      Hash: f0e000711d33fa53609561155bf634a7
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: WallJumpAgent
+  - hash:
+      serializedVersion: 2
+      Hash: 0be044d599f931ccffe2534904e3e625
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SoccerBallController
+  - hash:
+      serializedVersion: 2
+      Hash: 8e5750ad10b0567929995a0473923807
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: HitWall
+  - hash:
+      serializedVersion: 2
+      Hash: 5cca31c99362907d3791789e3bb2ff73
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: MLAgents
+    className: FlyCamera
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: MLAgents
+    className: RayPerception2D
+  - hash:
+      serializedVersion: 2
+      Hash: 2c08607c1101e626cd81f05d9f9b0e78
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PyramidAgent
+  - hash:
+      serializedVersion: 2
+      Hash: 9e056b0fc331916ca7b6c27b1af13309
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: MLAgents
+    className: GroundContact
+  - hash:
+      serializedVersion: 2
+      Hash: ee945fbca932a40ae48ea633f04e82d0
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PyramidSwitch
+  - hash:
+      serializedVersion: 2
+      Hash: 068ff82543ed4ab4f3b68427e387c53f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: BasicAgent
+  - hash:
+      serializedVersion: 2
+      Hash: 9461e48e3269d23a169bc9d05f5e57fa
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: FoodLogic
+  - hash:
+      serializedVersion: 2
+      Hash: 78e9466979745cbb0c3eb144aaae58ea
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GoalDetect
+  - hash:
+      serializedVersion: 2
+      Hash: 0ffa1251d3537fc124530a2cfd274e66
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: BouncerAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TennisAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: MLAgents
+    className: Area
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TemplateAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: 13ae4c39071cd274704b45dfee4f3e81
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: CrawlerAgent
+  - hash:
+      serializedVersion: 2
+      Hash: e591bbaab6a99a496adc9d7bae660e76
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TennisArea
+  - hash:
+      serializedVersion: 2
+      Hash: 8f903c3f39843f1db21fb69eaa3044a4
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: HallwayAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: 0d0cea5d0cfcd48abf8179302ff26d3c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: FoodCollectorArea
+  - hash:
+      serializedVersion: 2
+      Hash: b4828230e39c16cd8bc06489c3dc44d2
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: MLAgents
+    className: JointDriveController
+  - hash:
+      serializedVersion: 2
+      Hash: d033e51f78b10a55806399ab44f27bd9
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SoccerAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: MLAgents
+    className: AdjustTrainingTimescale
+  - hash:
+      serializedVersion: 2
+      Hash: 26a17c6af43d5515ec4470f622c5624c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: BouncerAgent
+  - hash:
+      serializedVersion: 2
+      Hash: 2249013e3c3ce7af5a097fb8e102fbd5
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ReacherGoal
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PyramidAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: 0d85f4fda1e0e70cd92c084d12f05cdc
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: MLAgents
+    className: CameraFollow
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: BasicAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: 66781781d42e64270e0245390e1cac9b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PushBlockAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: da8a984ffce92625ff8131783747b950
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ReacherAgent
+  - hash:
+      serializedVersion: 2
+      Hash: 21fa2f04f9163712e31951077ae5ff7e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: HallwayAgent
+  - hash:
+      serializedVersion: 2
+      Hash: 1d39bd9141f094c361c4e5282c30d94c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: WallJumpAcademy
+  - hash:
+      serializedVersion: 2
+      Hash: 2cd442c742bc06681f4c6abfd13ad35d
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: WalkerAgent
+  - hash:
+      serializedVersion: 2
+      Hash: 08c186fc1ba4e98590175b1190ab19a6
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TemplateAgent
+  - hash:
+      serializedVersion: 2
+      Hash: 8717dc35db89dcad114287b2d32b2b30
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Ball3DAgent
+  - hash:
+      serializedVersion: 2
+      Hash: 5b0f94c8c30592889475f84023c1c6f2
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: AgentSoccer
   platform: 24
   scenePathNames:
   - Assets/Scenes/HideAndSeekSimple.unity
-  playerPath: /home/guillefix/code/ai/vrai/environment/HideAndSeekv12/hide_and_seek_built_curriculum.x86_64
+  playerPath: /home/guillefix/code/ai/vrai/environment/HideAndSeekv12/hide_and_seek_built_hetero.x86_64

@@ -50,6 +50,24 @@
      <Compile Include="Assets\ML-Agents\Editor\DemonstrationDrawer.cs" />
      <Compile Include="Assets\ML-Agents\Editor\DemonstrationImporter.cs" />
      <Compile Include="Assets\ML-Agents\Editor\ResetParameterDrawer.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\DemonstrationTests.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\DiscreteActionOutputApplierTest.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\EditModeTestActionMasker.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\EditModeTestInternalBrainTensorApplier.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\EditModeTestInternalBrainTensorGenerator.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\MLAgentsEditModeTest.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\MultinomialTest.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\RandomNormalTest.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\RayPerceptionTests.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\Sensor\RayPerceptionSensorTests.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\Sensor\StackingSensorTests.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\Sensor\VectorSensorTests.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\Sensor\WriterAdapterTests.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\SideChannelTests.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\StandaloneBuildTest.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\TensorUtilsTest.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\TimerTest.cs" />
+     <Compile Include="Assets\ML-Agents\Editor\Tests\UtilitiesTests.cs" />
  <Reference Include="UnityEditor.TestRunner">
  <HintPath>/home/guillefix/code/ai/vrai/environment/HideAndSeekv12/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
  </Reference>
