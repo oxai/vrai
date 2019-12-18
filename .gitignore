@@ -21,3 +21,4 @@ agent/mlagents/models/*
 ../../environment/HideAndSeekv12/Library/ScriptAssemblies/*
 ../../environment/HideAndSeekv12/Library/PlayerDataCache/*
 **/*.x86_64
+environment/HideAndSeekv12/hide_and_seek_built_hetero_Data/
