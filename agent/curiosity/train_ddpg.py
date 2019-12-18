@@ -213,10 +213,10 @@ def main(argv):
 
             # update policy to achieve actions with higher q value
             # this is good to make sure we learn about actions for goals which are achievable
-            optimizer.zero_grad()
             # TODO: Alternative to try: because in this environment having several actions that lead to same outcome is probably not very likely, then we can train the action decoder directly too on hindsight goal
             # without  any problem for intrisic motivation I think
             if np.random.rand() < 0.5:
+                optimizer.zero_grad()
                 for i in range(2):
                     # find the actions the policy predicts for hindsight goal
                     hindsight_actions = net.compute_actions(hindsight_goals.detach(),observations)
@@ -226,12 +226,14 @@ def main(argv):
                     partial_backprop(action_reconstruction_loss)
                 new_actions = net.compute_actions(hindsight_goals,observations)
                 action_difference = torch.norm(new_actions-hindsight_actions_original)/torch.norm(hindsight_actions_original)
+                optimizer.step()
             else:
+                optimizer.zero_grad()
                 loss_policy = -net.compute_q_value(noisy_goals.detach(), observations, actions)
                 partial_backprop(loss_policy, [net.q_value_decoder])
                 new_actions = net.compute_actions(noisy_goals,observations)
                 action_difference = torch.norm(new_actions-actions)/torch.norm(actions)
-            optimizer.step()
+                optimizer.step()
 
 
             '''COMPUTE LEARNING PROGRESS'''
