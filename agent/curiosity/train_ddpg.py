@@ -193,6 +193,7 @@ def main(argv):
             # update q value network on desired goal
             optimizer.zero_grad()
             value = net.compute_q_value(noisy_goals, observations, noisy_actions)
+            print("q-value", value.data.item())
             delta = goal_reward - value
             total_delta += delta
             reward_value_fun = 0.5*delta**2
@@ -213,25 +214,29 @@ def main(argv):
             # update policy to achieve actions with higher q value
             # this is good to make sure we learn about actions for goals which are achievable
             optimizer.zero_grad()
-            # find the actions the policy predicts for hindsight goal
-            hindsight_actions = net.compute_actions(hindsight_goals.detach(),observations)
             # TODO: Alternative to try: because in this environment having several actions that lead to same outcome is probably not very likely, then we can train the action decoder directly too on hindsight goal
             # without  any problem for intrisic motivation I think
             if np.random.rand() < 0.5:
-                action_reconstruction_loss = 0.5*torch.norm(actions.detach() - hindsight_actions)**2
-                partial_backprop(action_reconstruction_loss)
+                for i in range(2):
+                    # find the actions the policy predicts for hindsight goal
+                    hindsight_actions = net.compute_actions(hindsight_goals.detach(),observations)
+                    if i == 0:
+                        hindsight_actions_original = hindsight_actions
+                    action_reconstruction_loss = 0.5*torch.norm(actions.detach() - hindsight_actions)**2
+                    partial_backprop(action_reconstruction_loss)
+                new_actions = net.compute_actions(hindsight_goals,observations)
+                action_difference = torch.norm(new_actions-hindsight_actions_original)/torch.norm(hindsight_actions_original)
             else:
-                loss_policy = -net.compute_q_value(hindsight_goals.detach(), observations, hindsight_actions)
+                loss_policy = -net.compute_q_value(noisy_goals.detach(), observations, actions)
                 partial_backprop(loss_policy, [net.q_value_decoder])
+                new_actions = net.compute_actions(noisy_goals,observations)
+                action_difference = torch.norm(new_actions-actions)/torch.norm(actions)
             optimizer.step()
 
 
             '''COMPUTE LEARNING PROGRESS'''
-            new_actions = net.compute_actions(hindsight_goals,observations)
-            print("q-value", value.data.item())
 
 
-            action_difference = torch.norm(new_actions-hindsight_actions)/torch.norm(actions)
             print("action difference", action_difference)
             #learning_progress = torch.abs(delta) + action_difference
             #learning_progress = torch.max(total_delta,action_difference)

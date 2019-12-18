@@ -60,17 +60,18 @@ class GOALRNN(nn.Module):
     def compute_goals(self,observations):
         pen_vars_slice = self.pen_vars_slice
         goals = self.goal_decoder(observations)
+        goals = torch.tanh(goals)
         pen_pos = observations[:,:,pen_vars_slice][...,:3]
         pen_rot = observations[:,:,pen_vars_slice][...,3:]
         rot_goal = goals[:,:,3:]
-        rel_rot_goal = (rot_goal-pen_rot)*0.1+pen_rot
+        rel_rot_goal = rot_goal*0.1+pen_rot
         goals = torch.cat([(goals[:,:,:3])*0.01+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
         return goals
     
     def compute_noisy_goals(self,observations):
         goals = self.compute_goals(observations)
         if np.random.rand() < 0.2:
-            noisy_goals = goals + 0.1*torch.randn_like(goals)
+            noisy_goals = goals + torch.Tensor([0.05]*3+[1.0]*4)*torch.randn_like(goals)
         else:
             noisy_goals = goals + 0.01*torch.randn_like(goals)
         return noisy_goals
