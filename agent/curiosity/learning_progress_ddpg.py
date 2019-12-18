@@ -78,8 +78,8 @@ class GOALRNN(nn.Module):
 
     def compute_q_value(self, goals, observations, actions):
         values = self.q_value_decoder(torch.cat([goals,observations,actions], dim=2))
-        values = values - 1 # learn the difference between the value and -1, because at the beginning most values will be close to -1
-        values = torch.tanh(values)
+        values = values + 1 # learn the difference between the value and -1, because at the beginning most values will be close to -1
+        #values = torch.tanh(values)
         return values
 
     def compute_qlp(self, observations, goals):
