@@ -709,6 +709,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 81464295859828807}
     m_Modifications:
+    - target: {fileID: -5507983681232115419, guid: 2c84645155d685a38b3540f62f3b80a7,
+        type: 3}
+      propertyPath: Seeker
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5507983681232115419, guid: 2c84645155d685a38b3540f62f3b80a7,
+        type: 3}
+      propertyPath: Enemy
+      value: 
+      objectReference: {fileID: 5395323464312672176}
     - target: {fileID: 1563603403485714494, guid: 2c84645155d685a38b3540f62f3b80a7,
         type: 3}
       propertyPath: m_Name
@@ -769,6 +779,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1563603403485714467, guid: 2c84645155d685a38b3540f62f3b80a7,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 320d64f090c14c602804f88c760b8032, type: 2}
+    - target: {fileID: 1563603403485714468, guid: 2c84645155d685a38b3540f62f3b80a7,
+        type: 3}
+      propertyPath: m_BehaviorName
+      value: hider
+      objectReference: {fileID: 0}
     - target: {fileID: 1563603403485714469, guid: 2c84645155d685a38b3540f62f3b80a7,
         type: 3}
       propertyPath: Seeker
@@ -782,6 +802,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4283767563695673482}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &647755153703254447 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -5507983681232115419, guid: 2c84645155d685a38b3540f62f3b80a7,
+    type: 3}
+  m_PrefabInstance: {fileID: 4283767563695673482}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0a2631297b06dd10a0105117dfa7f0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8750419432287577749
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -789,6 +821,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 81464295859828807}
     m_Modifications:
+    - target: {fileID: -5507983681232115419, guid: 2c84645155d685a38b3540f62f3b80a7,
+        type: 3}
+      propertyPath: Enemy
+      value: 
+      objectReference: {fileID: 647755153703254447}
     - target: {fileID: 1563603403485714494, guid: 2c84645155d685a38b3540f62f3b80a7,
         type: 3}
       propertyPath: m_Name
@@ -849,6 +886,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1563603403485714467, guid: 2c84645155d685a38b3540f62f3b80a7,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7cfb9846ab3e4e7ef86cdc19d8b4bf73, type: 2}
+    - target: {fileID: 1563603403485714468, guid: 2c84645155d685a38b3540f62f3b80a7,
+        type: 3}
+      propertyPath: m_BehaviorName
+      value: seeker
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c84645155d685a38b3540f62f3b80a7, type: 3}
 --- !u!4 &7844343793363369652 stripped
@@ -857,3 +904,15 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8750419432287577749}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5395323464312672176 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -5507983681232115419, guid: 2c84645155d685a38b3540f62f3b80a7,
+    type: 3}
+  m_PrefabInstance: {fileID: 8750419432287577749}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0a2631297b06dd10a0105117dfa7f0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

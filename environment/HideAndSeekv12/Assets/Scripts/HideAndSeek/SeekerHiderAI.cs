@@ -109,7 +109,7 @@ public class SeekerHiderAI : Agent{
         } else {
             if (GetStepCount() >= 240) {   // Wait until seeking mode 
                 Seeking = true;
-                Enemy.Seeking = true;
+                // Enemy.Seeking = true;
             }
         }
         if (GetStepCount()>1500) { // Stop game after 1500 steps 

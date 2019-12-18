@@ -5,6 +5,7 @@
     "signal_smoothing" : true,
     "parameters" :
     {
-        "seeker" : [1.0,0.0]
+        "seeker" : [1.0,0.0],
+        "waitPeriod" : [0.0,240.0]
     }
 }

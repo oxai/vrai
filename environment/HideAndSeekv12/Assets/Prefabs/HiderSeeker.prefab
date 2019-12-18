@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 1563603403485714464}
   - component: {fileID: 1563603403485714471}
   - component: {fileID: 1563603403485714468}
-  - component: {fileID: 1563603403485714469}
+  - component: {fileID: -5507983681232115419}
   m_Layer: 0
   m_Name: HiderSeeker
   m_TagString: agent
@@ -213,7 +213,8 @@ MonoBehaviour:
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: Seeker
---- !u!114 &1563603403485714469
+  m_useChildSensors: 1
+--- !u!114 &-5507983681232115419
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -222,7 +223,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1563603403485714494}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4902f777925609d4ca1c3f7c60c20ef5, type: 3}
+  m_Script: {fileID: 11500000, guid: a0a2631297b06dd10a0105117dfa7f0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   agentParameters:
@@ -236,4 +237,3 @@ MonoBehaviour:
   - 0
   Inputs: []
   Seeker: 1
-  Enemy: {fileID: 0}
