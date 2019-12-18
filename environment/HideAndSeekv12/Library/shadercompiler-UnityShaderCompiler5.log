@@ -1,2 +1,51 @@
 Base path: '/home/guillefix/Unity/Hub/Editor/2019.2.13f1/Editor/Data', plugins path '/home/guillefix/Unity/Hub/Editor/2019.2.13f1/Editor/Data/PlaybackEngines'
 Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  api=15 insize=23621 outsize=9103 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=23621 outsize=16840 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=1810 outsize=11250 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=4482 outsize=4148 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=12270 outsize=3383 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=12270 outsize=4575 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 15 at Tensor.cginc(128): use of potentially uninitialized variable (ReadonlyTensor::SafeGet)
+  api=15 insize=27408 outsize=5195 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=27408 outsize=3114 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=27408 outsize=4277 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=27408 outsize=4738 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=27408 outsize=6882 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=27408 outsize=5544 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=27408 outsize=5855 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=20360 outsize=2266 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=20360 outsize=3001 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=20360 outsize=3142 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=20360 outsize=3698 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=20360 outsize=2990 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=20360 outsize=2828 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=20360 outsize=5489 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=20360 outsize=5397 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=64076 outsize=6214 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=64076 outsize=18437 ok=1
+
+Quitting shader compiler process

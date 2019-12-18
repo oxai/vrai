@@ -297,7 +297,7 @@ namespace MLAgents
                 academy.AgentSendState -= SendInfo;
                 academy.DecideAction -= DecideAction;
                 academy.AgentAct -= AgentStep;
-                academy.AgentForceReset -= _AgentReset;
+                academy.AgentForceReset -= ForceReset;
             }
             m_Brain?.Dispose();
         }
@@ -496,16 +496,7 @@ namespace MLAgents
         public void InitializeSensors()
         {
             // Get all attached sensor components
-            SensorComponent[] attachedSensorComponents;
-            if(m_PolicyFactory.useChildSensors)
-            {
-                attachedSensorComponents = GetComponentsInChildren<SensorComponent>();
-            }
-            else
-            {
-                attachedSensorComponents = GetComponents<SensorComponent>();
-            }
-
+            var attachedSensorComponents = GetComponents<SensorComponent>();
             sensors.Capacity += attachedSensorComponents.Length;
             foreach (var component in attachedSensorComponents)
             {

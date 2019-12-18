@@ -1,2 +1,48 @@
 Base path: '/home/guillefix/Unity/Hub/Editor/2019.2.13f1/Editor/Data', plugins path '/home/guillefix/Unity/Hub/Editor/2019.2.13f1/Editor/Data/PlaybackEngines'
 Cmd: initializeCompiler
+Cmd: compileComputeKernel
+  api=18 insize=23621 outsize=46232 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=4482 outsize=4148 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=12270 outsize=3672 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=12270 outsize=4520 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=12270 outsize=4874 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=27408 outsize=3259 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=27408 outsize=3192 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=27408 outsize=4281 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=27408 outsize=6722 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=27408 outsize=11281 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=27408 outsize=7735 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=27408 outsize=5618 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=20360 outsize=2133 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=20360 outsize=3075 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=20360 outsize=3152 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=20360 outsize=3080 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=20360 outsize=3101 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=20360 outsize=3071 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=20360 outsize=5662 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=20360 outsize=5695 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=20360 outsize=6967 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=64076 outsize=34581 ok=1
+
+Quitting shader compiler process

@@ -13,12 +13,5 @@ agent/curiosity/rewards*.txt
 agent/curiosity/learning_progresses*.txt
 agent/curiosity/lprnn*.pt
 environment/HideAndSeekv12/Library/PackageCache
-**/*UnityTempFile-*
-../../environment/HideAndSeekv12/Library/metadata/*
-../../environment/HideAndSeekv12/Library/*
-agent/mlagents/summaries/*
-agent/mlagents/models/*
-../../environment/HideAndSeekv12/Library/ScriptAssemblies/*
-../../environment/HideAndSeekv12/Library/PlayerDataCache/*
+environment/HideAndSeekv12/Temp/
 **/*.x86_64
-environment/HideAndSeekv12/hide_and_seek_built_hetero_Data/*

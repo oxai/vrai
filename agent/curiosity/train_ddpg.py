@@ -242,16 +242,7 @@ def main(argv):
             '''TRAIN GOAL POLICY'''
             if iteration>0 and lp_training: #only do this once we have a previous_lp_value
                 # im doing 5 training iterations to make sure goal policy updates kinda quick, and is able to adapt to the learning of the agent
-                for i in range(2):
-                    optimizer.zero_grad()
-                    previous_lp_value = net.compute_qlp(observations, noisy_goals)
-                    delta = learning_progress.detach() + gamma*net.compute_qlp(new_observations, net.compute_noisy_goals(new_observations)).detach() - previous_lp_value
-                    #print(delta, learning_progress, lp_value, previous_lp_value)
-
-                    loss_lp_value_fun = 0.5*delta**2
-                    partial_backprop(loss_lp_value_fun, [net.goal_decoder])
-                    optimizer.step()
-                for i in range(2):
+                for i in range(5):
                     optimizer.zero_grad()
                     previous_lp_value = net.compute_qlp(observations, hindsight_goals)
                     delta = learning_progress.detach() + gamma*net.compute_qlp(new_observations, net.compute_noisy_goals(new_observations)).detach() - previous_lp_value
