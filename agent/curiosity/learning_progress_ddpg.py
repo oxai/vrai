@@ -46,11 +46,17 @@ class GOALRNN(nn.Module):
         noisy_goals = self.compute_noisy_goals(observations)
         #print(observations,noisy_goals)
         actions = self.compute_actions(noisy_goals, observations)
+        state_dict_backup = self.action_decoder.state_dict()
+        with torch.no_grad():
+            for param in self.action_decoder.parameters():
+                param.add_(torch.randn(param.size()) * 0.1)
+        noisy_actions = self.compute_actions(noisy_goals, observations)
+        self.action_decoder.load_state_dict(state_dict_backup, strict=False)
         #print(actions)
-        if np.random.rand() < 0.2:
-            noisy_actions = actions + 5*torch.randn_like(actions)
-        else:
-            noisy_actions = actions + 0.1*torch.randn_like(actions)
+        #if np.random.rand() < 0.2:
+        #    noisy_actions = actions + 5*torch.randn_like(actions)
+        #else:
+        #    noisy_actions = actions + np.random.randn()*torch.randn_like(actions)
         #noisy_actions = actions
         #values = self.compute_q_value(noisy_goals, observations, noisy_actions)
         #lp_values = self.compute_qlp(observations, noisy_goals)
@@ -64,16 +70,23 @@ class GOALRNN(nn.Module):
         pen_pos = observations[:,:,pen_vars_slice][...,:3]
         pen_rot = observations[:,:,pen_vars_slice][...,3:]
         rot_goal = goals[:,:,3:]
-        rel_rot_goal = rot_goal*0.1+pen_rot
-        goals = torch.cat([(goals[:,:,:3])*0.1+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
+        #rel_rot_goal = rot_goal*0.1+pen_rot
+        rel_rot_goal = rot_goal+pen_rot
+        goals = torch.cat([(goals[:,:,:3])*0.01+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
         return goals
     
     def compute_noisy_goals(self,observations):
-        goals = self.compute_goals(observations)
-        if np.random.rand() < 0.2:
-            noisy_goals = goals + torch.Tensor([0.05]*3+[1.0]*4)*torch.randn_like(goals)
-        else:
-            noisy_goals = goals + 0.01*torch.randn_like(goals)
+        state_dict_backup = self.goal_decoder.state_dict()
+        with torch.no_grad():
+            for param in self.goal_decoder.parameters():
+                param.add_(torch.randn(param.size()) * 0.1)
+        noisy_goals = self.compute_goals(observations)
+        self.goal_decoder.load_state_dict(state_dict_backup, strict=False)
+        #goals = self.compute_goals(observations)
+        #if np.random.rand() < 0.2:
+        #    noisy_goals = goals + torch.Tensor([0.05]*3+[1.0]*4)*torch.randn_like(goals)
+        #else:
+        #    noisy_goals = goals + 0.001*torch.randn_like(goals)
         return noisy_goals
 
     def compute_q_value(self, goals, observations, actions):
