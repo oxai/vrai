@@ -17,13 +17,16 @@ public class HiderSeekerAgent : Agent{
     float seekerFloat;
     bool sawEnemy = false;
     float waitPeriod = 240;
+    string behaviorName;
+    float distanceToSeenEnemey = 0.5f;
 
     // Start is called before the first frame update
     void Start(){
+        behaviorName = GetComponent<BehaviorParameters>().behaviorName;
         m_Academy = FindObjectOfType<HideAndSeekAcademy>();
         if (Seeker) seekerFloat = 1f;
         else seekerFloat = 0f;
-        seekerFloat = m_Academy.FloatProperties.GetPropertyWithDefault("seeker",seekerFloat);
+        seekerFloat = m_Academy.FloatProperties.GetPropertyWithDefault(behaviorName+"_seeking",seekerFloat);
         if (seekerFloat == 1f) Seeker = true;
         else if (seekerFloat == 0f) Seeker = false;
         if (Seeker) {// Seeker moves faster? 
@@ -65,23 +68,32 @@ public class HiderSeekerAgent : Agent{
         }
         AddVectorObs(rb.velocity.x / 10f); // Transform variables 
         AddVectorObs(rb.velocity.z / 10f);
-        AddVectorObs(transform.localPosition.x / 50f);
-        AddVectorObs(transform.localPosition.z / 50f);
+        // AddVectorObs(transform.localPosition.x / 50f);
+        // AddVectorObs(transform.localPosition.z / 50f);
         AddVectorObs((transform.eulerAngles.y > 180 ? transform.eulerAngles.y - 360f : transform.eulerAngles.y)/180f);
         for (int i = 0; i<5; i++) { // Ray cast for either wall or other agent 
             float Wall = 0;
             float HiderOrSeeker = 0;
             float Distance = 1f;
+            float seenThingAngle = 0;
+            float seenThingVelocity_x = 0;
+            float seenThingVelocity_y = 0;
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.TransformDirection(PolarToCartesian(142, 70 + i * 10)), out hit, 142f)) {
+                seenThingAngle=(hit.transform.eulerAngles.y > 180 ? hit.transform.eulerAngles.y - 360f : hit.transform.eulerAngles.y)/180f;
+                if (hit.rigidbody){
+                    seenThingVelocity_x = hit.rigidbody.velocity.x/10f;
+                    seenThingVelocity_y = hit.rigidbody.velocity.y/10f;
+                }
+                Distance = hit.distance / 142f;
                 if (hit.transform.tag == "agent") {
                     // Debug.Log("Saw enemy");
                     HiderOrSeeker = 1;
                     sawEnemy = true;
+                    distanceToSeenEnemey = Distance;
                 } else {
                     Wall = 1;
                 }
-                Distance = hit.distance / 142f;
                 if (Application.isEditor) {
                     Debug.DrawRay(transform.position,
                         transform.TransformDirection(
@@ -100,26 +112,31 @@ public class HiderSeekerAgent : Agent{
             AddVectorObs(Wall);  // If wall found 
             AddVectorObs(HiderOrSeeker); // If hider or seeker found 
             AddVectorObs(Distance); // Distance to object
+            AddVectorObs(seenThingAngle);
+            AddVectorObs(seenThingVelocity_x);
+            AddVectorObs(seenThingVelocity_y);
         }
     }
 
     public override void AgentReset() { // End of episode 
         sawEnemy = false;
-
-        seekerFloat = m_Academy.FloatProperties.GetPropertyWithDefault("seeker",seekerFloat);
+        seekerFloat = m_Academy.FloatProperties.GetPropertyWithDefault(behaviorName+"_seeking",seekerFloat);
         print(seekerFloat);
         waitPeriod = m_Academy.FloatProperties.GetPropertyWithDefault("waitPeriod",240);
         if (seekerFloat == 1f) Seeker = true;
         else if (seekerFloat == 0f) Seeker = false;
+        distanceToSeenEnemey = 0.5f;
 
         Seeking = false;
         // Reset agent to its spawn point
-        if (Seeker) {
-            transform.localPosition = new Vector3(Random.Range(0f,14f),0,Random.Range(11f,-11f));
-            transform.eulerAngles = new Vector3(0,Random.Range(0f,360f),0);
+        if (behaviorName == "seeker") {
+            // transform.localPosition = new Vector3(Random.Range(0f,14f),0,Random.Range(11f,-11f));
+            // transform.eulerAngles = new Vector3(0,Random.Range(0f,360f),0);
+            transform.eulerAngles = new Vector3(0, Random.Range(0f, 360f), 0);
+            transform.position = transform.parent.gameObject.transform.position + new Vector3(Random.Range(10f, -10f), 0, Random.Range(10f, -10f));
         } else {
             transform.eulerAngles = new Vector3(0, Random.Range(0f, 360f), 0);
-            transform.localPosition = new Vector3(Random.Range(-14f, 0f), 0, Random.Range(11f, -11f));
+            transform.position = transform.parent.gameObject.transform.position + new Vector3(Random.Range(10f, -10f), 0, Random.Range(10f, -10f));
         }
         // Reset action vector
         for (int i = 0; i<VectorActs.Count; i++) {
@@ -155,16 +172,17 @@ public class HiderSeekerAgent : Agent{
         //     }
         // }
 
-        if (sawEnemy) {
-            if (!Seeker) AddReward(-1f);
-            else AddReward(1f);
-            if (!Enemy.Seeker) Enemy.AddReward(-1f);
-            else Enemy.AddReward(1f);
-            Done();
-            Enemy.Done();
+        if (Seeker && sawEnemy) {
+            AddReward(Mathf.Clamp(1f-distanceToSeenEnemey,0,1));
+            if (!Enemy.Seeker) Enemy.AddReward(Mathf.Clamp(-1f+distanceToSeenEnemey,-1,0));
+            else Enemy.AddReward(Mathf.Clamp(1f-distanceToSeenEnemey,0,1));
+            if (waitPeriod > 0) {
+                Done();
+                Enemy.Done();
+            }
         }
         
-        if (GetStepCount()>1500) { // Stop game after 1500 steps 
+        if (GetStepCount()>2500) { // Stop game after 1500 steps 
             if (Seeker && seekerLearning) AddReward(-1f);
             else if (hiderLearning) AddReward(1f);
             Done();
@@ -180,12 +198,46 @@ public class HiderSeekerAgent : Agent{
         // in a time Time.deltaTime*10
         // we use that because we take a decision every 10 frames.
         // The actions have interpretation of (speed, angle of velocity in x-z plane, and angle)
-        rb.velocity = Vector3.Lerp(rb.velocity,Speed*VectorActs[0]*new Vector3(Mathf.Sin(VectorActs[1]*Mathf.PI),0, Mathf.Cos(VectorActs[1] * Mathf.PI)),Time.deltaTime*10);
-        transform.rotation = Quaternion.Lerp(transform.rotation,Quaternion.Euler(new Vector3(0, VectorActs[2] * 180f,0)),Time.deltaTime*5);
+        // rb.velocity = Vector3.Lerp(rb.velocity,Speed*VectorActs[0]*new Vector3(Mathf.Sin(VectorActs[1]*Mathf.PI),0, Mathf.Cos(VectorActs[1] * Mathf.PI)),Time.deltaTime*10);
+        Vector3 new_velociy = new Vector3(VectorActs[0],0, VectorActs[1]);
+        new_velociy = transform.TransformVector(new_velociy);
+        rb.velocity = Vector3.Lerp(rb.velocity,Speed*new_velociy,Time.deltaTime*10);
+        float new_angle = transform.eulerAngles.y -180f + VectorActs[2] * 180f;
+        // Debug.Log(transform.eulerAngles.y);
+        new_angle = (new_angle  > 180 ? new_angle - 360f : new_angle);
+        new_angle = (new_angle  < -180 ? new_angle + 360f : new_angle);
+        new_angle += 180f;
+        transform.rotation = Quaternion.Lerp(transform.rotation,Quaternion.Euler(new Vector3(0, new_angle,0)),Time.deltaTime*5);
+        // transform.rotation = Quaternion.Euler(new Vector3(0, new_angle,0));
     }
 
     public override float[] Heuristic() {
-        return VectorActs.ToArray();
+        if (Input.GetKey(KeyCode.S))
+        {
+            return new float[] { 0, -1f, 0 };
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            return new float[] { 1f, 0, 0 };
+        }
+        if (Input.GetKey(KeyCode.W))
+        {
+            return new float[] { 0, 1f, 0 };
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            return new float[] { -1f, 0, 0 };
+        }
+        if (Input.GetKey(KeyCode.Q))
+        {
+            return new float[] { 0, 0, -0.1f };
+        }
+        if (Input.GetKey(KeyCode.E))
+        {
+            return new float[] { 0, 0, 0.1f };
+        }
+        return new float[] { 0, 0, 0 };
+        // return VectorActs.ToArray();
     }
 
     public static Vector3 PolarToCartesian(float radius, float angle) {
@@ -196,8 +248,8 @@ public class HiderSeekerAgent : Agent{
 
     private void OnCollisionEnter(Collision collision) { // Rewards for being caught
         if (Seeking&&collision.transform.CompareTag("agent")) {
-            if (!Seeker) AddReward(-1f);
-            else AddReward(1f);
+            if (!Seeker) AddReward(-10f);
+            else AddReward(10f);
             Done();
         }
 

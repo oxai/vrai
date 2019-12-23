@@ -12,6 +12,8 @@ agent/curiosity/engineered_goal_spaces/lprnn_weights*.pt
 agent/curiosity/rewards*.txt
 agent/curiosity/learning_progresses*.txt
 agent/curiosity/lprnn*.pt
+agent/mlagents/summaries/*
+agent/mlagents/models/*
 environment/HideAndSeekv12/Library/PackageCache*
 environment/HideAndSeekv12/Temp/*
 **/*.x86_64
