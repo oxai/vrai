@@ -1,0 +1,2 @@
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\vrcai\obj\Debug\VRCAI.vbprojAssemblyReference.cache
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\vrcai\obj\Debug\VRCAI.vbproj.CoreCompileInputs.cache
