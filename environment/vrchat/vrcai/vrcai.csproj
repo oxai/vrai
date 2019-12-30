@@ -34,6 +34,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\dlls\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>dlls\UnityEditor.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\dlls\UnityEngine.dll</HintPath>
     </Reference>
@@ -42,6 +45,10 @@
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>..\..\..\..\dlls\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dlls\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="VRCMenuUtils">
       <HintPath>..\..\..\..\dlls\VRCMenuUtils.dll</HintPath>

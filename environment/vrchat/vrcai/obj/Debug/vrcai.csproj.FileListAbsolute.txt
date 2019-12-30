@@ -30,3 +30,4 @@ C:\Users\guill\Documents\code\vrai\environment\vrchat\vrcai\obj\Debug\vrcai.cspr
 C:\Users\guill\Documents\code\vrai\environment\vrchat\vrcai\obj\Debug\vrcai.csproj.CopyComplete
 C:\Users\guill\Documents\code\vrai\environment\vrchat\vrcai\obj\Debug\vrcai.dll
 C:\Users\guill\Documents\code\vrai\environment\vrchat\vrcai\obj\Debug\vrcai.pdb
+C:\Users\guill\Documents\code\vrai\environment\vrchat\vrcai\bin\Debug\UnityEditor.dll
