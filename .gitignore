@@ -11,6 +11,7 @@ agent/curiosity/engineered_goal_spaces/lprnn*.pt
 agent/curiosity/engineered_goal_spaces/lprnn_weights*.pt
 agent/curiosity/rewards*.txt
 agent/curiosity/learning_progresses*.txt
+agent/curiosity/test_rewards*.txt
 agent/curiosity/lprnn*.pt
 #agent/mlagents/summaries/*
 #agent/mlagents/models/*
@@ -20,3 +21,4 @@ environment/HideAndSeekv12/Temp/*
 environment/HideAndSeekv12/*.x86_64
 environment/HideAndSeekv12/Library/*
 ../../environment/New\ Unity\ Project/
+
