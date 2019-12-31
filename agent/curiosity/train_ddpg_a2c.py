@@ -67,7 +67,7 @@ def main(argv):
 
     '''NET'''
 
-    from learning_progress_ddpg import GOALRNN
+    from learning_progress_ddpg_a2c import GOALRNN
     net = GOALRNN(batch_size, number_layers, observation_dim, action_dim, goal_dim, n_hidden=256)
 
     if os.path.isfile("lprnn_weights"+experiment_name+".pt"):
@@ -81,6 +81,8 @@ def main(argv):
     # optimizer and losses
     from torch import optim
     #optimizer = optim.SGD(net.parameters(), lr=1e-4, momentum=0.9)
+    #optimizer = optim.SGD(net.parameters(), lr=1e-6)
+    #optimizer2 = optim.SGD(net.parameters(), lr=1e1)
     optimizer = optim.Adam(net.parameters())
     #optimizer = optim.RMSprop(net.parameters())
 
@@ -124,7 +126,7 @@ def main(argv):
             action_parameters = action_parameters[0,0,:]
         else:
             #feed observations to net, get desired goal, actions, and predicted value of action, and goal
-            actions, noisy_actions, noisy_goals = net(observations)
+            actions, noisy_actions, noisy_goals, log_prob_goals = net(observations)
             #goals = Variable(goals.data, requires_grad=True)
             if lp_training:
                 action_parameters, goal = noisy_actions[0,0,:], noisy_goals[0,0,:]
@@ -256,8 +258,9 @@ def main(argv):
             #learning_progress = torch.abs(delta) + action_difference
             #learning_progress = torch.max(total_delta,action_difference)
             #learning_progress = 0.1*torch.abs(total_delta)+2*action_difference
-            learning_progress = action_difference
-            #learning_progress = action_difference + 0.001*goal_reward
+            #learning_progress = action_difference
+            learning_progress = action_difference + 0.001*goal_reward
+            #learning_progress = goal_reward
             print("learning progress", learning_progress.data.item())
             lps.append(learning_progress.data.item())
 
@@ -265,9 +268,11 @@ def main(argv):
             if iteration>0 and lp_training: #only do this once we have a previous_lp_value
                 # im doing 5 training iterations to make sure goal policy updates kinda quick, and is able to adapt to the learning of the agent
                 for i in range(1):
+                    log_prob_goals = net.compute_log_prob_goals(observations, hindsight_goals)
                     optimizer.zero_grad()
-                    previous_lp_value = net.compute_qlp(observations, hindsight_goals)
-                    delta = learning_progress.detach() + gamma*net.compute_qlp(new_observations, net.compute_noisy_goals(new_observations)).detach() - previous_lp_value
+                    previous_lp_value = net.compute_vlp(observations)
+                    delta = learning_progress.detach() + gamma*net.compute_vlp(new_observations).detach() - previous_lp_value
+                    #delta = learning_progress.detach() 
                     #print(delta, learning_progress, lp_value, previous_lp_value)
 
                     loss_lp_value_fun = 0.5*delta**2
@@ -276,8 +281,8 @@ def main(argv):
 
                 for i in range(1):
                     optimizer.zero_grad()
-                    loss_goal_policy = -net.compute_qlp(observations, net.compute_goals(observations))
-                    partial_backprop(loss_goal_policy, [net.qlp_decoder])
+                    loss_goal_policy = -delta.detach()*log_prob_goals[0,0]
+                    partial_backprop(loss_goal_policy)
                     optimizer.step()
 
             #print("lp value", previous_lp_value.data.item())
