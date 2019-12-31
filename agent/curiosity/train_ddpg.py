@@ -75,7 +75,7 @@ def main(argv):
         net.load_state_dict(torch.load("lprnn_weights"+experiment_name+".pt"))
 
     #print(net.goal_decoder.state_dict().items())
-    net.goal_decoder.apply(weight_reset)
+    #net.goal_decoder.apply(weight_reset)
     #print(net.goal_decoder.state_dict().items())
 
     # optimizer and losses
