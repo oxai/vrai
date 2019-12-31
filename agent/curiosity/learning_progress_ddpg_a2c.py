@@ -34,16 +34,16 @@ class GOALRNN(nn.Module):
         self.nl = nl
         self.goal_dim = goal_dim
         self.action_dim = action_dim
-        self.goal_decoder = MLP(observation_dim, goal_dim)
+        self.goal_decoder = MLP(observation_dim, goal_dim*2)
         self.action_decoder = MLP(goal_dim+observation_dim, action_dim, hidden_dim=1024)
         self.q_value_decoder = MLP(goal_dim+observation_dim+action_dim, 1, number_layers=1, hidden_dim=1024)
-        self.qlp_decoder = MLP(observation_dim+goal_dim, 1)
+        self.vlp_decoder = MLP(observation_dim, 1)
         self.pen_vars_slice = slice(54,61)
 
     def forward(self, observations):
         pen_pos_center = torch.Tensor([1.0,0.90,0.15]).unsqueeze(0).unsqueeze(0)
 
-        noisy_goals = self.compute_noisy_goals(observations)
+        noisy_goals, log_prob_goals = self.compute_noisy_goals(observations)
         #print(observations,noisy_goals)
         actions = self.compute_actions(noisy_goals, observations)
         state_dict_backup = self.action_decoder.state_dict()
@@ -60,27 +60,37 @@ class GOALRNN(nn.Module):
         #noisy_actions = actions
         #values = self.compute_q_value(noisy_goals, observations, noisy_actions)
         #lp_values = self.compute_qlp(observations, noisy_goals)
-        return actions, noisy_actions, noisy_goals#, values, lp_values
+        return actions, noisy_actions, noisy_goals, log_prob_goals#, values, lp_values
 
     
     def compute_goals(self,observations):
         pen_vars_slice = self.pen_vars_slice
-        goals = self.goal_decoder(observations)
+        goal_means, goal_stds = torch.split(self.goal_decoder(observations), self.goal_dim, dim=2)
+        m = MultivariateNormal(goal_means, (goal_stds**2+0.01)*torch.eye(self.goal_dim)) # squaring stds so as to be positive
+        goals = m.sample()
+        log_prob_goals = m.log_prob(goals)
         #goals = torch.tanh(goals)
         pen_pos = observations[:,:,pen_vars_slice][...,:3]
         pen_rot = observations[:,:,pen_vars_slice][...,3:]
         rot_goal = goals[:,:,3:]
         #rel_rot_goal = rot_goal*0.1+pen_rot
         rel_rot_goal = rot_goal+pen_rot
-        goals = torch.cat([(goals[:,:,:3])*0.01+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
-        return goals
+        goals = torch.cat([(goals[:,:,:3])*0.001+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
+        return goals, log_prob_goals
+
+    def compute_log_prob_goals(self,observations, goals):
+        pen_vars_slice = self.pen_vars_slice
+        goal_means, goal_stds = torch.split(self.goal_decoder(observations), self.goal_dim, dim=2)
+        m = MultivariateNormal(goal_means, (goal_stds**2+0.01)*torch.eye(self.goal_dim)) # squaring stds so as to be positive
+        log_prob_goals = m.log_prob(goals)
+        return log_prob_goals
     
     def compute_noisy_goals(self,observations):
         state_dict_backup = self.goal_decoder.state_dict()
         with torch.no_grad():
             for param in self.goal_decoder.parameters():
                 param.add_(torch.randn(param.size()) * 0.1)
-        noisy_goals = self.compute_goals(observations)
+        noisy_goals, log_prob_goals = self.compute_goals(observations)
         noisy_goals = torch.clamp(noisy_goals, -10, 10)
         self.goal_decoder.load_state_dict(state_dict_backup, strict=False)
         #goals = self.compute_goals(observations)
@@ -88,7 +98,7 @@ class GOALRNN(nn.Module):
         #    noisy_goals = goals + torch.Tensor([0.05]*3+[1.0]*4)*torch.randn_like(goals)
         #else:
         #    noisy_goals = goals + 0.001*torch.randn_like(goals)
-        return noisy_goals
+        return noisy_goals, log_prob_goals
 
     def compute_q_value(self, goals, observations, actions):
         values = self.q_value_decoder(torch.cat([goals,observations,actions], dim=2))
@@ -96,9 +106,9 @@ class GOALRNN(nn.Module):
         #values = torch.tanh(values)
         return values
 
-    def compute_qlp(self, observations, goals):
-        values = self.qlp_decoder(torch.cat([observations,goals], dim=2))
-        values = values - 1 #pesimistic goal values to see if it makes it not explode :P
+    def compute_vlp(self, observations):
+        values = self.vlp_decoder(observations)
+        #values = values - 1 #pesimistic goal values to see if it makes it not explode :P
         #values = torch.tanh(values)
         return values
 
