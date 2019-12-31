@@ -49,7 +49,7 @@ class GOALRNN(nn.Module):
         state_dict_backup = self.action_decoder.state_dict()
         with torch.no_grad():
             for param in self.action_decoder.parameters():
-                param.add_(torch.randn(param.size()) * 0.1)
+                param.add_(torch.randn(param.size()) * 0.8)
         noisy_actions = self.compute_actions(noisy_goals, observations)
         self.action_decoder.load_state_dict(state_dict_backup, strict=False)
         #print(actions)
@@ -69,13 +69,13 @@ class GOALRNN(nn.Module):
         m = MultivariateNormal(goal_means, (goal_stds**2+0.01)*torch.eye(self.goal_dim)) # squaring stds so as to be positive
         goals = m.sample()
         log_prob_goals = m.log_prob(goals)
-        #goals = torch.tanh(goals)
+        goals = torch.tanh(goals)
         pen_pos = observations[:,:,pen_vars_slice][...,:3]
         pen_rot = observations[:,:,pen_vars_slice][...,3:]
         rot_goal = goals[:,:,3:]
         #rel_rot_goal = rot_goal*0.1+pen_rot
         rel_rot_goal = rot_goal+pen_rot
-        goals = torch.cat([(goals[:,:,:3])*0.001+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
+        goals = torch.cat([(goals[:,:,:3])*0.1+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
         return goals, log_prob_goals
 
     def compute_log_prob_goals(self,observations, goals):

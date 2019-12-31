@@ -258,8 +258,9 @@ def main(argv):
             #learning_progress = torch.abs(delta) + action_difference
             #learning_progress = torch.max(total_delta,action_difference)
             #learning_progress = 0.1*torch.abs(total_delta)+2*action_difference
-            #learning_progress = action_difference
-            learning_progress = action_difference + 0.001*goal_reward
+            learning_progress = action_difference
+            #learning_progress = action_difference + 0.001*goal_reward
+            learning_progress *= 10
             #learning_progress = goal_reward
             print("learning progress", learning_progress.data.item())
             lps.append(learning_progress.data.item())
