@@ -68,7 +68,7 @@ def main(argv):
 
     '''NET'''
 
-    from learning_progress_ddpg_a2c import GOALRNN
+    from learning_progress_noise import GOALRNN
     net = GOALRNN(batch_size, number_layers, observation_dim, action_dim, goal_dim, n_hidden=256)
 
     if os.path.isfile("lprnn_weights"+experiment_name+".pt"):
@@ -127,7 +127,7 @@ def main(argv):
             action_parameters = action_parameters[0,0,:]
         else:
             #feed observations to net, get desired goal, actions, and predicted value of action, and goal
-            actions, noisy_actions, noisy_goals, log_prob_goals = net(observations)
+            actions, noisy_actions, noisy_goals, log_prob_goals, noisy_noise, log_prob_noise = net(observations)
             #goals = Variable(goals.data, requires_grad=True)
             if lp_training:
                 action_parameters, goal = noisy_actions[0,0,:], noisy_goals[0,0,:]
@@ -241,13 +241,13 @@ def main(argv):
                     action_reconstruction_loss = 0.5*torch.norm(actions.detach() - hindsight_actions)**2
                     partial_backprop(action_reconstruction_loss)
                     optimizer.step()
-                for i in range(1):
-                    optimizer.zero_grad()
-                    # find the actions the policy predicts for hindsight goal
-                    hindsight_actions = net.compute_actions(hindsight_goals.detach()+0.1*torch.rand_like(hindsight_goals),observations)
-                    action_reconstruction_loss = 0.5*torch.norm(actions.detach() - hindsight_actions)**2
-                    partial_backprop(-action_reconstruction_loss)
-                    optimizer.step()
+                #for i in range(1):
+                #    optimizer.zero_grad()
+                #    # find the actions the policy predicts for hindsight goal
+                #    hindsight_actions = net.compute_actions(hindsight_goals.detach()+0.1*torch.rand_like(hindsight_goals),observations)
+                #    action_reconstruction_loss = 0.5*torch.norm(actions.detach() - hindsight_actions)**2
+                #    partial_backprop(-action_reconstruction_loss)
+                #    optimizer.step()
                 new_actions = net.compute_actions(hindsight_goals,observations)
                 action_difference = torch.norm(new_actions-hindsight_actions_original)/torch.norm(hindsight_actions_original)
             else:
@@ -293,6 +293,11 @@ def main(argv):
                     optimizer.zero_grad()
                     loss_goal_policy = -delta.detach()*log_prob_goals[0,0]
                     partial_backprop(loss_goal_policy)
+                    optimizer.step()
+
+                    optimizer.zero_grad()
+                    loss_noise_policy = -delta.detach()*log_prob_noise[0,0]
+                    partial_backprop(loss_noise_policy)
                     optimizer.step()
 
             #print("lp value", previous_lp_value.data.item())
