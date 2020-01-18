@@ -44,7 +44,11 @@ def main(argv):
 
     '''ENVIRONMENT'''
     import gym
-    env=gym.make("HandManipulatePen-v0")
+    #env=gym.make("HandManipulatePen-v0")
+    #env=gym.make("HandManipulateEgg-v0")
+    env=gym.make("FetchSlide-v1")
+    #goal_vars_slice = slice(54,61)
+    goal_vars_slice = slice(3,6)
     results = env.reset();
     #env.observation_space["observation"].shape[0]
     observation_dim = env.observation_space["observation"].shape[0]
@@ -52,7 +56,8 @@ def main(argv):
     n_dmp_basis = 10
     action_dim = n_actuators*(n_dmp_basis+1)
     #goal_dim = observation_dim
-    goal_dim = 7
+    #goal_dim = 7
+    goal_dim = 3
     batch_size = 1
     number_layers = 2
     gamma=0.9
@@ -68,8 +73,8 @@ def main(argv):
 
     '''NET'''
 
-    from learning_progress_noise import GOALRNN
-    net = GOALRNN(batch_size, number_layers, observation_dim, action_dim, goal_dim, n_hidden=256)
+    from learning_progress_a2c import GOALRNN
+    net = GOALRNN(batch_size, number_layers, observation_dim, action_dim, goal_dim, goal_vars_slice, n_hidden=256)
 
     if os.path.isfile("lprnn_weights"+experiment_name+".pt"):
         print("LOADING WEIGHTS")
@@ -102,11 +107,18 @@ def main(argv):
     if evaluating or not lp_training:
         pen_goal = results[0]["desired_goal"]
         goal = torch.Tensor(pen_goal)
-    if rendering:
-        setup_render(env)
+    #if rendering:
+    #    setup_render(env)
+
+    def g(epsilon, delta):
+        if delta>=0:
+            return (1+epsilon)*delta
+        else:
+            return (1-epsilon)*delta
 
     rewards = []
     lps = []
+    temp_buffer = []
     # a function that allows to do back prop, but not accumulate gradient in certain modules of a network
     def partial_backprop(loss,parts_to_ignore=[]):
         for part in parts_to_ignore:
@@ -127,7 +139,7 @@ def main(argv):
             action_parameters = action_parameters[0,0,:]
         else:
             #feed observations to net, get desired goal, actions, and predicted value of action, and goal
-            actions, noisy_actions, noisy_goals, log_prob_goals, noisy_noise, log_prob_noise = net(observations)
+            actions, noisy_actions, noisy_goals, log_prob_goals = net(observations)
             #goals = Variable(goals.data, requires_grad=True)
             if lp_training:
                 action_parameters, goal = noisy_actions[0,0,:], noisy_goals[0,0,:]
@@ -147,7 +159,8 @@ def main(argv):
                     print(results[1])
                     rewards.append(results[1])
             if rendering:
-                render_with_target(env,goal.detach().numpy())
+                #render_with_target(env,goal.detach().numpy())
+                env.render()
             obs = results[0]["observation"]
             done = results[2]
             if done:
@@ -186,102 +199,52 @@ def main(argv):
 
         if reset_env:
             observations = new_observations
-            if not evaluating and lp_training:
-                learning_progress = Variable(torch.zeros_like(learning_progress))
+            #if not evaluating and lp_training:
+            #    learning_progress = Variable(torch.zeros_like(learning_progress))
             reset_env = False
             continue
 
         if not evaluating: #if not evaluating, then train
 
-            pen_vars_slice = slice(54,61)
-            hindsight_goal = new_observations[0,0,pen_vars_slice]
+            hindsight_goal = new_observations[0,0,goal_vars_slice]
             hindsight_goals = hindsight_goal.unsqueeze(0).unsqueeze(0)
             sparse_goal_reward = env.compute_reward(hindsight_goal.numpy(), goal.detach().numpy(), None)
             goal_reward = torch.clamp(-torch.norm(hindsight_goal - goal.detach()), -1, 1)
-            print(new_observations[0,0,pen_vars_slice], goal)
+            print(new_observations[0,0,goal_vars_slice], goal)
             print("goal_reward",goal_reward)
             print("sparse_goal_reward",sparse_goal_reward)
             rewards.append(sparse_goal_reward)
 
-            total_delta = 0
+            temp_buffer.append((observations, noisy_actions, hindsight_goals, 0, new_observations, log_prob_goals.detach()))
 
-            ## update q value network on desired goal
-            #optimizer.zero_grad()
-            #value = net.compute_q_value(noisy_goals.detach(), observations, noisy_actions)
-            #print("q-value", value.data.item())
-            #delta = goal_reward - value
-            #total_delta += delta
-            #reward_value_fun = 0.5*delta**2
-            #partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
-            #optimizer.step()
-
-            ### update q value network on hindsight goal
-            ### by definition we have achieved the hindsight goal, so reward is 0.0 (achieved goal)
-            #goal_reward = 0.0
-            #optimizer.zero_grad()
-            #value = net.compute_q_value(hindsight_goals.detach(), observations, noisy_actions)
-            #delta = goal_reward - value
-            #total_delta += delta
-            #reward_value_fun = 0.5*delta**2
-            #partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
-            #optimizer.step()
-
-            # update policy to achieve actions with higher q value
-            # this is good to make sure we learn about actions for goals which are achievable
-            # TODO: Alternative to try: because in this environment having several actions that lead to same outcome is probably not very likely, then we can train the action decoder directly too on hindsight goal
-            # without  any problem for intrisic motivation I think
-            if np.random.rand() <= 1.0:
-                #print(net.action_decoder.state_dict().items())
-                for i in range(1):
+            '''TRAIN GOAL POLICY'''
+            if iteration > 0 and (iteration%20)==0 and lp_training: #only do this once we have a previous_lp_value
+                # im doing 5 training iterations to make sure goal policy updates kinda quick, and is able to adapt to the learning of the agent
+                for i in range(20):
+                    index = np.random.choice(range(len(temp_buffer)))
+                    print(index)
+                    observations, noisy_actions, hindsight_goals, _, new_observations, log_prob_goals_old = temp_buffer[index]
                     optimizer.zero_grad()
                     # find the actions the policy predicts for hindsight goal
                     hindsight_actions = net.compute_actions(hindsight_goals.detach(),observations)
-                    if i == 0:
-                        hindsight_actions_original = hindsight_actions.detach().clone()
+                    #hindsight_actions_original = hindsight_actions.detach().clone()
                     action_reconstruction_loss = 0.5*torch.norm(noisy_actions.detach() - hindsight_actions)**2
                     partial_backprop(action_reconstruction_loss)
                     optimizer.step()
-                #for i in range(1):
-                #    optimizer.zero_grad()
-                #    # find the actions the policy predicts for hindsight goal
-                #    hindsight_actions = net.compute_actions(hindsight_goals.detach()+0.1*torch.rand_like(hindsight_goals),observations)
-                #    action_reconstruction_loss = 0.5*torch.norm(actions.detach() - hindsight_actions)**2
-                #    partial_backprop(-action_reconstruction_loss)
-                #    optimizer.step()
-                new_actions = net.compute_actions(hindsight_goals,observations)
-                action_difference = torch.norm(new_actions-hindsight_actions_original)/torch.norm(hindsight_actions_original)
-            else:
-                actions = net.compute_actions(noisy_goals,observations)
-                optimizer.zero_grad()
-                loss_policy = -net.compute_q_value(noisy_goals.detach(), observations, actions)
-                partial_backprop(loss_policy, [net.q_value_decoder])
-                optimizer.step()
-                new_actions = net.compute_actions(noisy_goals,observations)
-                action_difference = torch.norm(new_actions-actions)/torch.norm(actions)
+                    new_actions = net.compute_actions(hindsight_goals,observations)
+                    action_difference = torch.norm(new_actions-hindsight_actions)/torch.norm(hindsight_actions)
+                    learning_progress = action_difference
+                    print("learning progress", learning_progress.data.item())
+                    lps.append(learning_progress.data.item())
+                    temp_buffer[index] = (observations, noisy_actions, hindsight_goals, learning_progress.detach(), new_observations, log_prob_goals_old)
 
-
-            '''COMPUTE LEARNING PROGRESS'''
-
-
-            print("action difference", action_difference)
-            #learning_progress = torch.abs(delta) + action_difference
-            #learning_progress = torch.max(total_delta,action_difference)
-            #learning_progress = 0.1*torch.abs(total_delta)+2*action_difference
-            learning_progress = action_difference
-            #learning_progress = action_difference + 0.001*goal_reward
-            learning_progress *= 10
-            #learning_progress = goal_reward
-            print("learning progress", learning_progress.data.item())
-            lps.append(learning_progress.data.item())
-
-            '''TRAIN GOAL POLICY'''
-            if iteration>0 and lp_training: #only do this once we have a previous_lp_value
-                # im doing 5 training iterations to make sure goal policy updates kinda quick, and is able to adapt to the learning of the agent
-                for i in range(1):
-                    log_prob_goals = net.compute_log_prob_goals(observations, hindsight_goals)
+                for i in range(20):
                     optimizer.zero_grad()
+                    index = np.random.choice(range(len(temp_buffer)))
+                    observations, _, hindsight_goals, learning_progress, new_observations, _= temp_buffer[index]
+                    log_prob_goals = net.compute_log_prob_goals(observations, hindsight_goals)
                     previous_lp_value = net.compute_vlp(observations)
-                    delta = learning_progress.detach() + gamma*net.compute_vlp(new_observations).detach() - previous_lp_value
+                    delta = learning_progress + gamma*net.compute_vlp(new_observations).detach() - previous_lp_value
                     #delta = learning_progress.detach() 
                     #print(delta, learning_progress, lp_value, previous_lp_value)
 
@@ -289,16 +252,20 @@ def main(argv):
                     partial_backprop(loss_lp_value_fun, [net.goal_decoder])
                     optimizer.step()
 
-                for i in range(1):
+                for i in range(20):
+                    index = np.random.choice(range(len(temp_buffer)))
+                    observations, _, hindsight_goals, learning_progress, new_observations, log_prob_goals_old = temp_buffer[index]
+                    log_prob_goals = net.compute_log_prob_goals(observations, hindsight_goals)
+                    previous_lp_value = net.compute_vlp(observations)
+                    delta = learning_progress + gamma*net.compute_vlp(new_observations).detach() - previous_lp_value
                     optimizer.zero_grad()
-                    loss_goal_policy = -delta.detach()*log_prob_goals[0,0]
+                    #loss_goal_policy = -delta.detach()*log_prob_goals[0,0]
+                    #loss_goal_policy = -delta.detach()*torch.exp(log_prob_goals[0,0]-log_prob_goals_old)
+                    loss_goal_policy = -torch.min(delta.detach()*torch.exp(log_prob_goals[0,0]-log_prob_goals_old), g(0.5, delta.detach()))
                     partial_backprop(loss_goal_policy)
                     optimizer.step()
 
-                    optimizer.zero_grad()
-                    loss_noise_policy = -delta.detach()*log_prob_noise[0,0]
-                    partial_backprop(loss_noise_policy)
-                    optimizer.step()
+                temp_buffer = []
 
             #print("lp value", previous_lp_value.data.item())
 

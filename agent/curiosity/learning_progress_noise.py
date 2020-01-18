@@ -36,11 +36,12 @@ class GOALRNN(nn.Module):
         self.action_dim = action_dim
         #self.goal_decoder = MLP(observation_dim, goal_dim*2)
         self.goal_decoder = MLP(observation_dim, goal_dim*2)
-        self.noise_decoder = MLP(observation_dim, action_dim*2)
+        self.noise_decoder = MLP(observation_dim, action_dim)
+        #self.noise_decoder = MLP(observation_dim, 2)
         self.action_decoder = MLP(goal_dim+observation_dim, action_dim, hidden_dim=1024)
         self.q_value_decoder = MLP(goal_dim+observation_dim+action_dim, 1, number_layers=1, hidden_dim=1024)
         self.vlp_decoder = MLP(observation_dim, 1)
-        self.noise_vlp_decoder = MLP(observation_dim, 1)
+        #self.noise_vlp_decoder = MLP(observation_dim, 1)
         self.pen_vars_slice = slice(54,61)
 
     def forward(self, observations):
@@ -51,14 +52,31 @@ class GOALRNN(nn.Module):
         #print(noisy_noise)
         #print(observations,noisy_goals)
         actions = self.compute_actions(noisy_goals, observations)
-        state_dict_backup = self.action_decoder.state_dict()
-        with torch.no_grad():
-            for param in self.action_decoder.parameters():
-                param.add_(torch.randn(param.size()) * 0.1)
-        noisy_actions = self.compute_actions(noisy_goals, observations)
-        print(actions)
-        #noisy_actions = actions+noisy_noise
+        #state_dict_backup = self.action_decoder.state_dict()
+        #with torch.no_grad():
+        #    for param in self.action_decoder.parameters():
+        #        #param.add_(torch.randn(param.size()) * 0.1)
+        #        param.add_(torch.randn(param.size()) * torch.abs(noisy_noise[0,0,0]))
+        #noisy_actions = self.compute_actions(noisy_goals, observations)
+        #print(actions)
+        noisy_actions = actions+0.1*noisy_noise
+        noisy_actions = torch.clamp(noisy_actions, -1, 1)
+        #print(noisy_actions)
         #noisy_actions = actions
+        #noisy_actions = actions * noisy_noise
+        #thing = np.random.rand()
+        #if thing < 1.0:
+        #    noisy_actions = 2*torch.rand_like(actions)-1
+        #elif thing < 0.5:
+        #    noisy_actions = noisy_noise
+        #else:
+        #    state_dict_backup = self.action_decoder.state_dict()
+        #    with torch.no_grad():
+        #        for param in self.action_decoder.parameters():
+        #            #param.add_(torch.randn(param.size()) * 0.1)
+        #            param.add_(torch.randn(param.size()) * 0.1)
+        #    noisy_actions = self.compute_actions(noisy_goals, observations)
+        #    self.action_decoder.load_state_dict(state_dict_backup, strict=False)
         #print(noisy_actions)
         #self.action_decoder.load_state_dict(state_dict_backup, strict=False)
         #print(actions)
@@ -111,17 +129,19 @@ class GOALRNN(nn.Module):
         return noisy_goals, log_prob_goals
 
     def compute_noise(self,observations):
-        noise_means, noise_stds = torch.split(self.noise_decoder(observations), self.action_dim, dim=2)
-        m = MultivariateNormal(noise_means, (noise_stds**2+0.01)*torch.eye(self.action_dim)) # squaring stds so as to be positive
+        noise_stds = self.noise_decoder(observations)
+        #noise_means, noise_stds = torch.split(self.noise_decoder(observations), 1, dim=2)
+        m = MultivariateNormal(torch.zeros_like(noise_stds), (noise_stds**2+0.01)*torch.eye(self.action_dim)) # squaring stds so as to be positive
         noise = m.sample()
-        noise = torch.clamp(noise, -1, 1)
+        #noise = torch.clamp(noise, -1, 1)
         log_prob_noise = m.log_prob(noise)
         #noise = torch.tanh(noise)
         return noise, log_prob_noise
 
     def compute_log_prob_noise(self,observations, goals):
-        noise_means, noise_stds = torch.split(self.noise_decoder(observations), self.action_dim, dim=2)
-        m = MultivariateNormal(noise_means, (noise_stds**2+0.01)*torch.eye(self.action_dim)) # squaring stds so as to be positive
+        noise_stds = self.noise_decoder(observations)
+        #noise_means, noise_stds = torch.split(self.noise_decoder(observations), 1, dim=2)
+        m = MultivariateNormal(torch.zeros_like(noise_stds), (noise_stds**2+0.01)*torch.eye(self.action_dim)) # squaring stds so as to be positive
         log_prob_noise = m.log_prob(noise)
         return log_prob_noise
     
@@ -156,7 +176,6 @@ class GOALRNN(nn.Module):
 
     def compute_actions(self, goals, observations):
         actions = self.action_decoder(torch.cat([goals, observations], dim=2))
-        actions = torch.clamp(actions, -1, 1)
         #actions = torch.tanh(actions)
         #print(actions)
         return actions

@@ -107,6 +107,7 @@ def main(argv):
 
     rewards = []
     lps = []
+    temp_buffer = []
     # a function that allows to do back prop, but not accumulate gradient in certain modules of a network
     def partial_backprop(loss,parts_to_ignore=[]):
         for part in parts_to_ignore:
@@ -274,14 +275,17 @@ def main(argv):
             print("learning progress", learning_progress.data.item())
             lps.append(learning_progress.data.item())
 
+            temp_buffer.append((observations, hindsight_goals, learning_progress.detach(), new_observations))
+
             '''TRAIN GOAL POLICY'''
-            if iteration>0 and lp_training: #only do this once we have a previous_lp_value
+            if iteration%20==19 and lp_training: #only do this once we have a previous_lp_value
                 # im doing 5 training iterations to make sure goal policy updates kinda quick, and is able to adapt to the learning of the agent
-                for i in range(1):
-                    log_prob_goals = net.compute_log_prob_goals(observations, hindsight_goals)
+                for i in range(20):
                     optimizer.zero_grad()
+                    observations, hindsight_goals, learning_progress, new_observations = np.random.choice(temp_buffer)
+                    log_prob_goals = net.compute_log_prob_goals(observations, hindsight_goals)
                     previous_lp_value = net.compute_vlp(observations)
-                    delta = learning_progress.detach() + gamma*net.compute_vlp(new_observations).detach() - previous_lp_value
+                    delta = learning_progress + gamma*net.compute_vlp(new_observations).detach() - previous_lp_value
                     #delta = learning_progress.detach() 
                     #print(delta, learning_progress, lp_value, previous_lp_value)
 
@@ -289,11 +293,17 @@ def main(argv):
                     partial_backprop(loss_lp_value_fun, [net.goal_decoder])
                     optimizer.step()
 
-                for i in range(1):
+                for i in range(20):
+                    observations, hindsight_goals, learning_progress, new_observations = np.random.choice(temp_buffer)
+                    log_prob_goals = net.compute_log_prob_goals(observations, hindsight_goals)
+                    previous_lp_value = net.compute_vlp(observations)
+                    delta = learning_progress + gamma*net.compute_vlp(new_observations).detach() - previous_lp_value
                     optimizer.zero_grad()
                     loss_goal_policy = -delta.detach()*log_prob_goals[0,0]
                     partial_backprop(loss_goal_policy)
                     optimizer.step()
+
+                temp_buffer = []
 
             #print("lp value", previous_lp_value.data.item())
 
