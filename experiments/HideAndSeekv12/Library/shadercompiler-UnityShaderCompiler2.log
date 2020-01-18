@@ -1,4 +1,76 @@
 Base path: '/home/guillefix/Unity/Hub/Editor/2019.2.13f1/Editor/Data', plugins path '/home/guillefix/Unity/Hub/Editor/2019.2.13f1/Editor/Data/PlaybackEngines'
 Cmd: initializeCompiler
-
-Quitting shader compiler process
+Cmd: compileComputeKernel
+  api=15 insize=7960 outsize=2819 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=7960 outsize=4334 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=7960 outsize=6410 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=64076 outsize=11114 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=9919 outsize=4360 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=9919 outsize=7275 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=9919 outsize=7974 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=24335 outsize=8284 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=7335 outsize=3984 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=44336 outsize=3790 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=44336 outsize=3941 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=44336 outsize=3273 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=44336 outsize=4507 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=44336 outsize=3354 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=44336 outsize=4144 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=6942 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=6957 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=7240 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=7900 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=5713 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=4081 outsize=6621 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=4081 outsize=7824 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=1788 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=2386 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=2292 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=1889 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=4314 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=3316 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=3247 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=3312 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=3466 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=2609 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=2397 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=5379 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=6156 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=5422 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=5765 ok=1
