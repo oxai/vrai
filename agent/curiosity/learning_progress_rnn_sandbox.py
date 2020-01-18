@@ -107,7 +107,8 @@ class GOALRNN(nn.Module):
 
 
 import gym
-env=gym.make("HandManipulatePen-v0")
+# env=gym.make("HandManipulatePen-v0")
+env=gym.make("FetchSlide-v1")
 results = env.reset();
 env.observation_space["observation"].shape[0]
 
