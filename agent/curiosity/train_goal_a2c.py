@@ -12,6 +12,7 @@ AGENT_DIR = os.path.join(ROOT_DIR, 'agent')
 MEMORIES_DIR = os.path.join(THIS_DIR,"memories")
 sys.path.append(ROOT_DIR)
 sys.path.append(AGENT_DIR)
+torch.autograd.set_detect_anomaly(True)
 
 from agent.robot_hand_utils import render_with_target, setup_render
 
@@ -106,6 +107,7 @@ def main(argv):
 
     rewards = []
     lps = []
+    temp_buffer = []
     # a function that allows to do back prop, but not accumulate gradient in certain modules of a network
     def partial_backprop(loss,parts_to_ignore=[]):
         for part in parts_to_ignore:
@@ -204,9 +206,9 @@ def main(argv):
 
             total_delta = 0
 
-            # update q value network on desired goal
+            ## update q value network on desired goal
             #optimizer.zero_grad()
-            #value = net.compute_q_value(noisy_goals, observations, noisy_actions)
+            #value = net.compute_q_value(noisy_goals.detach(), observations, noisy_actions)
             #print("q-value", value.data.item())
             #delta = goal_reward - value
             #total_delta += delta
@@ -214,11 +216,11 @@ def main(argv):
             #partial_backprop(reward_value_fun, [net.goal_decoder, net.action_decoder])
             #optimizer.step()
 
-            ## update q value network on hindsight goal
-            ## by definition we have achieved the hindsight goal, so reward is 0.0 (achieved goal)
+            ### update q value network on hindsight goal
+            ### by definition we have achieved the hindsight goal, so reward is 0.0 (achieved goal)
             #goal_reward = 0.0
             #optimizer.zero_grad()
-            #value = net.compute_q_value(hindsight_goals, observations, noisy_actions)
+            #value = net.compute_q_value(hindsight_goals.detach(), observations, noisy_actions)
             #delta = goal_reward - value
             #total_delta += delta
             #reward_value_fun = 0.5*delta**2
@@ -229,9 +231,9 @@ def main(argv):
             # this is good to make sure we learn about actions for goals which are achievable
             # TODO: Alternative to try: because in this environment having several actions that lead to same outcome is probably not very likely, then we can train the action decoder directly too on hindsight goal
             # without  any problem for intrisic motivation I think
-            if np.random.rand() < 1.0:
+            if np.random.rand() <= 1.0:
                 #print(net.action_decoder.state_dict().items())
-                for i in range(2):
+                for i in range(1):
                     optimizer.zero_grad()
                     # find the actions the policy predicts for hindsight goal
                     hindsight_actions = net.compute_actions(hindsight_goals.detach(),observations)
@@ -240,15 +242,23 @@ def main(argv):
                     action_reconstruction_loss = 0.5*torch.norm(actions.detach() - hindsight_actions)**2
                     partial_backprop(action_reconstruction_loss)
                     optimizer.step()
+                for i in range(1):
+                    optimizer.zero_grad()
+                    # find the actions the policy predicts for hindsight goal
+                    hindsight_actions = net.compute_actions(hindsight_goals.detach()+0.1*torch.rand_like(hindsight_goals),observations)
+                    action_reconstruction_loss = 0.5*torch.norm(actions.detach() - hindsight_actions)**2
+                    partial_backprop(-action_reconstruction_loss)
+                    optimizer.step()
                 new_actions = net.compute_actions(hindsight_goals,observations)
                 action_difference = torch.norm(new_actions-hindsight_actions_original)/torch.norm(hindsight_actions_original)
             else:
+                actions = net.compute_actions(noisy_goals,observations)
                 optimizer.zero_grad()
                 loss_policy = -net.compute_q_value(noisy_goals.detach(), observations, actions)
                 partial_backprop(loss_policy, [net.q_value_decoder])
+                optimizer.step()
                 new_actions = net.compute_actions(noisy_goals,observations)
                 action_difference = torch.norm(new_actions-actions)/torch.norm(actions)
-                optimizer.step()
 
 
             '''COMPUTE LEARNING PROGRESS'''
@@ -265,14 +275,17 @@ def main(argv):
             print("learning progress", learning_progress.data.item())
             lps.append(learning_progress.data.item())
 
+            temp_buffer.append((observations, hindsight_goals, learning_progress.detach(), new_observations))
+
             '''TRAIN GOAL POLICY'''
-            if iteration>0 and lp_training: #only do this once we have a previous_lp_value
+            if iteration%20==19 and lp_training: #only do this once we have a previous_lp_value
                 # im doing 5 training iterations to make sure goal policy updates kinda quick, and is able to adapt to the learning of the agent
-                for i in range(1):
-                    log_prob_goals = net.compute_log_prob_goals(observations, hindsight_goals)
+                for i in range(20):
                     optimizer.zero_grad()
+                    observations, hindsight_goals, learning_progress, new_observations = np.random.choice(temp_buffer)
+                    log_prob_goals = net.compute_log_prob_goals(observations, hindsight_goals)
                     previous_lp_value = net.compute_vlp(observations)
-                    delta = learning_progress.detach() + gamma*net.compute_vlp(new_observations).detach() - previous_lp_value
+                    delta = learning_progress + gamma*net.compute_vlp(new_observations).detach() - previous_lp_value
                     #delta = learning_progress.detach() 
                     #print(delta, learning_progress, lp_value, previous_lp_value)
 
@@ -280,11 +293,17 @@ def main(argv):
                     partial_backprop(loss_lp_value_fun, [net.goal_decoder])
                     optimizer.step()
 
-                for i in range(1):
+                for i in range(20):
+                    observations, hindsight_goals, learning_progress, new_observations = np.random.choice(temp_buffer)
+                    log_prob_goals = net.compute_log_prob_goals(observations, hindsight_goals)
+                    previous_lp_value = net.compute_vlp(observations)
+                    delta = learning_progress + gamma*net.compute_vlp(new_observations).detach() - previous_lp_value
                     optimizer.zero_grad()
                     loss_goal_policy = -delta.detach()*log_prob_goals[0,0]
                     partial_backprop(loss_goal_policy)
                     optimizer.step()
+
+                temp_buffer = []
 
             #print("lp value", previous_lp_value.data.item())
 
