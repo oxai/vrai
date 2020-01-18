@@ -20,5 +20,4 @@ environment/HideAndSeekv12/Temp/*
 **/*.x86_64
 environment/HideAndSeekv12/*.x86_64
 environment/HideAndSeekv12/Library/*
-../../environment/New\ Unity\ Project/
-
+environment/New\ Unity\ Project/

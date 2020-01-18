@@ -1,4 +1,62 @@
 Base path: '/home/guillefix/Unity/Hub/Editor/2019.2.13f1/Editor/Data', plugins path '/home/guillefix/Unity/Hub/Editor/2019.2.13f1/Editor/Data/PlaybackEngines'
 Cmd: initializeCompiler
-
-Quitting shader compiler process
+Cmd: compileComputeKernel
+  api=15 insize=7960 outsize=5729 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=7960 outsize=5935 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=64076 outsize=15985 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=9919 outsize=4357 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=9919 outsize=7347 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=24335 outsize=22370 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=7335 outsize=3491 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=7335 outsize=9994 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 15 at BarracudaReferenceImpl.compute(1256): array reference cannot be used as an l-value; not natively addressable, forcing loop to unroll
+  error: 1 plat 15 at BarracudaReferenceImpl.compute(1266): array reference cannot be used as an l-value; not natively addressable, forcing loop to unroll
+  api=15 insize=44336 outsize=16811 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=6838 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=5638 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=7831 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=5720 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=4081 outsize=4151 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=2119 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=2360 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=2117 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=3174 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=3516 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=3301 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=3353 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=2310 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=3742 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=3397 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=3130 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=5564 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=5737 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=5607 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=5751 ok=1

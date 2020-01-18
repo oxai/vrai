@@ -5,4 +5,8 @@
 #mlagents-learn trainer_config.yaml --curriculum=config/curricula/hideseek --run-id=uwu2 --train $@
 #mlagents-learn trainer_config.yaml --curriculum=config/curricula/hideseek --run-id=uwu3 --train $@
 #mlagents-learn trainer_config.yaml --curriculum=config/curricula/hideseek --run-id=uwu_rnn --train $@
-mlagents-learn trainer_config.yaml --curriculum=config/curricula/hideseek --run-id=uwu_rnn2 --train $@
+#mlagents-learn trainer_config.yaml --curriculum=config/curricula/hideseek --run-id=uwu_rnn2 --train $@
+#mlagents-learn --env=../../experiments/HideAndSeekv12/teacher_student.x86_64 trainer_config.yaml --run-id=student_teacher5 --train --load --time-scale=20 $@
+#mlagents-learn trainer_config.yaml --env=../../experiments/HideAndSeekv12/teacher_student.x86_64 --run-id=student_teacher5 --train --load --time-scale=20 $@
+mlagents-learn trainer_config.yaml --run-id=student_teacher_new3 --train --load --time-scale=20 $@
+#mlagents-learn --env=../../experiments/HideAndSeekv12/teacher_student.x86_64 trainer_config.yaml --run-id=student_teacher5 --load --base-port 5006 $@
