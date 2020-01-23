@@ -27,6 +27,14 @@ flags.DEFINE_bool("save_goals",False,"whether to save goals")
 flags.DEFINE_string("experiment_name","","experiment name")
 flags.DEFINE_bool("lp_training",True,"whether to train the goal policy or use random goals")
 
+def weight_reset(m):
+    if isinstance(m, nn.Conv2d) or isinstance(m, nn.Linear):
+        m.reset_parameters()
+    elif isinstance(m, nn.BatchNorm2d):
+        nn.init.constant_(m.weight, 1)
+        nn.init.constant_(m.bias, 0)
+
+
 def main(argv):
     FLAGS = flags.FLAGS
     print(FLAGS.flag_values_dict())
@@ -65,6 +73,10 @@ def main(argv):
     if os.path.isfile("lprnn_weights"+experiment_name+".pt"):
         print("LOADING WEIGHTS")
         net.load_state_dict(torch.load("lprnn_weights"+experiment_name+".pt"))
+
+    #print(net.goal_decoder.state_dict().items())
+    #net.goal_decoder.apply(weight_reset)
+    #print(net.goal_decoder.state_dict().items())
 
     # optimizer and losses
     from torch import optim
@@ -216,12 +228,13 @@ def main(argv):
             # TODO: Alternative to try: because in this environment having several actions that lead to same outcome is probably not very likely, then we can train the action decoder directly too on hindsight goal
             # without  any problem for intrisic motivation I think
             if np.random.rand() < 1.0:
+                #print(net.action_decoder.state_dict().items())
                 for i in range(2):
                     optimizer.zero_grad()
                     # find the actions the policy predicts for hindsight goal
                     hindsight_actions = net.compute_actions(hindsight_goals.detach(),observations)
                     if i == 0:
-                        hindsight_actions_original = hindsight_actions
+                        hindsight_actions_original = hindsight_actions.detach().clone()
                     action_reconstruction_loss = 0.5*torch.norm(actions.detach() - hindsight_actions)**2
                     partial_backprop(action_reconstruction_loss)
                     optimizer.step()
@@ -243,15 +256,15 @@ def main(argv):
             #learning_progress = torch.abs(delta) + action_difference
             #learning_progress = torch.max(total_delta,action_difference)
             #learning_progress = 0.1*torch.abs(total_delta)+2*action_difference
-            #learning_progress = action_difference
-            learning_progress = action_difference + 0.01*goal_reward
+            learning_progress = action_difference
+            #learning_progress = action_difference + 0.001*goal_reward
             print("learning progress", learning_progress.data.item())
             lps.append(learning_progress.data.item())
 
             '''TRAIN GOAL POLICY'''
             if iteration>0 and lp_training: #only do this once we have a previous_lp_value
                 # im doing 5 training iterations to make sure goal policy updates kinda quick, and is able to adapt to the learning of the agent
-                for i in range(5):
+                for i in range(1):
                     optimizer.zero_grad()
                     previous_lp_value = net.compute_qlp(observations, hindsight_goals)
                     delta = learning_progress.detach() + gamma*net.compute_qlp(new_observations, net.compute_noisy_goals(new_observations)).detach() - previous_lp_value
@@ -261,10 +274,11 @@ def main(argv):
                     partial_backprop(loss_lp_value_fun, [net.goal_decoder])
                     optimizer.step()
 
-                optimizer.zero_grad()
-                loss_goal_policy = -net.compute_qlp(observations, net.compute_goals(observations))
-                partial_backprop(loss_goal_policy, [net.qlp_decoder])
-                optimizer.step()
+                for i in range(1):
+                    optimizer.zero_grad()
+                    loss_goal_policy = -net.compute_qlp(observations, net.compute_goals(observations))
+                    partial_backprop(loss_goal_policy, [net.qlp_decoder])
+                    optimizer.step()
 
             #print("lp value", previous_lp_value.data.item())
 

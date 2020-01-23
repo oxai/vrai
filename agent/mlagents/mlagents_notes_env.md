@@ -167,6 +167,11 @@ which extends `UnityToExternalProtoServicer` defined in `mlagents.envs.communica
 
 This looks like a dead end. We need to undersand what process is `self.unity_to_external.parent_conn`. It seems I can't know without knowing how grpc works...
 
+ok it seems we are missing .proto files inside `communicator_objects`. but still not sure where the parent and child processes of `self.unity_to_external` are tied to unity environments or whatever
+
+Ok, I'll look at BrainParameters class next, maybe that should give me what I need to know.
+Or hecc, maybe I should just look at how side_channels work!
+
 
 
 

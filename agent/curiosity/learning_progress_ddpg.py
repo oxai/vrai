@@ -45,13 +45,7 @@ class GOALRNN(nn.Module):
 
         noisy_goals = self.compute_noisy_goals(observations)
         #print(observations,noisy_goals)
-        actions = self.compute_actions(noisy_goals, observations)
-        state_dict_backup = self.action_decoder.state_dict()
-        with torch.no_grad():
-            for param in self.action_decoder.parameters():
-                param.add_(torch.randn(param.size()) * 0.1)
-        noisy_actions = self.compute_actions(noisy_goals, observations)
-        self.action_decoder.load_state_dict(state_dict_backup, strict=False)
+        noisy_actions = self.compute_noisy_actions(noisy_goals, observations)
         #print(actions)
         #if np.random.rand() < 0.2:
         #    noisy_actions = actions + 5*torch.randn_like(actions)
@@ -62,11 +56,11 @@ class GOALRNN(nn.Module):
         #lp_values = self.compute_qlp(observations, noisy_goals)
         return actions, noisy_actions, noisy_goals#, values, lp_values
 
-    
+
     def compute_goals(self,observations):
         pen_vars_slice = self.pen_vars_slice
         goals = self.goal_decoder(observations)
-        goals = torch.tanh(goals)
+        #goals = torch.tanh(goals)
         pen_pos = observations[:,:,pen_vars_slice][...,:3]
         pen_rot = observations[:,:,pen_vars_slice][...,3:]
         rot_goal = goals[:,:,3:]
@@ -74,13 +68,14 @@ class GOALRNN(nn.Module):
         rel_rot_goal = rot_goal+pen_rot
         goals = torch.cat([(goals[:,:,:3])*0.01+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
         return goals
-    
+
     def compute_noisy_goals(self,observations):
         state_dict_backup = self.goal_decoder.state_dict()
         with torch.no_grad():
             for param in self.goal_decoder.parameters():
                 param.add_(torch.randn(param.size()) * 0.1)
         noisy_goals = self.compute_goals(observations)
+        noisy_goals = torch.clamp(noisy_goals, -10, 10)
         self.goal_decoder.load_state_dict(state_dict_backup, strict=False)
         #goals = self.compute_goals(observations)
         #if np.random.rand() < 0.2:
@@ -97,11 +92,22 @@ class GOALRNN(nn.Module):
 
     def compute_qlp(self, observations, goals):
         values = self.qlp_decoder(torch.cat([observations,goals], dim=2))
+        values = values - 1 #pesimistic goal values to see if it makes it not explode :P
         #values = torch.tanh(values)
         return values
 
     def compute_actions(self, goals, observations):
         actions = self.action_decoder(torch.cat([goals, observations], dim=2))
-        actions = torch.tanh(actions)
+        #actions = torch.tanh(actions)
         #print(actions)
         return actions
+
+    def compute_noisy_actions(self, goals, observations):
+        # actions = self.compute_actions(goals, observations)
+        state_dict_backup = self.action_decoder.state_dict()
+        with torch.no_grad():
+            for param in self.action_decoder.parameters():
+                param.add_(torch.randn(param.size()) * 0.1)
+        noisy_actions = self.compute_actions(goals, observations)
+        self.action_decoder.load_state_dict(state_dict_backup, strict=False)
+        return noisy_actions

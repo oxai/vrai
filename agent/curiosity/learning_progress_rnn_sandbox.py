@@ -108,6 +108,7 @@ class GOALRNN(nn.Module):
 
 import gym
 env=gym.make("HandManipulatePen-v0")
+env=gym.make("FetchSlide-v1")
 results = env.reset();
 env.observation_space["observation"].shape[0]
 
@@ -131,6 +132,39 @@ for idx, value in enumerate(lookat):
 env.viewer.cam.distance = 0.5
 env.viewer.cam.azimuth = 55.
 env.viewer.cam.elevation = -25.
+env.viewer.render()
+
+#%%
+
+import gym
+env=gym.make("FetchSlide-v1")
+results = env.reset();
+results
+env.action_space.high[0]
+env.observation_space["observation"].shape[0]
+env.observation_space["observation"]
+# gym.make("Reacher-v2").observation_space.low
+import numpy as np
+
+# goal = np.concatenate([1.0+0.02*(2*np.random.rand(2)-1), 0.15+0.02*(2*np.random.rand(1)-1), (2*np.random.rand(4)-1)])
+goal = np.array([1.5,1,0.41])+0.1*np.random.randn(3)
+
+sim = env.sim
+
+sites_offset = (sim.data.site_xpos - sim.model.site_pos).copy()
+site_id = sim.model.site_name2id('target0')
+sim.model.site_pos[site_id] = goal - sites_offset[0]
+sim.forward()
+
+import mujoco_py
+env.viewer = mujoco_py.MjViewer(env.sim)
+body_id = sim.model.body_name2id('robot0:gripper_link')
+lookat = sim.data.body_xpos[body_id]
+for idx, value in enumerate(lookat):
+    env.viewer.cam.lookat[idx] = value
+env.viewer.cam.distance = 2.5
+env.viewer.cam.azimuth = 132.
+env.viewer.cam.elevation = -14.
 env.viewer.render()
 
 #%%
