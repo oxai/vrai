@@ -1,4 +1,73 @@
 Base path: '/home/guillefix/Unity/Hub/Editor/2019.2.13f1/Editor/Data', plugins path '/home/guillefix/Unity/Hub/Editor/2019.2.13f1/Editor/Data/PlaybackEngines'
 Cmd: initializeCompiler
-
-Quitting shader compiler process
+Cmd: compileComputeKernel
+  api=15 insize=7960 outsize=3759 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=7960 outsize=5715 ok=1
+Cmd: compileComputeKernel
+  error: 1 plat 18 at Tensor.cginc(155): use of potentially uninitialized variable (ReadonlyTensor::SafeGet)
+  api=18 insize=64076 outsize=40845 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=9919 outsize=5078 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=9919 outsize=7283 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=24335 outsize=6183 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=24335 outsize=39088 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=7335 outsize=6963 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=44336 outsize=3560 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=44336 outsize=3276 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=44336 outsize=3351 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=44336 outsize=4503 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=44336 outsize=4793 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=44336 outsize=3725 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=7416 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=11427 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=5575 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=7831 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=44336 outsize=5720 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=4081 outsize=3607 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=2077 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=2186 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=1853 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=3262 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=3563 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=3264 ok=1
+Cmd: compileComputeKernel
+  api=15 insize=29386 outsize=3273 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=3148 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=3382 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=2397 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=3594 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=4491 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=5538 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=5747 ok=1
+Cmd: compileComputeKernel
+  api=18 insize=29386 outsize=6606 ok=1

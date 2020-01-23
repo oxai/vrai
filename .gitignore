@@ -11,6 +11,7 @@ agent/curiosity/engineered_goal_spaces/lprnn*.pt
 agent/curiosity/engineered_goal_spaces/lprnn_weights*.pt
 agent/curiosity/rewards*.txt
 agent/curiosity/learning_progresses*.txt
+agent/curiosity/test_rewards*.txt
 agent/curiosity/lprnn*.pt
 #agent/mlagents/summaries/*
 #agent/mlagents/models/*
@@ -29,4 +30,3 @@ environment/vrchat/UnityMiddleWare/Packages
 environment/vrchat/UnityMiddleWare/Unity\ Environment_Data
 environment/vrchat/VrcaiMlaCommunicator/packages/*
 # environment/vrchat/VrcaiMlaCommunicator/VrcaiMlaCommunicator/bin/*
-
