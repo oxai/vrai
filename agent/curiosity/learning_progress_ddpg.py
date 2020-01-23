@@ -45,13 +45,7 @@ class GOALRNN(nn.Module):
 
         noisy_goals = self.compute_noisy_goals(observations)
         #print(observations,noisy_goals)
-        actions = self.compute_actions(noisy_goals, observations)
-        state_dict_backup = self.action_decoder.state_dict()
-        with torch.no_grad():
-            for param in self.action_decoder.parameters():
-                param.add_(torch.randn(param.size()) * 0.1)
-        noisy_actions = self.compute_actions(noisy_goals, observations)
-        self.action_decoder.load_state_dict(state_dict_backup, strict=False)
+        noisy_actions = self.compute_noisy_actions(noisy_goals, observations)
         #print(actions)
         #if np.random.rand() < 0.2:
         #    noisy_actions = actions + 5*torch.randn_like(actions)
@@ -62,7 +56,7 @@ class GOALRNN(nn.Module):
         #lp_values = self.compute_qlp(observations, noisy_goals)
         return actions, noisy_actions, noisy_goals#, values, lp_values
 
-    
+
     def compute_goals(self,observations):
         pen_vars_slice = self.pen_vars_slice
         goals = self.goal_decoder(observations)
@@ -74,7 +68,7 @@ class GOALRNN(nn.Module):
         rel_rot_goal = rot_goal+pen_rot
         goals = torch.cat([(goals[:,:,:3])*0.01+pen_pos,(rel_rot_goal)/torch.norm(rel_rot_goal)], dim=2)
         return goals
-    
+
     def compute_noisy_goals(self,observations):
         state_dict_backup = self.goal_decoder.state_dict()
         with torch.no_grad():
@@ -107,3 +101,13 @@ class GOALRNN(nn.Module):
         #actions = torch.tanh(actions)
         #print(actions)
         return actions
+
+    def compute_noisy_actions(self, goals, observations):
+        # actions = self.compute_actions(goals, observations)
+        state_dict_backup = self.action_decoder.state_dict()
+        with torch.no_grad():
+            for param in self.action_decoder.parameters():
+                param.add_(torch.randn(param.size()) * 0.1)
+        noisy_actions = self.compute_actions(goals, observations)
+        self.action_decoder.load_state_dict(state_dict_backup, strict=False)
+        return noisy_actions
