@@ -17,6 +17,16 @@ agent/curiosity/lprnn*.pt
 environment/HideAndSeekv12/Library/PackageCache*
 environment/HideAndSeekv12/Temp/*
 **/*.x86_64
-environment/HideAndSeekv12/*.x86_64
-environment/HideAndSeekv12/Library/*
+experiments/HideAndSeekv12/*.x86_64
+experiments/HideAndSeekv12/Library/*
 ../../environment/New\ Unity\ Project/
+# environment/vrchat/vrcai/bin/*
+environment/vrchat/vrcai/.vs/*
+experiments/HideAndSeekv12/.vs/HideAndSeekv12/
+environment/vrchat/vrcai/packages/
+environment/vrchat/UnityMiddleWare/Library
+environment/vrchat/UnityMiddleWare/Packages
+environment/vrchat/UnityMiddleWare/Unity\ Environment_Data
+environment/vrchat/VrcaiMlaCommunicator/packages/*
+# environment/vrchat/VrcaiMlaCommunicator/VrcaiMlaCommunicator/bin/*
+
