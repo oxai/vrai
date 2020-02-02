@@ -22,7 +22,7 @@ public class TestAcademy : Academy
         ipEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
         //var zkEndpoint = new TcpZkEndPoint("username", "password",
         //    new IPEndPoint(IPAddress.Parse(ip), port), connectTimeOutMs: 2500);
-        client = new TcpClient<IVrcaiMlaTest>(ipEndPoint);
+        //client = new TcpClient<IVrcaiMlaTest>(ipEndPoint);
 
         //using (var client = new TcpClient<IVrcaiMlaTest>(zkEndpoint))
         //using (var )

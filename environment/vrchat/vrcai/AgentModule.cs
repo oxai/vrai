@@ -16,7 +16,7 @@ namespace AgentModule
         public Transform transform;
         public Rigidbody rb;
         public float Speed = 10f;
-        private List<Vector3> initialPoss;
+        private List<Vector3> initialPoss = new List<Vector3>();
         System.Random rnd = new System.Random();
 
         public Agent(GameObject agent)
