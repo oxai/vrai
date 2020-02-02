@@ -79,9 +79,11 @@
     <Compile Include="Assets\ML-Agents\Examples\GridWorld\Scripts\GridArea.cs" />
     <Compile Include="Assets\ML-Agents\Examples\Hallway\Scripts\HallwayAcademy.cs" />
     <Compile Include="Assets\ML-Agents\Examples\Hallway\Scripts\HallwayAgent.cs" />
+    <Compile Include="Assets\ML-Agents\Examples\Hallway\Scripts\HallwaySettings.cs" />
     <Compile Include="Assets\ML-Agents\Examples\PushBlock\Scripts\GoalDetect.cs" />
     <Compile Include="Assets\ML-Agents\Examples\PushBlock\Scripts\PushAgentBasic.cs" />
     <Compile Include="Assets\ML-Agents\Examples\PushBlock\Scripts\PushBlockAcademy.cs" />
+    <Compile Include="Assets\ML-Agents\Examples\PushBlock\Scripts\PushBlockSettings.cs" />
     <Compile Include="Assets\ML-Agents\Examples\Pyramids\Scripts\PyramidAcademy.cs" />
     <Compile Include="Assets\ML-Agents\Examples\Pyramids\Scripts\PyramidAgent.cs" />
     <Compile Include="Assets\ML-Agents\Examples\Pyramids\Scripts\PyramidArea.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="Assets\ML-Agents\Examples\Soccer\Scripts\SoccerAcademy.cs" />
     <Compile Include="Assets\ML-Agents\Examples\Soccer\Scripts\SoccerBallController.cs" />
     <Compile Include="Assets\ML-Agents\Examples\Soccer\Scripts\SoccerFieldArea.cs" />
+    <Compile Include="Assets\ML-Agents\Examples\Soccer\Scripts\SoccerSettings.cs" />
     <Compile Include="Assets\ML-Agents\Examples\Template\Scripts\TemplateAcademy.cs" />
     <Compile Include="Assets\ML-Agents\Examples\Template\Scripts\TemplateAgent.cs" />
     <Compile Include="Assets\ML-Agents\Examples\Tennis\Scripts\HitWall.cs" />
@@ -113,6 +116,7 @@
     <Compile Include="Assets\ML-Agents\Examples\Walker\Scripts\WalkerAgent.cs" />
     <Compile Include="Assets\ML-Agents\Examples\WallJump\Scripts\WallJumpAcademy.cs" />
     <Compile Include="Assets\ML-Agents\Examples\WallJump\Scripts\WallJumpAgent.cs" />
+    <Compile Include="Assets\ML-Agents\Examples\WallJump\Scripts\WallJumpSettings.cs" />
     <Compile Include="Assets\ML-Agents\Scripts\Academy.cs" />
     <Compile Include="Assets\ML-Agents\Scripts\ActionMasker.cs" />
     <Compile Include="Assets\ML-Agents\Scripts\Agent.cs" />
@@ -191,6 +195,8 @@
     <Compile Include="Assets\Scripts\HideAndSeek\HideAndSeekAcademy.cs" />
     <Compile Include="Assets\Scripts\HideAndSeek\HiderSeekerAgent.cs" />
     <Compile Include="Assets\Scripts\HideAndSeek\SeekerHiderAI.cs" />
+    <Compile Include="Assets\Scripts\HideAndSeek\StudentAgent.cs" />
+    <Compile Include="Assets\Scripts\HideAndSeek\TeacherAgent.cs" />
     <None Include="Assets\ML-Agents\Examples\SharedAssets\Materials\ShaderRadialGrid.shader" />
     <None Include="Assets\ML-Agents\Examples\SharedAssets\Materials\GridPatternShader.shader" />
     <None Include="Assets\ML-Agents\Examples\SharedAssets\Materials\ShaderOutline.shader" />
@@ -198,11 +204,20 @@
     <Reference Include="MacBLAS">
       <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/MacBLAS.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Burst">
+      <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/Unity.Burst.dll</HintPath>
+    </Reference>
     <Reference Include="Barracuda-editor">
       <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/Barracuda-editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Burst.Editor">
+      <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Barracuda">
+      <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/Barracuda.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
       <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
@@ -213,11 +228,20 @@
     <Reference Include="com.unity.multiplayer-weaver.Editor">
       <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/com.unity.multiplayer-weaver.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="BurstBLAS">
+      <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/BurstBLAS.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics">
+      <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.SpatialTracking">
       <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/UnityEditor.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics.Editor">
+      <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/Unity.Mathematics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
@@ -405,27 +429,6 @@
     <Reference Include="Unity.Locator">
       <HintPath>C:/Program Files/2019.3.0f3/Editor/Data/Managed/Unity.Locator.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>C:/Program Files/2019.3.0f3/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TestRunner">
-      <HintPath>C:/Program Files/2019.3.0f3/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>C:/Program Files/2019.3.0f3/Editor/Data/UnityExtensions/Unity/TestRunner/net35/unity-custom/nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Timeline">
-      <HintPath>C:/Program Files/2019.3.0f3/Editor/Data/UnityExtensions/Unity/Timeline/RuntimeEditor/UnityEngine.Timeline.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>C:/Program Files/2019.3.0f3/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.GoogleAudioSpatializer">
-      <HintPath>C:/Program Files/2019.3.0f3/Editor/Data/UnityExtensions/Unity/UnityGoogleAudioSpatializer/RuntimeEditor/UnityEngine.GoogleAudioSpatializer.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.SpatialTracking">
-      <HintPath>C:/Program Files/2019.3.0f3/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
-    </Reference>
     <Reference Include="System.IO.Abstractions">
       <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Assets/ML-Agents/Plugins/System.IO.Abstractions.dll</HintPath>
     </Reference>
@@ -447,11 +450,11 @@
     <Reference Include="Unity.Analytics.Tracker">
       <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/PackageCache/com.unity.analytics@3.3.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
-    <Reference Include="Barracuda">
-      <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/PackageCache/com.unity.barracuda@0.3.2-preview/Barracuda/Barracuda.dll</HintPath>
-    </Reference>
     <Reference Include="Google.Protobuf">
-      <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/PackageCache/com.unity.barracuda@0.3.2-preview/Barracuda/Plugins/ProtoBuffer/Google.Protobuf.dll</HintPath>
+      <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/PackageCache/com.unity.barracuda@0.4.0-preview/Barracuda/Plugins/ProtoBuffer/Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst.Unsafe">
+      <HintPath>C:/Users/guill/Documents/code/vrai/experiments/HideAndSeekv12/Library/PackageCache/com.unity.burst@1.1.1/Unity.Burst.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/2019.3.0f3/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
