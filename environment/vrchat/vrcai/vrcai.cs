@@ -1,27 +1,43 @@
-﻿using System;
+﻿using ServiceWire;
+using ServiceWire.TcpIp;
+//using ServiceWire.ZeroKnowledge;
+using System;
+using System.Net;
 using System.Collections;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 using VRC;
 using VRCMenuUtils;
 using VRCModLoader;
+using VrcaiMlaCommunicator;
+using System.Collections.Generic;
+using AgentModule;
+using VRCTools;
+//using System.Threading.Tasks;
+//using System.Net;
+//using Windows.Networking.Sockets;
+//using System.Net.sockets;
 
-namespace ExampleModule
+
+namespace vrcai
 {
 
-    [VRCModInfo("VRCAI", "0.2.5", "BeansMain", null, null)]
+    [VRCModInfo("VRCAI", "0.2.5", "oxai", null, null)]
     public class VRCAI : VRCMod
 	{
-		
-		public void OnGUI()
+        public static Agent agent;
+        public static Player myPlayer;
+        public static bool wiggly_avatar = false;
+        public static Vector3 avatarPos1;
+        public static Vector3 avatarPos2;
+        public static int avatarState = 1;
+        public static int timeScaleState = 1;
+        public static float stop_training = 0;
+        public void OnGUI()
 		{
 
 		}
-        public float Speed = 0.7f;
-        //public Renderer rend;
-        //private void OnApplicationStart()
-        //{
-        //    ModManager.StartCoroutine(this.Setup());
-        //}
         //private IEnumerator Setup()
         //{
         //    yield return VRCMenuUtilsAPI.WaitForInit();
@@ -29,34 +45,143 @@ namespace ExampleModule
         //    VRCMenuUtilsAPI.AddQuickMenuButton("Rgb", "Rainbow\nRGB\nOff", "Enables/Disables Rainbow nameplates", new Action(this.RGB_Off));
         //    yield break;
         //}
-        public void Start()
-		{
-            Console.WriteLine("[VRCAI] Started.");
-		}
+        private void OnApplicationStart()
+        {
+            ModManager.StartCoroutine(StartRPCServer());
+        }
+        void OnLevelWasloaded(int level)
+        {
+            if (level != -1) return;
+            //ModManager.StartCoroutine(FindShiba());
+        }
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.F9))
 
-		
-		public void FixedUpdate()
-		{
-            this.GetPlayerPositions();
-		}
-        public void GetPlayerPositions()
-		{
-			foreach (Player player in PlayerManager.GetAllPlayers())
-			{
-                String name = player.vrcPlayer.namePlate.mainText.text; //not sure if this is the best way to get username
-                Vector3 position = player.vrcPlayer.avatarGameObject.transform.position;
-                Transform chest = player.vrcPlayer.avatarGameObject.transform.Find("Armature").Find("Hips").Find("Spine").Find("Chest");
-                Transform right_hand = chest.Find("Right_shoulder").Find("Right_arm").Find("Right_elbow").Find("Right_wrist");
-                Vector3 right_hand_position = right_hand.position;
-                Transform left_hand = chest.Find("Left_shoulder").Find("Left_arm").Find("Left_elbow").Find("Left_wrist");
-                Vector3 left_hand_position = left_hand.position;
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter("player_"+name+"_data.txt", true))
+            {
+                GameObject shiba_big = GameObject.Find("prop_shibaplush (1)");
+                agent = new Agent(shiba_big);
+            }
+            if (Input.GetKeyDown(KeyCode.F3))
+            {
+                myPlayer = PlayerManager.GetAllPlayers()[0];
+                wiggly_avatar = !wiggly_avatar;
+                avatarPos1 = myPlayer.vrcPlayer.transform.position;
+                avatarPos2 = avatarPos1 + new Vector3(0.1f, 0.1f, 0.1f);
+            }
+            //if (Input.GetKeyDown(KeyCode.T))
+            //{
+            //    if (timeScaleState == 1)
+            //    {
+            //        Time.timeScale = 20f;
+            //        timeScaleState = 2;
+            //    } else if (timeScaleState == 2)
+            //    {
+            //        Time.timeScale = 1f;
+            //        timeScaleState = 1;
+            //    }
+            //}
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                if (stop_training == 0)
                 {
-                    file.WriteLine(position.ToString("F6") + "\t" + left_hand_position.ToString("F6") + "\t" + right_hand_position.ToString("F6"));
+                    stop_training = 1f;
+                    Time.timeScale = 1f;
+                }
+                else if (stop_training == 1f)
+                {
+                    stop_training = 0;
+                    Time.timeScale = 20f;
                 }
             }
-		}
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                agent.addInitPos();
+            }
+        }
+                internal IEnumerator FindShiba()
+        {
+            while (RoomManager.currentRoom == null)
+            {
+                yield return new WaitForSeconds(1f);
+            }
+            GameObject shiba_big = GameObject.Find("prop_shibaplush (1)");
+            if (!(shiba_big == null))
+            {
+                agent = new Agent(shiba_big);
+            }
+            else
+            {
+                agent = null;
+            }
+        }
+        internal IEnumerator StartRPCServer()
+        {
+            // logger and stats are optional 
+            // there is a null implementation by default
+            //var logger = new ServiceWire.Logger(logLevel: LogLevel.Debug);
+            //var stats = new Stats();
+
+            //var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
+            int port = 4420;
+            var ipEndpoint = new IPEndPoint(IPAddress.Any, port);
+
+            var vrcaimltest = new VrcaiMlaTest();
+
+            var tcphost = new TcpHost(ipEndpoint);
+            tcphost.AddService<IVrcaiMlaTest>(vrcaimltest);
+
+            VRCModLoader.VRCModLogger.Log("Starting server");
+            tcphost.Open();
+            while (true) { yield return null; }
+            tcphost.Close();
+        }
+
+        public void FixedUpdate()
+		{
+            if (!(agent == null))
+            {
+                VRCModLoader.VRCModLogger.Log("Agent moving");
+                agent.move();
+            }
+            if (wiggly_avatar)
+            {
+                if (avatarState == 1)
+                {
+                    myPlayer.vrcPlayer.transform.position = avatarPos1;
+                    avatarState = 2;
+                } else if (avatarState == 2)
+                {
+                    myPlayer.vrcPlayer.transform.position = avatarPos2;
+                    avatarState = 1;
+                }
+            }
+        }
+
+        public static List<float> getObs(List<float> actions)
+        {
+            agent.updateActions(actions);
+            return agent.getObservations(stop_training);
+        }
 
         //public static bool toggle;
 	}
+
+    public class VrcaiMlaTest : IVrcaiMlaTest
+    {
+        public List<float> getObs(List<float> actions)
+        {
+            //float observation = 1f;
+            //return Task.FromResult(observation);
+            //return 1f;
+            return VRCAI.getObs(actions);
+        }
+        public void resetAgent()
+        {
+            //float observation = 1f;
+            //return Task.FromResult(observation);
+            //return 1f;
+            VRCAI.agent.resetAgent();
+        }
+    }
 }
