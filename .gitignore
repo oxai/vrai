@@ -21,3 +21,4 @@ environment/HideAndSeekv12/Temp/*
 environment/HideAndSeekv12/*.x86_64
 environment/HideAndSeekv12/Library/*
 environment/New\ Unity\ Project/
+agent/curiosity/summaries/*
