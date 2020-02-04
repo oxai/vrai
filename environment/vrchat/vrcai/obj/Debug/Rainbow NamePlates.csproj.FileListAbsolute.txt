@@ -1,0 +1,16 @@
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\obj\Debug\Rainbow NamePlates.csprojAssemblyReference.cache
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\obj\Debug\Rainbow NamePlates.csproj.CoreCompileInputs.cache
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\bin\Debug\RainbowNameS_Rework.dll
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\bin\Debug\RainbowNameS_Rework.pdb
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\bin\Debug\Assembly-CSharp.dll
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\bin\Debug\UnityEngine.CoreModule.dll
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\bin\Debug\UnityEngine.dll
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\bin\Debug\UnityEngine.IMGUIModule.dll
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\bin\Debug\VRCMenuUtils.dll
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\bin\Debug\VRCModLoader.dll
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\bin\Debug\UnityEngine.UI.dll
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\bin\Debug\VRCSDK2.dll
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\bin\Debug\VRCCore-Editor.dll
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\obj\Debug\Rainbow NamePlates.csproj.CopyComplete
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\obj\Debug\RainbowNameS_Rework.dll
+C:\Users\guill\Documents\code\vrcmods\vrcai-mod\vrcai\Rainbow NamePlates\obj\Debug\RainbowNameS_Rework.pdb
