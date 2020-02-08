@@ -12,8 +12,8 @@
 After installing all this, we need to copy the relevant DLLs to `Mod` folder in the VRChat installation folder (usually `C:\Program Files (x86)\Steam\steamapps\common\VRChat\`):
 
 * `VRCTestingKit.dll` from https://github.com/FusGang/VRCTestingKit/releases
-* `vrcai.dll`, `Newtonsoft.Json`, `ServiceWire.dll` from `vrcai/bin/Debug`
+* `vrcai.dll`, `Newtonsoft.Json.dll`, `ServiceWire.dll` from `vrcai/bin/Debug`
 * `System.Threading` from `VRChat_Data/Managed` in VRChat installation folder
-* `VrcaiMlaCommunicator.dll` from `VrcaiMlaCommunicator/bin/Debug` (after compiling in visual studio)
+* `VrcaiMlaCommunicator.dll` from `VrcaiMlaCommunicator/bin/Debug`
 
 Then just start VRChat in desktop mode, and you can use F1 to toggle the VRCTetingKit con, and press TAB to toggle between freeing the mouse for use with the VRCTestingKit UI and using it to control the game
