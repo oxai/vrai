@@ -128,12 +128,42 @@ public class SeekerHiderAI : Agent{
         // in a time Time.deltaTime*10
         // we use that because we take a decision every 10 frames.
         // The actions have interpretation of (speed, angle of velocity in x-z plane, and angle)
-        rb.velocity = Vector3.Lerp(rb.velocity,Speed*VectorActs[0]*new Vector3(Mathf.Sin(VectorActs[1]*Mathf.PI),0, Mathf.Cos(VectorActs[1] * Mathf.PI)),Time.deltaTime*10);
-        transform.rotation = Quaternion.Lerp(transform.rotation,Quaternion.Euler(new Vector3(0, VectorActs[2] * 180f,0)),Time.deltaTime*5);
+        // 
+        Vector3 new_velocity = Speed*VectorActs[0]*new Vector3(Mathf.Sin(VectorActs[1]*Mathf.PI),0, Mathf.Cos(VectorActs[1] * Mathf.PI));
+        new_velocity = transform.TransformDirection(new_velocity);
+        //why are we using lerp here?
+        rb.velocity = Vector3.Lerp(rb.velocity,new_velocity,Time.deltaTime);
+        float new_y_angle = transform.rotation.eulerAngles.y + VectorActs[2] * 180f;
+        transform.rotation = Quaternion.Lerp(transform.rotation,Quaternion.Euler(new Vector3(0, new_y_angle,0)),Time.deltaTime);
     }
 
     public override float[] Heuristic() {
-        return VectorActs.ToArray();
+        // return VectorActs.ToArray();
+        if (Input.GetKey(KeyCode.S))
+        {
+            return new float[] { -1f, 0f, 0 };
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            return new float[] { 1f, 0.5f, 0 };
+        }
+        if (Input.GetKey(KeyCode.W))
+        {
+            return new float[] { 1f, 0f, 0 };
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            return new float[] { 1f, -0.5f, 0 };
+        }
+        if (Input.GetKey(KeyCode.Q))
+        {
+            return new float[] { 0, 0, -0.1f };
+        }
+        if (Input.GetKey(KeyCode.E))
+        {
+            return new float[] { 0, 0, 0.1f };
+        }
+        return new float[] { 0, 0, 0 };
     }
 
     public static Vector3 PolarToCartesian(float radius, float angle) {
