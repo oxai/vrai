@@ -95,10 +95,10 @@ public class SeekerHiderAI : Agent{
     }
 
     public override void AgentAction(float[] vectorAction) {
-        if (Seeker && !Seeking) // Do nothing when not seeking as the seeker
-            return;
-        for (int i = 0; i<vectorAction.Length; i++) {
-            VectorActs[i] = Mathf.Clamp(vectorAction[i],-1.0f,1.0f);
+        if (!(Seeker && !Seeking)) { // Do nothing when not seeking as the seeker
+            for (int i = 0; i<vectorAction.Length; i++) {
+                VectorActs[i] = Mathf.Clamp(vectorAction[i],-1.0f,1.0f);
+            }
         }
         if (Seeking) { // In seeking mode 
             if (Seeker) { 
