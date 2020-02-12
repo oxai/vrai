@@ -46,3 +46,6 @@ C:\Users\guill\Documents\code\vrai\environment\vrchat\vrcai\bin\Debug\System.Run
 C:\Users\guill\Documents\code\vrai\environment\vrchat\vrcai\bin\Debug\UnityEngine.PhysicsModule.dll
 C:\Users\guill\Documents\code\vrai\environment\vrchat\vrcai\bin\Debug\VRCCore-Standalone.dll
 C:\Users\guill\Documents\code\vrai\environment\vrchat\vrcai\bin\Debug\VRCTools.0.8.2.dll
+C:\Program Files (x86)\Steam\steamapps\common\VRChat\Mods\vrcai.dll
+C:\Program Files (x86)\Steam\steamapps\common\VRChat\Mods\vrcai.pdb
+C:\Program Files (x86)\Steam\steamapps\common\VRChat\Mods\vrcai.dll.config

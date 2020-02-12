@@ -13,11 +13,13 @@ using VRCModLoader;
 using VrcaiMlaCommunicator;
 using System.Collections.Generic;
 using AgentModule;
+using VRCAI;
 using VRCTools;
 //using System.Threading.Tasks;
 //using System.Net;
 //using Windows.Networking.Sockets;
 //using System.Net.sockets;
+using System.Reflection;
 
 
 namespace vrcai
@@ -27,6 +29,8 @@ namespace vrcai
     public class VRCAI : VRCMod
 	{
         public static Agent agent;
+        public static GameObject stand;
+        public static List<GameObject> joints;
         public static Player myPlayer;
         public static bool wiggly_avatar = false;
         public static Vector3 avatarPos1;
@@ -53,6 +57,7 @@ namespace vrcai
         {
             if (level != -1) return;
             //ModManager.StartCoroutine(FindShiba());
+            System.Reflection.PropertyInfo propertyInfo;
         }
         public void Update()
         {
@@ -60,7 +65,12 @@ namespace vrcai
 
             {
                 GameObject shiba_big = GameObject.Find("prop_shibaplush (1)");
-                agent = new Agent(shiba_big);
+                if (!(shiba_big == null)) agent = new Agent(shiba_big);
+                //stand = GameObject.Find("avatar_stand");
+                stand = GameObject.Find("vrcai_ava_armature");
+                VRCModLoader.VRCModLogger.Log(stand.name);
+                joints = utils.findAllChildren(stand);
+                VRCModLoader.VRCModLogger.Log(joints[0].transform.rotation.ToString());
             }
             if (Input.GetKeyDown(KeyCode.F3))
             {
@@ -144,6 +154,29 @@ namespace vrcai
                 VRCModLoader.VRCModLogger.Log("Agent moving");
                 agent.move();
             }
+
+            if (!(joints == null))
+            {
+                for (int i = 0; i < joints.Count(); i++)
+                {
+                    GameObject joint = joints[i];
+                    //Rigidbody r = joint.GetComponent<Rigidbody>();
+                    //r.AddTorque(0.1*Random.insideUnitSphere());
+                    joint.transform.rotation =
+                        joint.transform.rotation * Quaternion.Euler(10f * UnityEngine.Random.insideUnitSphere);
+                }
+            }
+
+
+            foreach (Player player in PlayerManager.GetAllPlayers())
+            {
+                //GameObject p = player.vrcPlayer.avatarGameObject;
+                //Transform chest = player.vrcPlayer.avatarGameObject.transform.Find("Armature").Find("Hips").Find("Spine").Find("Chest");
+                //Transform right_arm = chest.Find("Right_shoulder").Find("Right_arm");
+                //right_arm.rotation = right_arm.rotation * Quaternion.Euler(10f * UnityEngine.Random.insideUnitSphere);
+                VRCModLoader.VRCModLogger.Log(UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.LeftHand).ToString());
+            }
+
             if (wiggly_avatar)
             {
                 if (avatarState == 1)

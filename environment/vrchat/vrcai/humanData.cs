@@ -26,6 +26,7 @@ namespace HumanData
                 {
                     file.WriteLine(position.ToString("F6") + "\t" + left_hand_position.ToString("F6") + "\t" + right_hand_position.ToString("F6"));
                 }
+
             }
         }
     }
