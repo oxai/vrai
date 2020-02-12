@@ -1,0 +1,14 @@
+[22:54:28.859] [VRCModLoader] Logger Initialised
+[22:54:29.947] [ModComponent] Loading VRLoader.dll
+[22:54:29.971] [ModComponent] VRLoader.dll loaded
+[22:54:29.971] [ModComponent] Creating components
+[22:54:29.973] [ModComponent] Awake called
+[22:54:29.976] Looking for mods
+[22:54:29.977] VRChat
+[22:54:33.695] [ModComponent] Scene Loaded: Application2
+[22:54:33.709] [ModComponent] OnApplicationQuit called
+[22:54:34.352] [ModComponent] Start called
+[22:54:34.352] [ModComponent] OnLevelWasLoaded called (0)
+[22:54:37.519] [ModComponent] Scene Loaded: ui
+[22:54:51.785] [ModComponent] OnLevelWasLoaded called (-1)
+[22:54:51.805] [ModComponent] Scene Loaded: Home_CrossPlatform_V6_TMP
