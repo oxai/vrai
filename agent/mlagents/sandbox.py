@@ -41,6 +41,7 @@ engine_configuration_channel.set_configuration_parameters(time_scale = 3.0)
 # comm = env.get_communicator(2,5004,100)
 
 '''Examine the observation and state spaces'''
+
 '''
 We can reset the environment to be provided with an initial set of observations and states for all the agents within the environment. In ML-Agents, states refer to a vector of variables corresponding to relevant aspects of the environment for an agent. Likewise, observations refer to a set of relevant pixel-wise visuals for an agent.
 '''
