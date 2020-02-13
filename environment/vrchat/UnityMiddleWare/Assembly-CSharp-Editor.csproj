@@ -737,6 +737,12 @@
     <Reference Include="Boo.Lang">
       <HintPath>C:/Program Files/2019.3.0f3/Editor/Data/MonoBleedingEdge/lib/mono/unityscript/Boo.Lang.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>C:/Program Files/2019.3.0f3/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <HintPath>C:/Program Files/2019.3.0f3/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Drawing.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
