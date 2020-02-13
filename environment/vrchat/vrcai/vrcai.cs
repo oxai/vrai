@@ -149,10 +149,14 @@ namespace vrcai
 
         public void FixedUpdate()
 		{
+
             if (!(agent == null))
             {
                 VRCModLoader.VRCModLogger.Log("Agent moving");
                 agent.move();
+                agent.texture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0, false);
+                //agent.texture_ptr = texture.GetNativeTexturePtr();
+                //agent.texture.Apply();
             }
 
             if (!(joints == null))
@@ -191,7 +195,14 @@ namespace vrcai
             }
         }
 
-        public static List<float> getObs(List<float> actions)
+        private void OnPostRender()
+        {
+            VRCModLoader.VRCModLogger.Log("HIIIIIIIIIIIIIIII");
+            
+        }
+
+        //public static List<float> getObs(List<float> actions)
+        public static TextureMessage getObs(List<float> actions)
         {
             agent.updateActions(actions);
             return agent.getObservations(stop_training);
@@ -202,7 +213,8 @@ namespace vrcai
 
     public class VrcaiMlaTest : IVrcaiMlaTest
     {
-        public List<float> getObs(List<float> actions)
+        //public List<float> getObs(List<float> actions)
+        public TextureMessage getObs(List<float> actions)
         {
             //float observation = 1f;
             //return Task.FromResult(observation);

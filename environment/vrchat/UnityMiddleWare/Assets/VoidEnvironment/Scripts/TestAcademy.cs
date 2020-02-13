@@ -27,20 +27,20 @@ public class TestAcademy : Academy
         //using (var client = new TcpClient<IVrcaiMlaTest>(zkEndpoint))
         //using (var )
         //{
-            //List<float> actions = new List<float> { 0.1f, 0.1f, 0 };
-            //List<float> response = client.Proxy.getObs(actions);
-            //Debug.Log(response);
-            //for (int i = 0; i < response.Count; i++)
-            //{
-            //    Debug.Log(response[i].ToString());
-            //}
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    var id = client.Proxy.GetId("test1", 3.314, 42);
-            //    int q2 = 4;
-            //    var response = client.Proxy.Get(id, "mirror", 4.123, out q2);
-            //    var list = client.Proxy.GetItems(id, new int[] { 3, 6, 9 });
-            //}
+        //List<float> actions = new List<float> { 0.1f, 0.1f, 0 };
+        //List<float> response = client.Proxy.getObs(actions);
+        //Debug.Log(response);
+        //for (int i = 0; i < response.Count; i++)
+        //{
+        //    Debug.Log(response[i].ToString());
+        //}
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    var id = client.Proxy.GetId("test1", 3.314, 42);
+        //    int q2 = 4;
+        //    var response = client.Proxy.Get(id, "mirror", 4.123, out q2);
+        //    var list = client.Proxy.GetItems(id, new int[] { 3, 6, 9 });
+        //}
         //}
     }
 

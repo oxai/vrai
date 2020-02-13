@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using VRC;
 using VRCModLoader;
 using UnityEngine;
+using VrcaiMlaCommunicator;
 
 
 namespace AgentModule
@@ -17,7 +19,12 @@ namespace AgentModule
         public Rigidbody rb;
         public float Speed = 10f;
         private List<Vector3> initialPoss = new List<Vector3>();
+        //public IntPtr texture_ptr;
+        public Texture2D texture = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
         System.Random rnd = new System.Random();
+        public int texture_size = Screen.width * Screen.height * 4;
+        public int texture_width = Screen.width;
+        public int texture_height = Screen.height;
 
         public Agent(GameObject agent)
         {
@@ -46,14 +53,19 @@ namespace AgentModule
             VectorActs = actions;
         }
 
-        public List<float> getObservations(float stop_training)
+        //public IEnumerator getObservations(float stop_training)
+        //public List<float> getObservations(float stop_training)
+        public TextureMessage getObservations(float stop_training)
         {
             Vector3 pos = transform.position;
             Quaternion rot = transform.rotation;
             Vector3 vel = rb.velocity;
             Vector3 rotVel = rb.angularVelocity;
             //NOTE: we are putting the reward as the last observation!
-            return new List<float> { pos.x, pos.z, rot.x, rot.y, rot.z, rot.w, vel.x, vel.y, vel.z, rotVel.x, rotVel.y, rotVel.z, getReward(), stop_training };
+            //return new List<float> { pos.x, pos.z, rot.x, rot.y, rot.z, rot.w, vel.x, vel.y, vel.z, rotVel.x, rotVel.y, rotVel.z, getReward(), stop_training };
+
+            return new TextureMessage {raw_texture = texture.GetRawTextureData(), size = texture_size, width = texture_width, height = texture_height};
+            //yield return new List<float> { pos.x, pos.z, rot.x, rot.y, rot.z, rot.w, vel.x, vel.y, vel.z, rotVel.x, rotVel.y, rotVel.z, getReward(), stop_training };
         }
 
         public float getReward()

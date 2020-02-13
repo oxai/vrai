@@ -1,0 +1,3 @@
+-r:System.Windows.Forms.dll
+-r:System.Drawing.dll
+-r:System.Drawing.Common.dll
