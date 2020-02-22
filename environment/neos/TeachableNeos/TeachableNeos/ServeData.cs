@@ -19,10 +19,10 @@ namespace FrooxEngine.LogiX.Network
     [NodeName("Serve Data")]
     public class ServeData : LogixNode
     {
-        public readonly Input<float> TestNumber;
-        public readonly Input<float> TestNumber2;
+        public readonly Input<float> x;
+        //public readonly Input<float> TestNumber2;
 
-        public readonly Output<int> TestOutput;
+        //public readonly Output<int> TestOutput;
         //private DataComm.DataCommClient client;
         public Channel channel;
         public Server server;
@@ -39,7 +39,7 @@ namespace FrooxEngine.LogiX.Network
 
         //}
 
-            private void StartRPCServer()
+        private void StartRPCServer()
         {
             //channel = new Channel("127.0.0.1:50052", ChannelCredentials.Insecure);
             //this.client = new DataComm.DataCommClient(channel);
@@ -47,22 +47,22 @@ namespace FrooxEngine.LogiX.Network
 
             server = new Server
             {
-                Services = { DataComm.BindService(new TeachableNeos.DataCommImpl()) },
+                Services = { DataComm.BindService(new TeachableNeos.DataCommImpl(this)) },
                 Ports = { new ServerPort("127.0.0.1", Port, ServerCredentials.Insecure) }
             };
             server.Start();
 
         }
 
-        protected override void OnEvaluate()
-        {
-            var number1 = TestNumber.EvaluateRaw();
-            var number2 = TestNumber2.EvaluateRaw();
-            //Feature request = new Feature { Thing = number1, Thing2 = number2 };
-            //Classification c = this.client.SendFeatures(request);
-            //int k = c.K;
-            TestOutput.Value = 1;
-        }
+        //protected override void OnEvaluate()
+        //{
+        //    var number1 = TestNumber.EvaluateRaw();
+        //    var number2 = TestNumber2.EvaluateRaw();
+        //    //Feature request = new Feature { Thing = number1, Thing2 = number2 };
+        //    //Classification c = this.client.SendFeatures(request);
+        //    //int k = c.K;
+        //    TestOutput.Value = 1;
+        //}
 
         //protected override void InitializeSyncMembers()
         //{
