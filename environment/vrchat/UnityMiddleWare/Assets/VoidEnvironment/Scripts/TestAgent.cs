@@ -14,6 +14,8 @@ using System.Runtime.InteropServices;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 using Screen = System.Windows.Forms.Screen;
+using Microsoft.PerceptionSimulation;
+using Vector3 = UnityEngine.Vector3;
 
 public class TestAgent : Agent
 {
@@ -23,28 +25,29 @@ public class TestAgent : Agent
     //IFloatProperties m_ResetParams;
     public TcpClient<IVrcaiMlaTest> client;
     public IPEndPoint ipEndPoint;
-    //public Academy academy;
-    public List<float> inputs = new List<float>(){0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f}; //can't call this variable observations, coz I guess that's being used for something else? dunno
-    //public IntPtr texturePtr; //can't call this variable observations, coz I guess that's being used for something else? dunno
+    public TestAcademy academy;
+    public List<float> inputs; //can't call this variable observations, coz I guess that's being used for something else? dunno
+    //public IntPtr texturePtr;
     public float stop_training = 0;
     Texture2D tex;
     //RenderTexture rt;
     RawImage image;
     public override void InitializeAgent()
     {
-        var academy = FindObjectOfType<TestAcademy>();
+        inputs = new List<float>() {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+        academy = FindObjectOfType<TestAcademy>();
         //client = academy.client;
         ipEndPoint = academy.ipEndPoint;
-        using (var client = new TcpClient<IVrcaiMlaTest>(ipEndPoint))
-        {
-            TextureMessage response = client.Proxy.getObs(new List<float>{0f,0f,0f});
-            image = GameObject.Find("RawImage").GetComponent<RawImage>();
-            //image.uvRect = new Rect(0,0, response.width, response.height);
-            GameObject.Find("RawImage").GetComponent<RectTransform>().sizeDelta = new Vector2(response.width,response.height);
-            //GameObject.Find("RawImage").GetComponent<RectTransform>().
-            //Debug.Log("hi");
-            //rt = new RenderTexture(tex.width / 2, tex.height / 2, 0);
-        }
+        //using (var client = new TcpClient<IVrcaiMlaTest>(ipEndPoint))
+        //{
+        //    TextureMessage response = client.Proxy.getObs(new List<float>{0f,0f,0f});
+        //    image = GameObject.Find("RawImage").GetComponent<RawImage>();
+        //    //image.uvRect = new Rect(0,0, response.width, response.height);
+        //    GameObject.Find("RawImage").GetComponent<RectTransform>().sizeDelta = new Vector2(response.width,response.height);
+        //    //GameObject.Find("RawImage").GetComponent<RectTransform>().
+        //    //Debug.Log("hi");
+        //    //rt = new RenderTexture(tex.width / 2, tex.height / 2, 0);
+        //}
         //m_BallRb = ball.GetComponent<Rigidbody>();
         //var academy = FindObjectOfType<Academy>();
         //m_ResetParams = academy.FloatProperties;
@@ -63,8 +66,10 @@ public class TestAgent : Agent
         //{
         //    Debug.Log(observations[i].ToString());
         //}
+        Debug.Log(inputs.Count);
         for (int i = 0; i < inputs.Count-2; i++)
         {
+            //Debug.Log(inputs[i]);
             AddVectorObs(inputs[i]);
             //AddVectorObs(0.0f);
         }
@@ -93,85 +98,81 @@ public class TestAgent : Agent
 
     public override void AgentAction(float[] vectorAction)
     {
-        //List<float> thing = new List<float>(vectorAction);
-        //Debug.Log(thing[1]);
-        Debug.Log(vectorAction.Length);
-        vectorAction = new float[]{0f, 0f, 0f};
-        if (GetStepCount() >= 2500 || stop_training == 1f)
-        {
-            using (var client = new TcpClient<IVrcaiMlaTest>(ipEndPoint))
-            {
-                //inputs = client.Proxy.getObs(new List<float>(vectorAction));
-                TextureMessage response = client.Proxy.getObs(new List<float>(vectorAction));
-                //Debug.Log(response.raw_texture[0]);
-                Destroy(tex);
-                tex = new Texture2D(response.width, response.height, TextureFormat.RGB24, false);
-                tex.LoadRawTextureData(response.raw_texture);
-                tex.Apply();
-                image.texture = tex;
-                //Destroy(tex);
-                //Debug.Log(response.raw_texture);
-                //tex.LoadRawTextureData(response.ptr,response.size);
-            }
-            //AddReward(-10f);
-            Done();
-        }
-        else
-        {
-            Debug.Log("acting");
-            using (var client = new TcpClient<IVrcaiMlaTest>(ipEndPoint))
-            {
-                //inputs = client.Proxy.getObs(new List<float>(vectorAction));
-                TextureMessage response = client.Proxy.getObs(new List<float>(vectorAction));
-                //Debug.Log(response.raw_texture[0]);
-                Destroy(tex);
-                tex = new Texture2D(response.width, response.height, TextureFormat.RGB24, false);
-                tex.LoadRawTextureData(response.raw_texture);
-                tex.Apply();
-                //Debug.Log(image);
-                image.texture = tex;
-                // texRef is your Texture2D
-                // You can also reduice your texture 2D that way
-                // Copy your texture ref to the render texture
-                //UnityEngine.Graphics.Blit(tex, rt);
-                //CaptureApplication("notepad");
-                //Create a new bitmap.
-                //var bmpScreenshot = new Bitmap(Screen.PrimaryScreen.Bounds.Width,
-                //    Screen.PrimaryScreen.Bounds.Height,
-                //    PixelFormat.Format32bppArgb);
+        //Debug.Log(vectorAction.Length);
+        //vectorAction = new float[] { 0f, 0f, 0f };
+        //if (GetStepCount() >= 2500 || stop_training == 1f)
+        //{
+        //    using (var client = new TcpClient<IVrcaiMlaTest>(ipEndPoint))
+        //    {
+        //        //inputs = client.Proxy.getObs(new List<float>(vectorAction));
+        //        TextureMessage response = client.Proxy.getObs(new List<float>(vectorAction));
+        //        //Debug.Log(response.raw_texture[0]);
+        //        Destroy(tex);
+        //        tex = new Texture2D(response.width, response.height, TextureFormat.RGB24, false);
+        //        tex.LoadRawTextureData(response.raw_texture);
+        //        tex.Apply();
+        //        image.texture = tex;
+        //        //Destroy(tex);
+        //        //Debug.Log(response.raw_texture);
+        //        //tex.LoadRawTextureData(response.ptr,response.size);
+        //    }
+        //    //AddReward(-10f);
+        //    Done();
+        //}
+        //else
+        //{
+        //    Debug.Log("acting");
+        //    using (var client = new TcpClient<IVrcaiMlaTest>(ipEndPoint))
+        //    {
+        //        //inputs = client.Proxy.getObs(new List<float>(vectorAction));
+        //        TextureMessage response = client.Proxy.getObs(new List<float>(vectorAction));
+        //        //Debug.Log(response.raw_texture[0]);
+        //        Destroy(tex);
+        //        tex = new Texture2D(response.width, response.height, TextureFormat.RGB24, false);
+        //        tex.LoadRawTextureData(response.raw_texture);
+        //        tex.Apply();
+        //        //Debug.Log(image);
+        //        image.texture = tex;
+        //        // texRef is your Texture2D
+        //        // You can also reduice your texture 2D that way
+        //        // Copy your texture ref to the render texture
+        //        //UnityEngine.Graphics.Blit(tex, rt);
+        //        //CaptureApplication("notepad");
+        //        //Create a new bitmap.
+        //        //var bmpScreenshot = new Bitmap(Screen.PrimaryScreen.Bounds.Width,
+        //        //    Screen.PrimaryScreen.Bounds.Height,
+        //        //    PixelFormat.Format32bppArgb);
 
-                //// Create a graphics object from the bitmap.
-                //var gfxScreenshot = System.Drawing.Graphics.FromImage(bmpScreenshot);
+        //        //// Create a graphics object from the bitmap.
+        //        //var gfxScreenshot = System.Drawing.Graphics.FromImage(bmpScreenshot);
 
-                //// Take the screenshot from the upper left corner to the right bottom corner.
-                //gfxScreenshot.CopyFromScreen(Screen.PrimaryScreen.Bounds.X,
-                //    Screen.PrimaryScreen.Bounds.Y,
-                //    0,
-                //    0,
-                //    Screen.PrimaryScreen.Bounds.Size,
-                //    CopyPixelOperation.SourceCopy);
+        //        //// Take the screenshot from the upper left corner to the right bottom corner.
+        //        //gfxScreenshot.CopyFromScreen(Screen.PrimaryScreen.Bounds.X,
+        //        //    Screen.PrimaryScreen.Bounds.Y,
+        //        //    0,
+        //        //    0,
+        //        //    Screen.PrimaryScreen.Bounds.Size,
+        //        //    CopyPixelOperation.SourceCopy);
 
-                //// Save the screenshot to the specified path that the user has chosen.
-                //bmpScreenshot.Save("Screenshot.png", ImageFormat.Png);
-            }
-
-            //Debug.Log(observations.GetType());
-            //for (int i = 0; i < observations.Count; i++)
-            //{
-            //    Debug.Log(observations[i].ToString());
-            //}
-        }
+        //        //// Save the screenshot to the specified path that the user has chosen.
+        //        //bmpScreenshot.Save("Screenshot.png", ImageFormat.Png);
+        //    }
+        //}
+        //Debug.Log("doing action");
+        Dictionary<string, Vector3> actions = new Dictionary<String,Vector3>();
+        actions.Add("move", new Vector3(0f, 0f, 0.05f));
+        academy.DoAction(actions);
     }
 
     public override void AgentReset()
     {
-        Debug.Log("Episode done");
-        if (stop_training == 0)
-        {
-            Debug.Log("Reseting agent");
-            using (var client = new TcpClient<IVrcaiMlaTest>(ipEndPoint))
-                client.Proxy.resetAgent();
-        }
+        //Debug.Log("Episode done");
+        //if (stop_training == 0)
+        //{
+        //    Debug.Log("Reseting agent");
+        //    using (var client = new TcpClient<IVrcaiMlaTest>(ipEndPoint))
+        //        client.Proxy.resetAgent();
+        //}
     }
 
     public void Update()

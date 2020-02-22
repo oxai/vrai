@@ -20,6 +20,7 @@ using VRCTools;
 //using Windows.Networking.Sockets;
 //using System.Net.sockets;
 using System.Reflection;
+using HumanData;
 
 
 namespace vrcai
@@ -38,6 +39,7 @@ namespace vrcai
         public static int avatarState = 1;
         public static int timeScaleState = 1;
         public static float stop_training = 0;
+        private bool recording = false;
         public void OnGUI()
 		{
 
@@ -79,18 +81,6 @@ namespace vrcai
                 avatarPos1 = myPlayer.vrcPlayer.transform.position;
                 avatarPos2 = avatarPos1 + new Vector3(0.1f, 0.1f, 0.1f);
             }
-            //if (Input.GetKeyDown(KeyCode.T))
-            //{
-            //    if (timeScaleState == 1)
-            //    {
-            //        Time.timeScale = 20f;
-            //        timeScaleState = 2;
-            //    } else if (timeScaleState == 2)
-            //    {
-            //        Time.timeScale = 1f;
-            //        timeScaleState = 1;
-            //    }
-            //}
             if (Input.GetKeyDown(KeyCode.T))
             {
                 if (stop_training == 0)
@@ -107,6 +97,17 @@ namespace vrcai
             if (Input.GetKeyDown(KeyCode.P))
             {
                 agent.addInitPos();
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                if (!recording)
+                {
+                    recording = true;
+                }
+                else
+                {
+                    recording = false;
+                }
             }
         }
                 internal IEnumerator FindShiba()
@@ -127,12 +128,6 @@ namespace vrcai
         }
         internal IEnumerator StartRPCServer()
         {
-            // logger and stats are optional 
-            // there is a null implementation by default
-            //var logger = new ServiceWire.Logger(logLevel: LogLevel.Debug);
-            //var stats = new Stats();
-
-            //var port = Convert.ToInt32(ConfigurationManager.AppSettings["port"]);
             int port = 4420;
             var ipEndpoint = new IPEndPoint(IPAddress.Any, port);
 
@@ -155,30 +150,11 @@ namespace vrcai
                 VRCModLoader.VRCModLogger.Log("Agent moving");
                 agent.move();
                 agent.texture.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0, false);
-                //agent.texture_ptr = texture.GetNativeTexturePtr();
-                //agent.texture.Apply();
             }
 
-            if (!(joints == null))
+            if (recording)
             {
-                for (int i = 0; i < joints.Count(); i++)
-                {
-                    GameObject joint = joints[i];
-                    //Rigidbody r = joint.GetComponent<Rigidbody>();
-                    //r.AddTorque(0.1*Random.insideUnitSphere());
-                    joint.transform.rotation =
-                        joint.transform.rotation * Quaternion.Euler(10f * UnityEngine.Random.insideUnitSphere);
-                }
-            }
-
-
-            foreach (Player player in PlayerManager.GetAllPlayers())
-            {
-                //GameObject p = player.vrcPlayer.avatarGameObject;
-                //Transform chest = player.vrcPlayer.avatarGameObject.transform.Find("Armature").Find("Hips").Find("Spine").Find("Chest");
-                //Transform right_arm = chest.Find("Right_shoulder").Find("Right_arm");
-                //right_arm.rotation = right_arm.rotation * Quaternion.Euler(10f * UnityEngine.Random.insideUnitSphere);
-                VRCModLoader.VRCModLogger.Log(UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.LeftHand).ToString());
+                PlayerRecorder.recordPlayersVariables();
             }
 
             if (wiggly_avatar)
