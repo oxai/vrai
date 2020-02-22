@@ -3,14 +3,14 @@ syntax = "proto3";
 
 service DataComm {
    // (Method definitions not shown)
-  rpc GetObs(Empty) returns (Observation);
+  rpc GetObs(Empty) returns (NeosObservation);
 }
 
 message Empty {
 
 }
 
-message Observation {
+message NeosObservation {
     //int32 k = 1;
 	float x = 1;
 	float y = 2;
