@@ -26,3 +26,41 @@ C:\Users\dings\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\Teach
 C:\Users\dings\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.csproj.CoreCompileInputs.cache
 C:\Users\dings\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.dll
 C:\Users\dings\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.pdb
+C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries\grpc_csharp_ext.x86.dll
+C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries\grpc_csharp_ext.x64.dll
+C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries\libgrpc_csharp_ext.x86.so
+C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries\libgrpc_csharp_ext.x64.so
+C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries\libgrpc_csharp_ext.x86.dylib
+C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries\libgrpc_csharp_ext.x64.dylib
+C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries\TeachableNeos.dll.config
+C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries\TeachableNeos.dll
+C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries\TeachableNeos.pdb
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\grpc_csharp_ext.x86.dll
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\grpc_csharp_ext.x64.dll
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\libgrpc_csharp_ext.x86.so
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\libgrpc_csharp_ext.x64.so
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\libgrpc_csharp_ext.x86.dylib
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\libgrpc_csharp_ext.x64.dylib
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\TeachableNeos.dll.config
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\TeachableNeos.dll
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\TeachableNeos.pdb
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\BaseX.dll
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\FrooxEngine.dll
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\Google.Protobuf.dll
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\Grpc.Core.dll
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\System.Buffers.dll
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\System.Interactive.Async.dll
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\System.Memory.dll
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\Google.Protobuf.xml
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\Grpc.Core.pdb
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\Grpc.Core.xml
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\System.Buffers.xml
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\System.Interactive.Async.xml
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\System.Memory.xml
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.csprojAssemblyReference.cache
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.csproj.CoreCompileInputs.cache
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.csproj.CopyComplete
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.dll
+C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.pdb

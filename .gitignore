@@ -34,6 +34,6 @@ agent/mlagents/summaries/*
 **/Temp/**
 **/*db.lock
 **/PackageCache/*
-environment/neos/UnityMiddleWare/Library
-environment/neos/UnityMiddleWare/Packages
-environment/neos/UnityMiddleWare/Unity\ Environment_Data
+environment/neos/UnityMiddleWare2/Library
+environment/neos/UnityMiddleWare2/Packages
+environment/neos/UnityMiddleWare2/Unity\ Environment_Data

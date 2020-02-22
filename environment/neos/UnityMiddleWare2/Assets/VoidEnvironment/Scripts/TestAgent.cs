@@ -72,7 +72,7 @@ public class TestAgent : Agent
     //    }
     //}
 
-    public override void AgentAction(float[] vectorAction)
+    public override async void AgentAction(float[] vectorAction)
     {
         //Debug.Log(vectorAction.Length);
         //vectorAction = new float[] { 0f, 0f, 0f };
