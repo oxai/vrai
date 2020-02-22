@@ -1,0 +1,2 @@
+obj\Debug/BasicComm.cs \
+obj\Debug/BasicCommGrpc.cs: ../../protos/basic_comm.proto
