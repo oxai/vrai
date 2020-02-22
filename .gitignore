@@ -32,3 +32,5 @@ environment/vrchat/VrcaiMlaCommunicator/packages/*
 # environment/vrchat/VrcaiMlaCommunicator/VrcaiMlaCommunicator/bin/*
 agent/mlagents/summaries/*
 **/Temp/**
+**/*db.lock
+**/PackageCache/*

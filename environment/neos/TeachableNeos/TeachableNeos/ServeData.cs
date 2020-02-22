@@ -66,10 +66,10 @@ namespace FrooxEngine.LogiX.Network
         {
             var number1 = TestNumber.EvaluateRaw();
             var number2 = TestNumber2.EvaluateRaw();
-            Feature request = new Feature { Thing = number1, Thing2 = number2 };
-            Classification c = this.client.SendFeatures(request);
-            int k = c.K;
-            TestOutput.Value = k;
+            //Feature request = new Feature { Thing = number1, Thing2 = number2 };
+            //Classification c = this.client.SendFeatures(request);
+            //int k = c.K;
+            TestOutput.Value = 1;
         }
 
         //protected override void InitializeSyncMembers()
