@@ -29,11 +29,11 @@ namespace FrooxEngine.LogiX.Network
         public override void RunStartup()
         {
             base.RunStartup();
-            StartRPCServer();
-            //RunInBackground(() =>
-            //{
-            //    StartRPCServer();
-            //})
+            //StartRPCServer();
+            RunInBackground(() =>
+            {
+                StartRPCServer();
+            });
         }
 
         //protected override void OnChanges()
@@ -43,8 +43,22 @@ namespace FrooxEngine.LogiX.Network
 
             private void StartRPCServer()
         {
-            channel = new Channel("127.0.0.1:50052", ChannelCredentials.Insecure);
-            this.client = new DataComm.DataCommClient(channel);
+            //channel = new Channel("127.0.0.1:50052", ChannelCredentials.Insecure);
+            //this.client = new DataComm.DataCommClient(channel);
+            const int Port = 50052;
+
+            Server server = new Server
+            {
+                Services = { DataComm.BindService(new DataCommImpl()) },
+                Ports = { new ServerPort("localhost", Port, ServerCredentials.Insecure) }
+            };
+            server.Start();
+
+            Console.WriteLine("RouteGuide server listening on port " + Port);
+            Console.WriteLine("Press any key to stop the server...");
+            Console.ReadKey();
+
+            server.ShutdownAsync().Wait();
 
         }
 

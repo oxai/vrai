@@ -11,7 +11,7 @@ service DataComm {
 //}
 
 message Classification {
-    int32 k = 1;
+  int32 k = 1;
 }
 
 message Feature {
