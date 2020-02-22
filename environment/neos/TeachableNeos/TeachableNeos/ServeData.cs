@@ -23,17 +23,15 @@ namespace FrooxEngine.LogiX.Network
         public readonly Input<float> TestNumber2;
 
         public readonly Output<int> TestOutput;
-        public DataComm.DataCommClient client;
+        //private DataComm.DataCommClient client;
         public Channel channel;
+        public Server server;
 
         public override void RunStartup()
         {
             base.RunStartup();
             //StartRPCServer();
-            RunInBackground(() =>
-            {
-                StartRPCServer();
-            });
+            Task.Run(()=> { StartRPCServer(); });
         }
 
         //protected override void OnChanges()
@@ -47,18 +45,12 @@ namespace FrooxEngine.LogiX.Network
             //this.client = new DataComm.DataCommClient(channel);
             const int Port = 50052;
 
-            Server server = new Server
+            server = new Server
             {
-                Services = { DataComm.BindService(new DataCommImpl()) },
-                Ports = { new ServerPort("localhost", Port, ServerCredentials.Insecure) }
+                Services = { DataComm.BindService(new TeachableNeos.DataCommImpl()) },
+                Ports = { new ServerPort("127.0.0.1", Port, ServerCredentials.Insecure) }
             };
             server.Start();
-
-            Console.WriteLine("RouteGuide server listening on port " + Port);
-            Console.WriteLine("Press any key to stop the server...");
-            Console.ReadKey();
-
-            server.ShutdownAsync().Wait();
 
         }
 
@@ -122,7 +114,8 @@ namespace FrooxEngine.LogiX.Network
 
         public override void RunOnDestroying()
         {
-            channel.ShutdownAsync().Wait();
+            //channel.ShutdownAsync().Wait();
+            server.ShutdownAsync().Wait();
         }
     }
 }

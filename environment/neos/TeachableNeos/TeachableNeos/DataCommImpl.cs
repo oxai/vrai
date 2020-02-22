@@ -14,11 +14,11 @@ namespace TeachableNeos
 
         }
 
-        public override Task<Classification> SendFeatures(Feature f, ServerCallContext context)
+        public override Task<NeosObservation> GetObs(Empty f, ServerCallContext context)
         {
-            return Task.FromResult(new Classification
+            return Task.FromResult(new NeosObservation
             {
-                K = 2
+                X = 1, Y = 1, Z = 1
             });
         }
     }

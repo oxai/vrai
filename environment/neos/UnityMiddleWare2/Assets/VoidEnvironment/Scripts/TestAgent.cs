@@ -15,7 +15,7 @@ using Screen = System.Windows.Forms.Screen;
 
 public class TestAgent : Agent
 {
-    public DataComm.DataCommClient client;
+    private DataComm.DataCommClient client;
     public TestAcademy academy;
     public List<float> inputs; //can't call this variable observations, coz I guess that's being used for something else? dunno
     public float stop_training = 0;
@@ -135,7 +135,7 @@ public class TestAgent : Agent
         //    }
         //}
         //Debug.Log("doing action");
-        Observation obs = client.GetObs(new Empty());
+        NeosObservation obs = client.GetObs(new Empty());
         Debug.Log(obs.X);
         Debug.Log(obs.Y);
         Debug.Log(obs.Z);
