@@ -3,18 +3,16 @@ syntax = "proto3";
 
 service DataComm {
    // (Method definitions not shown)
-  rpc SendFeatures(Feature) returns (Classification);
+  rpc GetObs(Empty) returns (Observation);
 }
 
-//message Empty {
-//
-//}
+message Empty {
 
-message Classification {
-    int32 k = 1;
 }
 
-message Feature {
-  float thing = 1;
-  float thing2 = 2;
+message Observation {
+    //int32 k = 1;
+	float x = 1;
+	float y = 2;
+	float z = 3;
 }

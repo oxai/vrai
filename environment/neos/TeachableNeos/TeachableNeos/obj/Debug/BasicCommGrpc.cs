@@ -11,15 +11,15 @@ public static partial class DataComm
 {
   static readonly string __ServiceName = "DataComm";
 
-  static readonly grpc::Marshaller<global::Feature> __Marshaller_Feature = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Feature.Parser.ParseFrom);
-  static readonly grpc::Marshaller<global::Classification> __Marshaller_Classification = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Classification.Parser.ParseFrom);
+  static readonly grpc::Marshaller<global::Empty> __Marshaller_Empty = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Empty.Parser.ParseFrom);
+  static readonly grpc::Marshaller<global::Observation> __Marshaller_Observation = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Observation.Parser.ParseFrom);
 
-  static readonly grpc::Method<global::Feature, global::Classification> __Method_SendFeatures = new grpc::Method<global::Feature, global::Classification>(
+  static readonly grpc::Method<global::Empty, global::Observation> __Method_GetObs = new grpc::Method<global::Empty, global::Observation>(
       grpc::MethodType.Unary,
       __ServiceName,
-      "SendFeatures",
-      __Marshaller_Feature,
-      __Marshaller_Classification);
+      "GetObs",
+      __Marshaller_Empty,
+      __Marshaller_Observation);
 
   /// <summary>Service descriptor</summary>
   public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -37,7 +37,7 @@ public static partial class DataComm
     /// <param name="request">The request received from the client.</param>
     /// <param name="context">The context of the server-side call handler being invoked.</param>
     /// <returns>The response to send back to the client (wrapped by a task).</returns>
-    public virtual global::System.Threading.Tasks.Task<global::Classification> SendFeatures(global::Feature request, grpc::ServerCallContext context)
+    public virtual global::System.Threading.Tasks.Task<global::Observation> GetObs(global::Empty request, grpc::ServerCallContext context)
     {
       throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
     }
@@ -75,9 +75,9 @@ public static partial class DataComm
     /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
     /// <param name="cancellationToken">An optional token for canceling the call.</param>
     /// <returns>The response received from the server.</returns>
-    public virtual global::Classification SendFeatures(global::Feature request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    public virtual global::Observation GetObs(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
     {
-      return SendFeatures(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      return GetObs(request, new grpc::CallOptions(headers, deadline, cancellationToken));
     }
     /// <summary>
     /// (Method definitions not shown)
@@ -85,9 +85,9 @@ public static partial class DataComm
     /// <param name="request">The request to send to the server.</param>
     /// <param name="options">The options for the call.</param>
     /// <returns>The response received from the server.</returns>
-    public virtual global::Classification SendFeatures(global::Feature request, grpc::CallOptions options)
+    public virtual global::Observation GetObs(global::Empty request, grpc::CallOptions options)
     {
-      return CallInvoker.BlockingUnaryCall(__Method_SendFeatures, null, options, request);
+      return CallInvoker.BlockingUnaryCall(__Method_GetObs, null, options, request);
     }
     /// <summary>
     /// (Method definitions not shown)
@@ -97,9 +97,9 @@ public static partial class DataComm
     /// <param name="deadline">An optional deadline for the call. The call will be cancelled if deadline is hit.</param>
     /// <param name="cancellationToken">An optional token for canceling the call.</param>
     /// <returns>The call object.</returns>
-    public virtual grpc::AsyncUnaryCall<global::Classification> SendFeaturesAsync(global::Feature request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    public virtual grpc::AsyncUnaryCall<global::Observation> GetObsAsync(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
     {
-      return SendFeaturesAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+      return GetObsAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
     }
     /// <summary>
     /// (Method definitions not shown)
@@ -107,9 +107,9 @@ public static partial class DataComm
     /// <param name="request">The request to send to the server.</param>
     /// <param name="options">The options for the call.</param>
     /// <returns>The call object.</returns>
-    public virtual grpc::AsyncUnaryCall<global::Classification> SendFeaturesAsync(global::Feature request, grpc::CallOptions options)
+    public virtual grpc::AsyncUnaryCall<global::Observation> GetObsAsync(global::Empty request, grpc::CallOptions options)
     {
-      return CallInvoker.AsyncUnaryCall(__Method_SendFeatures, null, options, request);
+      return CallInvoker.AsyncUnaryCall(__Method_GetObs, null, options, request);
     }
     /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
     protected override DataCommClient NewInstance(ClientBaseConfiguration configuration)
@@ -123,7 +123,7 @@ public static partial class DataComm
   public static grpc::ServerServiceDefinition BindService(DataCommBase serviceImpl)
   {
     return grpc::ServerServiceDefinition.CreateBuilder()
-        .AddMethod(__Method_SendFeatures, serviceImpl.SendFeatures).Build();
+        .AddMethod(__Method_GetObs, serviceImpl.GetObs).Build();
   }
 
   /// <summary>Register service method with a service binder with or without implementation. Useful when customizing the  service binding logic.
@@ -132,7 +132,7 @@ public static partial class DataComm
   /// <param name="serviceImpl">An object implementing the server-side handling logic.</param>
   public static void BindService(grpc::ServiceBinderBase serviceBinder, DataCommBase serviceImpl)
   {
-    serviceBinder.AddMethod(__Method_SendFeatures, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Feature, global::Classification>(serviceImpl.SendFeatures));
+    serviceBinder.AddMethod(__Method_GetObs, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Empty, global::Observation>(serviceImpl.GetObs));
   }
 
 }

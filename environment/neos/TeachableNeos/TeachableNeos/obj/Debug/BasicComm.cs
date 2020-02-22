@@ -22,26 +22,25 @@ public static partial class BasicCommReflection {
   static BasicCommReflection() {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
-          "ChBiYXNpY19jb21tLnByb3RvIhsKDkNsYXNzaWZpY2F0aW9uEgkKAWsYASAB",
-          "KAUiKAoHRmVhdHVyZRINCgV0aGluZxgBIAEoAhIOCgZ0aGluZzIYAiABKAIy",
-          "NQoIRGF0YUNvbW0SKQoMU2VuZEZlYXR1cmVzEgguRmVhdHVyZRoPLkNsYXNz",
-          "aWZpY2F0aW9uYgZwcm90bzM="));
+          "ChBiYXNpY19jb21tLnByb3RvIgcKBUVtcHR5Ii4KC09ic2VydmF0aW9uEgkK",
+          "AXgYASABKAISCQoBeRgCIAEoAhIJCgF6GAMgASgCMioKCERhdGFDb21tEh4K",
+          "BkdldE9icxIGLkVtcHR5GgwuT2JzZXJ2YXRpb25iBnByb3RvMw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-          new pbr::GeneratedClrTypeInfo(typeof(global::Classification), global::Classification.Parser, new[]{ "K" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::Feature), global::Feature.Parser, new[]{ "Thing", "Thing2" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::Empty), global::Empty.Parser, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::Observation), global::Observation.Parser, new[]{ "X", "Y", "Z" }, null, null, null)
         }));
   }
   #endregion
 
 }
 #region Messages
-public sealed partial class Classification : pb::IMessage<Classification> {
-  private static readonly pb::MessageParser<Classification> _parser = new pb::MessageParser<Classification>(() => new Classification());
+public sealed partial class Empty : pb::IMessage<Empty> {
+  private static readonly pb::MessageParser<Empty> _parser = new pb::MessageParser<Empty>(() => new Empty());
   private pb::UnknownFieldSet _unknownFields;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public static pb::MessageParser<Classification> Parser { get { return _parser; } }
+  public static pb::MessageParser<Empty> Parser { get { return _parser; } }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
@@ -54,55 +53,41 @@ public sealed partial class Classification : pb::IMessage<Classification> {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public Classification() {
+  public Empty() {
     OnConstruction();
   }
 
   partial void OnConstruction();
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public Classification(Classification other) : this() {
-    k_ = other.k_;
+  public Empty(Empty other) : this() {
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public Classification Clone() {
-    return new Classification(this);
-  }
-
-  /// <summary>Field number for the "k" field.</summary>
-  public const int KFieldNumber = 1;
-  private int k_;
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public int K {
-    get { return k_; }
-    set {
-      k_ = value;
-    }
+  public Empty Clone() {
+    return new Empty(this);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
-    return Equals(other as Classification);
+    return Equals(other as Empty);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public bool Equals(Classification other) {
+  public bool Equals(Empty other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
     if (ReferenceEquals(other, this)) {
       return true;
     }
-    if (K != other.K) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override int GetHashCode() {
     int hash = 1;
-    if (K != 0) hash ^= K.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -116,10 +101,6 @@ public sealed partial class Classification : pb::IMessage<Classification> {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public void WriteTo(pb::CodedOutputStream output) {
-    if (K != 0) {
-      output.WriteRawTag(8);
-      output.WriteInt32(K);
-    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -128,9 +109,6 @@ public sealed partial class Classification : pb::IMessage<Classification> {
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public int CalculateSize() {
     int size = 0;
-    if (K != 0) {
-      size += 1 + pb::CodedOutputStream.ComputeInt32Size(K);
-    }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
     }
@@ -138,12 +116,9 @@ public sealed partial class Classification : pb::IMessage<Classification> {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public void MergeFrom(Classification other) {
+  public void MergeFrom(Empty other) {
     if (other == null) {
       return;
-    }
-    if (other.K != 0) {
-      K = other.K;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -156,21 +131,17 @@ public sealed partial class Classification : pb::IMessage<Classification> {
         default:
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
-        case 8: {
-          K = input.ReadInt32();
-          break;
-        }
       }
     }
   }
 
 }
 
-public sealed partial class Feature : pb::IMessage<Feature> {
-  private static readonly pb::MessageParser<Feature> _parser = new pb::MessageParser<Feature>(() => new Feature());
+public sealed partial class Observation : pb::IMessage<Observation> {
+  private static readonly pb::MessageParser<Observation> _parser = new pb::MessageParser<Observation>(() => new Observation());
   private pb::UnknownFieldSet _unknownFields;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public static pb::MessageParser<Feature> Parser { get { return _parser; } }
+  public static pb::MessageParser<Observation> Parser { get { return _parser; } }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
@@ -183,69 +154,86 @@ public sealed partial class Feature : pb::IMessage<Feature> {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public Feature() {
+  public Observation() {
     OnConstruction();
   }
 
   partial void OnConstruction();
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public Feature(Feature other) : this() {
-    thing_ = other.thing_;
-    thing2_ = other.thing2_;
+  public Observation(Observation other) : this() {
+    x_ = other.x_;
+    y_ = other.y_;
+    z_ = other.z_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public Feature Clone() {
-    return new Feature(this);
+  public Observation Clone() {
+    return new Observation(this);
   }
 
-  /// <summary>Field number for the "thing" field.</summary>
-  public const int ThingFieldNumber = 1;
-  private float thing_;
+  /// <summary>Field number for the "x" field.</summary>
+  public const int XFieldNumber = 1;
+  private float x_;
+  /// <summary>
+  ///int32 k = 1;
+  /// </summary>
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public float Thing {
-    get { return thing_; }
+  public float X {
+    get { return x_; }
     set {
-      thing_ = value;
+      x_ = value;
     }
   }
 
-  /// <summary>Field number for the "thing2" field.</summary>
-  public const int Thing2FieldNumber = 2;
-  private float thing2_;
+  /// <summary>Field number for the "y" field.</summary>
+  public const int YFieldNumber = 2;
+  private float y_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public float Thing2 {
-    get { return thing2_; }
+  public float Y {
+    get { return y_; }
     set {
-      thing2_ = value;
+      y_ = value;
+    }
+  }
+
+  /// <summary>Field number for the "z" field.</summary>
+  public const int ZFieldNumber = 3;
+  private float z_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public float Z {
+    get { return z_; }
+    set {
+      z_ = value;
     }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
-    return Equals(other as Feature);
+    return Equals(other as Observation);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public bool Equals(Feature other) {
+  public bool Equals(Observation other) {
     if (ReferenceEquals(other, null)) {
       return false;
     }
     if (ReferenceEquals(other, this)) {
       return true;
     }
-    if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Thing, other.Thing)) return false;
-    if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Thing2, other.Thing2)) return false;
+    if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(X, other.X)) return false;
+    if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Y, other.Y)) return false;
+    if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Z, other.Z)) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override int GetHashCode() {
     int hash = 1;
-    if (Thing != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Thing);
-    if (Thing2 != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Thing2);
+    if (X != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(X);
+    if (Y != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Y);
+    if (Z != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Z);
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -259,13 +247,17 @@ public sealed partial class Feature : pb::IMessage<Feature> {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public void WriteTo(pb::CodedOutputStream output) {
-    if (Thing != 0F) {
+    if (X != 0F) {
       output.WriteRawTag(13);
-      output.WriteFloat(Thing);
+      output.WriteFloat(X);
     }
-    if (Thing2 != 0F) {
+    if (Y != 0F) {
       output.WriteRawTag(21);
-      output.WriteFloat(Thing2);
+      output.WriteFloat(Y);
+    }
+    if (Z != 0F) {
+      output.WriteRawTag(29);
+      output.WriteFloat(Z);
     }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
@@ -275,10 +267,13 @@ public sealed partial class Feature : pb::IMessage<Feature> {
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public int CalculateSize() {
     int size = 0;
-    if (Thing != 0F) {
+    if (X != 0F) {
       size += 1 + 4;
     }
-    if (Thing2 != 0F) {
+    if (Y != 0F) {
+      size += 1 + 4;
+    }
+    if (Z != 0F) {
       size += 1 + 4;
     }
     if (_unknownFields != null) {
@@ -288,15 +283,18 @@ public sealed partial class Feature : pb::IMessage<Feature> {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-  public void MergeFrom(Feature other) {
+  public void MergeFrom(Observation other) {
     if (other == null) {
       return;
     }
-    if (other.Thing != 0F) {
-      Thing = other.Thing;
+    if (other.X != 0F) {
+      X = other.X;
     }
-    if (other.Thing2 != 0F) {
-      Thing2 = other.Thing2;
+    if (other.Y != 0F) {
+      Y = other.Y;
+    }
+    if (other.Z != 0F) {
+      Z = other.Z;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -310,11 +308,15 @@ public sealed partial class Feature : pb::IMessage<Feature> {
           _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
           break;
         case 13: {
-          Thing = input.ReadFloat();
+          X = input.ReadFloat();
           break;
         }
         case 21: {
-          Thing2 = input.ReadFloat();
+          Y = input.ReadFloat();
+          break;
+        }
+        case 29: {
+          Z = input.ReadFloat();
           break;
         }
       }
