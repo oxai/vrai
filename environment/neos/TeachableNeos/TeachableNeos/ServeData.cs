@@ -5,11 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using BaseX;
 using FrooxEngine;
-//using FrooxEngine.LogiX;
-
-//using Grpc.Core;
-//using Grpc.Core.Utils;
-//using LogiX;
 using FrooxEngine.LogiX;
 using Grpc.Core;
 
@@ -20,9 +15,20 @@ namespace FrooxEngine.LogiX.Network
     public class ServeData : LogixNode
     {
         public readonly Input<float> x;
-        //public readonly Input<float> TestNumber2;
+        public readonly Input<float> z;
+        public readonly Input<float> reward;
+        public readonly Impulse Pulse;
+        public readonly Impulse ResetPulse;
 
         //public readonly Output<int> TestOutput;
+        //public readonly Output<float> body_vx;
+        //public readonly Output<float> body_vy;
+        public readonly Sync<float> body_vx;
+        public readonly Sync<float> body_vz;
+        public float body_vx_tmp;
+        public float body_vz_tmp;
+        public bool have_read;
+        public bool have_reset;
         //private DataComm.DataCommClient client;
         public Channel channel;
         public Server server;
@@ -31,12 +37,35 @@ namespace FrooxEngine.LogiX.Network
         {
             base.RunStartup();
             //StartRPCServer();
-            Task.Run(()=> { StartRPCServer(); });
+            Task.Run(()=> {
+                try
+                {
+                    StartRPCServer();
+                }
+                catch (Exception exception)
+                {
+                    Debug.Log("Server threw exeception : " + exception.Message);
+                }
+            });
         }
+
+        //public void Trigger(NeosAction action)
+        //{
+        //    //body_vx.Value = action.BodyVx;
+        //    //body_vy.Value = action.BodyVz;
+        //    //Pulse.Trigger();
+        //}
 
         //protected override void OnChanges()
         //{
 
+        //}
+        //protected override void InitializeSyncMembers()
+        //{
+        //    base.InitializeSyncMembers();
+        //    this.Pulse = new Impulse();
+        //    this.body_vx = new Output<float>();
+        //    this.body_vz = new Output<float>();
         //}
 
         private void StartRPCServer()
@@ -54,6 +83,30 @@ namespace FrooxEngine.LogiX.Network
 
         }
 
+        protected override void OnCommonUpdate()
+        {
+            //Pass the callback to the base so the output are updated
+            base.OnCommonUpdate();
+            body_vx.Value = this.body_vx_tmp;
+            body_vz.Value = this.body_vz_tmp;
+            if (have_read)
+            {
+                Pulse.Trigger();
+                have_read = false;
+            }
+            if (have_reset)
+            {
+                ResetPulse.Trigger();
+                have_reset = false;
+            }
+        }
+
+        protected override void OnChanges()
+        {
+            //Pass the callback to the base so the outputs are updated on the node
+            base.OnChanges();
+        }
+
         //protected override void OnEvaluate()
         //{
         //    var number1 = TestNumber.EvaluateRaw();
@@ -64,56 +117,57 @@ namespace FrooxEngine.LogiX.Network
         //    TestOutput.Value = 1;
         //}
 
-        //protected override void InitializeSyncMembers()
-        //{
-        //    base.InitializeSyncMembers();
-        //    this.TestNumber = new Input<float>();
-        //    this.TestNumber2 = new Input<float>();
-        //    this.TestOutput = new Output<float>();
-        //}
+            //protected override void InitializeSyncMembers()
+            //{
+            //    base.InitializeSyncMembers();
+            //    this.TestNumber = new Input<float>();
+            //    this.TestNumber2 = new Input<float>();
+            //    this.TestOutput = new Output<float>();
+            //}
 
 
-        //public override ISyncMember GetSyncMember(int index)
-        //{
-        //    switch (index)
-        //    {
-        //        case 0:
-        //            return (ISyncMember)this.persistent;
-        //        case 1:
-        //            return (ISyncMember)this.updateOrder;
-        //        case 2:
-        //            return (ISyncMember)this.EnabledField;
-        //        case 3:
-        //            return (ISyncMember)this._activeVisual;
-        //        case 4:
-        //            return (ISyncMember)this.TestNumber;
-        //        case 5:
-        //            return (ISyncMember)this.TestNumber2;
-        //        case 6:
-        //            return (ISyncMember)this.TestOutput;
-        //        default:
-        //            throw new ArgumentOutOfRangeException();
-        //    }
-        //}
+            //public override ISyncMember GetSyncMember(int index)
+            //{
+            //    switch (index)
+            //    {
+            //        case 0:
+            //            return (ISyncMember)this.persistent;
+            //        case 1:
+            //            return (ISyncMember)this.updateOrder;
+            //        case 2:
+            //            return (ISyncMember)this.EnabledField;
+            //        case 3:
+            //            return (ISyncMember)this._activeVisual;
+            //        case 4:
+            //            return (ISyncMember)this.TestNumber;
+            //        case 5:
+            //            return (ISyncMember)this.TestNumber2;
+            //        case 6:
+            //            return (ISyncMember)this.TestOutput;
+            //        default:
+            //            throw new ArgumentOutOfRangeException();
+            //    }
+            //}
 
-        //public static ServeData __New()
-        //{
-        //    return new ServeData();
-        //}
+            //public static ServeData __New()
+            //{
+            //    return new ServeData();
+            //}
 
-        //protected override void NotifyOutputsOfChange()
-        //{
-        //    ((IOutputElement)this.TestOutput).NotifyChange();
-        //}
+            //protected override void NotifyOutputsOfChange()
+            //{
+            //    ((IOutputElement)this.TestOutput).NotifyChange();
+            //}
 
-        //[ImpulseTarget]
-        //public void Run()
-        //{
+            //[ImpulseTarget]
+            //public void Run()
+            //{
 
-        //}
+            //}
 
         public override void RunOnDestroying()
         {
+            base.RunOnDestroying();
             //channel.ShutdownAsync().Wait();
             server.ShutdownAsync().Wait();
         }

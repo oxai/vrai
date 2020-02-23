@@ -13,6 +13,8 @@ public static partial class DataComm
 
   static readonly grpc::Marshaller<global::Empty> __Marshaller_Empty = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Empty.Parser.ParseFrom);
   static readonly grpc::Marshaller<global::NeosObservation> __Marshaller_NeosObservation = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NeosObservation.Parser.ParseFrom);
+  static readonly grpc::Marshaller<global::NeosAction> __Marshaller_NeosAction = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NeosAction.Parser.ParseFrom);
+  static readonly grpc::Marshaller<global::Response> __Marshaller_Response = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Response.Parser.ParseFrom);
 
   static readonly grpc::Method<global::Empty, global::NeosObservation> __Method_GetObs = new grpc::Method<global::Empty, global::NeosObservation>(
       grpc::MethodType.Unary,
@@ -20,6 +22,20 @@ public static partial class DataComm
       "GetObs",
       __Marshaller_Empty,
       __Marshaller_NeosObservation);
+
+  static readonly grpc::Method<global::NeosAction, global::Response> __Method_SendAct = new grpc::Method<global::NeosAction, global::Response>(
+      grpc::MethodType.Unary,
+      __ServiceName,
+      "SendAct",
+      __Marshaller_NeosAction,
+      __Marshaller_Response);
+
+  static readonly grpc::Method<global::Empty, global::Response> __Method_ResetAgent = new grpc::Method<global::Empty, global::Response>(
+      grpc::MethodType.Unary,
+      __ServiceName,
+      "ResetAgent",
+      __Marshaller_Empty,
+      __Marshaller_Response);
 
   /// <summary>Service descriptor</summary>
   public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -37,6 +53,16 @@ public static partial class DataComm
     /// <param name="context">The context of the server-side call handler being invoked.</param>
     /// <returns>The response to send back to the client (wrapped by a task).</returns>
     public virtual global::System.Threading.Tasks.Task<global::NeosObservation> GetObs(global::Empty request, grpc::ServerCallContext context)
+    {
+      throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+    }
+
+    public virtual global::System.Threading.Tasks.Task<global::Response> SendAct(global::NeosAction request, grpc::ServerCallContext context)
+    {
+      throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+    }
+
+    public virtual global::System.Threading.Tasks.Task<global::Response> ResetAgent(global::Empty request, grpc::ServerCallContext context)
     {
       throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
     }
@@ -110,6 +136,38 @@ public static partial class DataComm
     {
       return CallInvoker.AsyncUnaryCall(__Method_GetObs, null, options, request);
     }
+    public virtual global::Response SendAct(global::NeosAction request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    {
+      return SendAct(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+    }
+    public virtual global::Response SendAct(global::NeosAction request, grpc::CallOptions options)
+    {
+      return CallInvoker.BlockingUnaryCall(__Method_SendAct, null, options, request);
+    }
+    public virtual grpc::AsyncUnaryCall<global::Response> SendActAsync(global::NeosAction request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    {
+      return SendActAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+    }
+    public virtual grpc::AsyncUnaryCall<global::Response> SendActAsync(global::NeosAction request, grpc::CallOptions options)
+    {
+      return CallInvoker.AsyncUnaryCall(__Method_SendAct, null, options, request);
+    }
+    public virtual global::Response ResetAgent(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    {
+      return ResetAgent(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+    }
+    public virtual global::Response ResetAgent(global::Empty request, grpc::CallOptions options)
+    {
+      return CallInvoker.BlockingUnaryCall(__Method_ResetAgent, null, options, request);
+    }
+    public virtual grpc::AsyncUnaryCall<global::Response> ResetAgentAsync(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    {
+      return ResetAgentAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+    }
+    public virtual grpc::AsyncUnaryCall<global::Response> ResetAgentAsync(global::Empty request, grpc::CallOptions options)
+    {
+      return CallInvoker.AsyncUnaryCall(__Method_ResetAgent, null, options, request);
+    }
     /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
     protected override DataCommClient NewInstance(ClientBaseConfiguration configuration)
     {
@@ -122,7 +180,9 @@ public static partial class DataComm
   public static grpc::ServerServiceDefinition BindService(DataCommBase serviceImpl)
   {
     return grpc::ServerServiceDefinition.CreateBuilder()
-        .AddMethod(__Method_GetObs, serviceImpl.GetObs).Build();
+        .AddMethod(__Method_GetObs, serviceImpl.GetObs)
+        .AddMethod(__Method_SendAct, serviceImpl.SendAct)
+        .AddMethod(__Method_ResetAgent, serviceImpl.ResetAgent).Build();
   }
 
 }
