@@ -528,6 +528,7 @@ MonoBehaviour:
     resetOnDone: 1
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
+  academy: {fileID: 0}
   inputs:
   - 0
   - 0
@@ -586,7 +587,7 @@ MonoBehaviour:
   m_BrainParameters:
     vectorObservationSize: 12
     numStackedVectorObservations: 1
-    vectorActionSize: 03000000
+    vectorActionSize: 02000000
     vectorActionDescriptions: []
     vectorActionSpaceType: 1
   m_Model: {fileID: 0}

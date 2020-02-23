@@ -4,10 +4,21 @@ syntax = "proto3";
 service DataComm {
    // (Method definitions not shown)
   rpc GetObs(Empty) returns (NeosObservation);
+  rpc SendAct(NeosAction) returns (Response);
+  rpc ResetAgent(Empty) returns (Response);
 }
 
 message Empty {
 
+}
+
+message Response {
+	string res = 1;
+}
+
+message NeosAction {
+	float body_vx = 1;
+	float body_vz = 2;
 }
 
 message NeosObservation {
@@ -15,4 +26,5 @@ message NeosObservation {
 	float x = 1;
 	float y = 2;
 	float z = 3;
+	float reward = 4;
 }

@@ -68,9 +68,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicComm.cs" />
-    <Compile Include="BasicCommGrpc.cs" />
     <Compile Include="DataCommImpl.cs" />
+    <Compile Include="Grpc\BasicComm.cs" />
+    <Compile Include="Grpc\BasicCommGrpc.cs" />
     <Compile Include="ServeData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -89,4 +89,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Grpc.Core.1.10.0\build\net45\Grpc.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Grpc.Core.1.10.0\build\net45\Grpc.Core.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>copy /B $(ProjectDir)$(OutDir)TeachableNeos.dll "C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
