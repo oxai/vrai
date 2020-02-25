@@ -50,7 +50,7 @@ public class TestAgent : Agent
         //Debug.Log(inputs.Count);
         AddVectorObs(obs.X);
         AddVectorObs(obs.Z);
-        float reward = Mathf.Clamp(0.1f * inputs[inputs.Count - 2], -1f, 1f)+1f;
+        float reward = obs.Reward;
         //Debug.Log("Reward " + reward.ToString());
         AddReward(reward);
         stop_training = 0f;

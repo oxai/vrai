@@ -21,7 +21,7 @@ namespace TeachableNeos
         {
             return Task.FromResult(new NeosObservation
             {
-                X = node.x.Evaluate(), Y = 1, Z = node.z.Evaluate(), Reward = node.reward.Evaluate()
+                X = node.x_tmp, Y = 1, Z = node.z_tmp, Reward = node.reward_tmp
             });
         }
 

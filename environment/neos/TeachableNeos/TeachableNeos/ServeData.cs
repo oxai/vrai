@@ -15,8 +15,11 @@ namespace FrooxEngine.LogiX.Network
     public class ServeData : LogixNode
     {
         public readonly Input<float> x;
+        public float x_tmp;
         public readonly Input<float> z;
+        public float z_tmp;
         public readonly Input<float> reward;
+        public float reward_tmp;
         public readonly Impulse Pulse;
         public readonly Impulse ResetPulse;
 
@@ -83,10 +86,12 @@ namespace FrooxEngine.LogiX.Network
 
         }
 
-        protected override void OnCommonUpdate()
+        [ImpulseTarget]
+        public void SendAction()
         {
-            //Pass the callback to the base so the output are updated
-            base.OnCommonUpdate();
+            x_tmp = this.x.Evaluate();
+            z_tmp = this.z.Evaluate();
+            reward_tmp = this.reward.Evaluate();
             body_vx.Value = this.body_vx_tmp;
             body_vz.Value = this.body_vz_tmp;
             if (have_read)
@@ -99,6 +104,12 @@ namespace FrooxEngine.LogiX.Network
                 ResetPulse.Trigger();
                 have_reset = false;
             }
+        }
+
+        protected override void OnCommonUpdate()
+        {
+            //Pass the callback to the base so the output are updated
+            base.OnCommonUpdate();
         }
 
         protected override void OnChanges()
