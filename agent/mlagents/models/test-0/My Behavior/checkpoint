@@ -1,2 +1,2 @@
-model_checkpoint_path: "model-265.cptk"
-all_model_checkpoint_paths: "model-265.cptk"
+model_checkpoint_path: "model-50000.cptk"
+all_model_checkpoint_paths: "model-50000.cptk"
