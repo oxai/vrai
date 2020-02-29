@@ -37,6 +37,13 @@ public static partial class DataComm
       __Marshaller_Empty,
       __Marshaller_Response);
 
+  static readonly grpc::Method<global::Empty, global::NeosAction> __Method_GatherAct = new grpc::Method<global::Empty, global::NeosAction>(
+      grpc::MethodType.Unary,
+      __ServiceName,
+      "GatherAct",
+      __Marshaller_Empty,
+      __Marshaller_NeosAction);
+
   /// <summary>Service descriptor</summary>
   public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
   {
@@ -63,6 +70,11 @@ public static partial class DataComm
     }
 
     public virtual global::System.Threading.Tasks.Task<global::Response> ResetAgent(global::Empty request, grpc::ServerCallContext context)
+    {
+      throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+    }
+
+    public virtual global::System.Threading.Tasks.Task<global::NeosAction> GatherAct(global::Empty request, grpc::ServerCallContext context)
     {
       throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
     }
@@ -168,6 +180,22 @@ public static partial class DataComm
     {
       return CallInvoker.AsyncUnaryCall(__Method_ResetAgent, null, options, request);
     }
+    public virtual global::NeosAction GatherAct(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    {
+      return GatherAct(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+    }
+    public virtual global::NeosAction GatherAct(global::Empty request, grpc::CallOptions options)
+    {
+      return CallInvoker.BlockingUnaryCall(__Method_GatherAct, null, options, request);
+    }
+    public virtual grpc::AsyncUnaryCall<global::NeosAction> GatherActAsync(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    {
+      return GatherActAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+    }
+    public virtual grpc::AsyncUnaryCall<global::NeosAction> GatherActAsync(global::Empty request, grpc::CallOptions options)
+    {
+      return CallInvoker.AsyncUnaryCall(__Method_GatherAct, null, options, request);
+    }
     /// <summary>Creates a new instance of client from given <c>ClientBaseConfiguration</c>.</summary>
     protected override DataCommClient NewInstance(ClientBaseConfiguration configuration)
     {
@@ -182,7 +210,8 @@ public static partial class DataComm
     return grpc::ServerServiceDefinition.CreateBuilder()
         .AddMethod(__Method_GetObs, serviceImpl.GetObs)
         .AddMethod(__Method_SendAct, serviceImpl.SendAct)
-        .AddMethod(__Method_ResetAgent, serviceImpl.ResetAgent).Build();
+        .AddMethod(__Method_ResetAgent, serviceImpl.ResetAgent)
+        .AddMethod(__Method_GatherAct, serviceImpl.GatherAct).Build();
   }
 
 }
