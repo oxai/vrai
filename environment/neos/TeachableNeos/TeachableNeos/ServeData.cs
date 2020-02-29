@@ -23,11 +23,16 @@ namespace FrooxEngine.LogiX.Network
         public readonly Impulse Pulse;
         public readonly Impulse ResetPulse;
 
+        public readonly Input<float> body_vx_human;
+        public readonly Input<float> body_vz_human;
+        public float body_vx_human_tmp;
+        public float body_vz_human_tmp;
         //public readonly Output<int> TestOutput;
         //public readonly Output<float> body_vx;
         //public readonly Output<float> body_vy;
         public readonly Sync<float> body_vx;
         public readonly Sync<float> body_vz;
+
         public float body_vx_tmp;
         public float body_vz_tmp;
         public bool have_read;
@@ -92,6 +97,8 @@ namespace FrooxEngine.LogiX.Network
             x_tmp = this.x.Evaluate();
             z_tmp = this.z.Evaluate();
             reward_tmp = this.reward.Evaluate();
+            body_vx_human_tmp = this.body_vx_human.Evaluate();
+            body_vz_human_tmp = this.body_vz_human.Evaluate();
             body_vx.Value = this.body_vx_tmp;
             body_vz.Value = this.body_vz_tmp;
             if (have_read)
