@@ -42,6 +42,17 @@ namespace TeachableNeos
                 return Task.FromResult(new Response{ Res = error});
             }
         }
+
+        public override Task<NeosAction> GatherAct(Empty f, ServerCallContext context)
+        {
+            return Task.FromResult(new NeosAction
+            {
+                BodyVx = node.body_vx_human_tmp,
+                BodyVz = node.body_vz_human_tmp
+            });
+        }
+
+
         public override Task<Response> ResetAgent(Empty f, ServerCallContext context)
         {
 

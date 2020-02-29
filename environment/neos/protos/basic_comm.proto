@@ -6,6 +6,7 @@ service DataComm {
   rpc GetObs(Empty) returns (NeosObservation);
   rpc SendAct(NeosAction) returns (Response);
   rpc ResetAgent(Empty) returns (Response);
+  rpc GatherAct(Empty) returns (NeosAction);
 }
 
 message Empty {
