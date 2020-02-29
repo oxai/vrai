@@ -75,7 +75,6 @@ public class TestAgent : Agent
 
     public override void AgentAction(float[] vectorAction)
     {
-
         if (GetStepCount() >= 100)
         {
             Response res = client.SendAct(new NeosAction { BodyVx = vectorAction[0], BodyVz = vectorAction[1] });
@@ -104,7 +103,10 @@ public class TestAgent : Agent
 
     public override float[] Heuristic()
     {
+        NeosAction action_message = client.GatherAct(new Empty());
         var action = new float[2];
+        action[0] = action_message.BodyVx;
+        action[1] = action_message.BodyVz;
         return action;
     }
 

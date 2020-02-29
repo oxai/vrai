@@ -25,10 +25,11 @@ public static partial class BasicCommReflection {
           "ChBiYXNpY19jb21tLnByb3RvIgcKBUVtcHR5IhcKCFJlc3BvbnNlEgsKA3Jl",
           "cxgBIAEoCSIuCgpOZW9zQWN0aW9uEg8KB2JvZHlfdngYASABKAISDwoHYm9k",
           "eV92ehgCIAEoAiJCCg9OZW9zT2JzZXJ2YXRpb24SCQoBeBgBIAEoAhIJCgF5",
-          "GAIgASgCEgkKAXoYAyABKAISDgoGcmV3YXJkGAQgASgCMnIKCERhdGFDb21t",
-          "EiIKBkdldE9icxIGLkVtcHR5GhAuTmVvc09ic2VydmF0aW9uEiEKB1NlbmRB",
-          "Y3QSCy5OZW9zQWN0aW9uGgkuUmVzcG9uc2USHwoKUmVzZXRBZ2VudBIGLkVt",
-          "cHR5GgkuUmVzcG9uc2ViBnByb3RvMw=="));
+          "GAIgASgCEgkKAXoYAyABKAISDgoGcmV3YXJkGAQgASgCMpQBCghEYXRhQ29t",
+          "bRIiCgZHZXRPYnMSBi5FbXB0eRoQLk5lb3NPYnNlcnZhdGlvbhIhCgdTZW5k",
+          "QWN0EgsuTmVvc0FjdGlvbhoJLlJlc3BvbnNlEh8KClJlc2V0QWdlbnQSBi5F",
+          "bXB0eRoJLlJlc3BvbnNlEiAKCUdhdGhlckFjdBIGLkVtcHR5GgsuTmVvc0Fj",
+          "dGlvbmIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
