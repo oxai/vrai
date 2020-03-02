@@ -4,6 +4,7 @@ syntax = "proto3";
 service DataComm {
    // (Method definitions not shown)
   rpc GetObs(Empty) returns (NeosObservation);
+  rpc GetTextureObs(Empty) returns (TextureObservation);
   rpc SendAct(NeosAction) returns (Response);
   rpc ResetAgent(Empty) returns (Response);
   rpc GatherAct(Empty) returns (NeosAction);
@@ -20,6 +21,10 @@ message Response {
 message NeosAction {
 	float body_vx = 1;
 	float body_vz = 2;
+}
+
+message TextureObservation {
+	byte[] texture = 1;
 }
 
 message NeosObservation {

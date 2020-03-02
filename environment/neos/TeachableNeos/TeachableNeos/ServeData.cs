@@ -7,6 +7,8 @@ using BaseX;
 using FrooxEngine;
 using FrooxEngine.LogiX;
 using Grpc.Core;
+using CodeX;
+//using UnityEngine;
 
 namespace FrooxEngine.LogiX.Network
 {
@@ -22,6 +24,9 @@ namespace FrooxEngine.LogiX.Network
         public float reward_tmp;
         public readonly Impulse Pulse;
         public readonly Impulse ResetPulse;
+        public byte[] texture;
+
+        public readonly Input<Camera> camera;
 
         public readonly Input<float> body_vx_human;
         public readonly Input<float> body_vz_human;
@@ -111,6 +116,9 @@ namespace FrooxEngine.LogiX.Network
                 ResetPulse.Trigger();
                 have_reset = false;
             }
+            //texture = RenderManager.RenderToBitmap(camera.Evaluate().GetRenderSettings(new int2(84,84))).Wait().RawData();
+            texture = base.World.Render.Connector.Render(camera.Evaluate().GetRenderSettings(new int2(84,84)));
+            Debug.Log(texture[1].ToString());
         }
 
         protected override void OnCommonUpdate()
