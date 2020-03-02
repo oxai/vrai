@@ -45,8 +45,8 @@ public class TestAgent : Agent
     public override void CollectObservations()
     {
         NeosObservation obs = client.GetObs(new Empty());
-        //Debug.Log(obs.X);
-        //Debug.Log(obs.Z);
+        Debug.Log("X: "+obs.X.ToString());
+        Debug.Log("Z: "+obs.Z.ToString());
         //Debug.Log(inputs.Count);
         AddVectorObs(obs.X);
         AddVectorObs(obs.Z);
@@ -75,17 +75,21 @@ public class TestAgent : Agent
 
     public override void AgentAction(float[] vectorAction)
     {
+        Debug.Log("vx: "+vectorAction[0].ToString());
+        Debug.Log("vz: "+vectorAction[1].ToString());
         if (GetStepCount() >= 100)
         {
             Response res = client.SendAct(new NeosAction { BodyVx = vectorAction[0], BodyVz = vectorAction[1] });
             //Response res = client.SendAct(new NeosAction { BodyVx = 0.1f, BodyVz = 0.5f });
-            Debug.Log(res.Res);
+            if (res.Res != "Ok")
+                Debug.Log(res.Res);
             Done();
         } else
         {
             Response res = client.SendAct(new NeosAction { BodyVx = vectorAction[0], BodyVz = vectorAction[1] });
             //Response res = client.SendAct(new NeosAction { BodyVx = 0.1f, BodyVz = 0.5f });
-            Debug.Log(res.Res);
+            if (res.Res != "Ok")
+                Debug.Log(res.Res);
         }
 
     }
@@ -107,6 +111,7 @@ public class TestAgent : Agent
         var action = new float[2];
         action[0] = action_message.BodyVx;
         action[1] = action_message.BodyVz;
+        //Debug.Log(action[0]);
         return action;
     }
 
