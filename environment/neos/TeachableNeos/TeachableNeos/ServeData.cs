@@ -22,6 +22,9 @@ namespace FrooxEngine.LogiX.Network
         public float z_tmp;
         public readonly Input<float> reward;
         public float reward_tmp;
+        public readonly Input<bool> reset_server;
+        public readonly Input<int> copy_idx;
+        public int copy_idx_tmp;
         public readonly Impulse Pulse;
         public readonly Impulse ResetPulse;
         public byte[] texture;
@@ -50,16 +53,7 @@ namespace FrooxEngine.LogiX.Network
         {
             base.RunStartup();
             //StartRPCServer();
-            Task.Run(()=> {
-                try
-                {
-                    StartRPCServer();
-                }
-                catch (Exception exception)
-                {
-                    Debug.Log("Server threw exeception : " + exception.Message);
-                }
-            });
+            StartRPCServer();
         }
 
         //public void Trigger(NeosAction action)
@@ -83,27 +77,31 @@ namespace FrooxEngine.LogiX.Network
 
         private void StartRPCServer()
         {
-            //channel = new Channel("127.0.0.1:50052", ChannelCredentials.Insecure);
-            //this.client = new DataComm.DataCommClient(channel);
-            const int Port = 50052;
+            Task.Run(()=> {
+                try
+                {
+                    //channel = new Channel("127.0.0.1:50052", ChannelCredentials.Insecure);
+                    //this.client = new DataComm.DataCommClient(channel);
+                    int Port = 50052+copy_idx_tmp;
 
-            server = new Server
-            {
-                Services = { DataComm.BindService(new TeachableNeos.DataCommImpl(this)) },
-                Ports = { new ServerPort("127.0.0.1", Port, ServerCredentials.Insecure) }
-            };
-            server.Start();
+                    server = new Server
+                    {
+                        Services = { DataComm.BindService(new TeachableNeos.DataCommImpl(this)) },
+                        Ports = { new ServerPort("127.0.0.1", Port, ServerCredentials.Insecure) }
+                    };
+                    server.Start();
+                }
+                catch (Exception exception)
+                {
+                    Debug.Log("Server threw exeception : " + exception.Message);
+                }
+            });
 
         }
 
         [ImpulseTarget]
-        public void SendAction()
+        public void PerformAction()
         {
-            x_tmp = this.x.Evaluate();
-            z_tmp = this.z.Evaluate();
-            reward_tmp = this.reward.Evaluate();
-            body_vx_human_tmp = this.body_vx_human.Evaluate();
-            body_vz_human_tmp = this.body_vz_human.Evaluate();
             body_vx.Value = this.body_vx_tmp;
             body_vz.Value = this.body_vz_tmp;
             if (have_read)
@@ -115,6 +113,26 @@ namespace FrooxEngine.LogiX.Network
             {
                 ResetPulse.Trigger();
                 have_reset = false;
+                x_tmp = this.x.Evaluate();
+                z_tmp = this.z.Evaluate();
+                reward_tmp = this.reward.Evaluate();
+                body_vx_human_tmp = 0;
+                body_vz_human_tmp = 0;
+            } else
+            {
+                x_tmp = this.x.Evaluate();
+                z_tmp = this.z.Evaluate();
+                reward_tmp = this.reward.Evaluate();
+                body_vx_human_tmp = this.body_vx_human.Evaluate();
+                body_vz_human_tmp = this.body_vz_human.Evaluate();
+            }
+            copy_idx_tmp = this.copy_idx.Evaluate();
+            
+            if (this.reset_server.Evaluate())
+            {
+                server.ShutdownAsync().Wait();
+                StartRPCServer();
+
             }
             //texture = RenderManager.RenderToBitmap(camera.Evaluate().GetRenderSettings(new int2(84,84))).Wait().RawData();
             texture = base.World.Render.Connector.Render(camera.Evaluate().GetRenderSettings(new int2(84,84)));

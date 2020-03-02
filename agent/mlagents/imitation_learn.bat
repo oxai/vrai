@@ -1,0 +1,1 @@
+mlagents-learn gail_config.yaml --run-id=test_imitation_learn3 --train
