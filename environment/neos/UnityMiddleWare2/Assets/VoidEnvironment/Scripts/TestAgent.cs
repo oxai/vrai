@@ -12,30 +12,39 @@ using System.Runtime.InteropServices;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 using Screen = System.Windows.Forms.Screen;
+using Google.Protobuf;
+using UnityEngine.UI;
+using Grpc.Core;
 
 public class TestAgent : Agent
 {
     private DataComm.DataCommClient client;
     public TestAcademy academy;
-    public List<float> inputs; //can't call this variable observations, coz I guess that's being used for something else? dunno
+    //public List<float> inputs; //can't call this variable observations, coz I guess that's being used for something else? dunno
     public float stop_training = 0;
+    public bool should_reset = false;
+    public int texture_width = 84, texture_height = 84;
+    public int agent_index = 0;
     Texture2D tex;
     RawImage image;
+    public Camera dummyCamera;
+    public RawImage raw_image;
+    private ConnectToNeos cameraToNeos;
+
     public override void InitializeAgent()
     {
+        var channel = new Channel("127.0.0.1:5005"+(2+agent_index).ToString(), ChannelCredentials.Insecure);
+        this.client = new DataComm.DataCommClient(channel);
         //inputs = new List<float>() {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
-        academy = FindObjectOfType<TestAcademy>();
-        client = academy.client;
-        //using (var client = new TcpClient<IVrcaiMlaTest>(ipEndPoint))
-        //{
-        //    TextureMessage response = client.Proxy.getObs(new List<float>{0f,0f,0f});
-        //    image = GameObject.Find("RawImage").GetComponent<RawImage>();
-        //    //image.uvRect = new Rect(0,0, response.width, response.height);
-        //    GameObject.Find("RawImage").GetComponent<RectTransform>().sizeDelta = new Vector2(response.width,response.height);
-        //    //GameObject.Find("RawImage").GetComponent<RectTransform>().
-        //    //Debug.Log("hi");
-        //    //rt = new RenderTexture(tex.width / 2, tex.height / 2, 0);
-        //}
+        //academy = FindObjectOfType<TestAcademy>();
+        //client = academy.client;
+        cameraToNeos = dummyCamera.GetComponent<ConnectToNeos>();
+        image = raw_image.GetComponent<RawImage>();
+        //image.uvRect = new Rect(0,0, response.width, response.height);
+        //GameObject.Find("RawImage").GetComponent<RectTransform>().sizeDelta = new Vector2(texture_width, texture_height);
+        //GameObject.Find("RawImage").GetComponent<RectTransform>().
+        //Debug.Log("hi");
+        //rt = new RenderTexture(tex.width / 2, tex.height / 2, 0);
         //m_BallRb = ball.GetComponent<Rigidbody>();
         //var academy = FindObjectOfType<Academy>();
         //m_ResetParams = academy.FloatProperties;
@@ -45,49 +54,42 @@ public class TestAgent : Agent
     public override void CollectObservations()
     {
         NeosObservation obs = client.GetObs(new Empty());
-        Debug.Log("X: "+obs.X.ToString());
-        Debug.Log("Z: "+obs.Z.ToString());
+        //Debug.Log("X: "+obs.X.ToString());
+        //Debug.Log("Z: "+obs.Z.ToString());
         //Debug.Log(inputs.Count);
         AddVectorObs(obs.X);
         AddVectorObs(obs.Z);
         float reward = obs.Reward;
         //Debug.Log("Reward " + reward.ToString());
         AddReward(reward);
-        stop_training = 0f;
+        //stop_training = 0f;
+        should_reset = obs.ShouldReset;
+        TextureObservation res = client.GetTextureObs(new Empty());
+        byte[] texture_bytes = res.Texture.ToByteArray();
+        //Debug.Log("Length of texture bytes: "+texture_bytes.Length.ToString());
+        Destroy(tex);
+        tex = new Texture2D(texture_width, texture_height, TextureFormat.ARGB32, false);
+        tex.LoadRawTextureData(texture_bytes);
+        tex.Apply();
+        image.texture = tex;
+        cameraToNeos.texture = tex;
+
     }
-
-    //void FixedUpdate()
-    //{
-
-    //    using (var client = new TcpClient<IVrcaiMlaTest>(ipEndPoint))
-    //    {
-    //        //inputs = client.Proxy.getObs(new List<float>(vectorAction));
-    //        TextureMessage response = client.Proxy.getObs(new List<float>(new List<float> { 0f, 0f, 0f }));
-    //        //Debug.Log(response.raw_texture[0]);
-    //        Destroy(tex);
-    //        tex = new Texture2D(response.width, response.height, TextureFormat.RGB24, false);
-    //        tex.LoadRawTextureData(response.raw_texture);
-    //        tex.Apply();
-    //        //Debug.Log(image);
-    //        image.texture = tex;
-    //    }
-    //}
 
     public override void AgentAction(float[] vectorAction)
     {
-        Debug.Log("vx: "+vectorAction[0].ToString());
-        Debug.Log("vz: "+vectorAction[1].ToString());
-        if (GetStepCount() >= 100)
+        //Debug.Log("vx: " + vectorAction[0].ToString());
+        //Debug.Log("vz: " + vectorAction[1].ToString());
+        //Debug.Log("wy: " + vectorAction[2].ToString());
+        if (should_reset || GetStepCount() >= 2500)
         {
-            Response res = client.SendAct(new NeosAction { BodyVx = vectorAction[0], BodyVz = vectorAction[1] });
-            //Response res = client.SendAct(new NeosAction { BodyVx = 0.1f, BodyVz = 0.5f });
+            Response res = client.SendAct(new NeosAction { BodyVx = vectorAction[0], BodyVz = vectorAction[1], BodyWy = vectorAction[2] });
             if (res.Res != "Ok")
                 Debug.Log(res.Res);
             Done();
         } else
         {
-            Response res = client.SendAct(new NeosAction { BodyVx = vectorAction[0], BodyVz = vectorAction[1] });
-            //Response res = client.SendAct(new NeosAction { BodyVx = 0.1f, BodyVz = 0.5f });
+            Response res = client.SendAct(new NeosAction { BodyVx = vectorAction[0], BodyVz = vectorAction[1], BodyWy = vectorAction[2] });
             if (res.Res != "Ok")
                 Debug.Log(res.Res);
         }
@@ -97,8 +99,8 @@ public class TestAgent : Agent
     public override void AgentReset()
     {
         Response res = client.ResetAgent(new Empty());
-        //Response res = client.SendAct(new NeosAction { BodyVx = 0.1f, BodyVz = 0.5f });
-        Debug.Log(res.Res);
+        if (res.Res != "Ok")
+            Debug.Log(res.Res);
     }
 
     public void Update()
@@ -108,9 +110,10 @@ public class TestAgent : Agent
     public override float[] Heuristic()
     {
         NeosAction action_message = client.GatherAct(new Empty());
-        var action = new float[2];
+        var action = new float[3];
         action[0] = action_message.BodyVx;
         action[1] = action_message.BodyVz;
+        action[2] = action_message.BodyWy;
         //Debug.Log(action[0]);
         return action;
     }

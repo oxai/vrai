@@ -71,20 +71,26 @@ CrawlerStatic:
             demo_path: Project/Assets/ML-Agents/Examples/Crawler/Demos/ExpertCrawlerSta.demo
 
 NeosAgent:
-    max_steps: 1.5e7
-    batch_size: 128
-    buffer_size: 2048
+    max_steps: Infinity
+    batch_size: 2048
+    buffer_size: 64000
+    num_epoch: 4
+    learning_rate: 0.0001
+    time_horizon: 512
     beta: 1.0e-2
     hidden_units: 256
-    summary_freq: 6000
-    time_horizon: 64
+    summary_freq: 1000
     num_layers: 2
+    use_recurrent: false
+    sequence_length: 4
     reward_signals:
         gail:
             strength: 1.0
             gamma: 0.99
+            use_actions: false
             encoding_size: 128
-            demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\test2.demo
+            demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\virustest2_4.demo
+            learning_rate: 1.0e-4
 
 Hallway:
     use_recurrent: true

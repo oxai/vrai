@@ -13,6 +13,7 @@ public static partial class DataComm
 
   static readonly grpc::Marshaller<global::Empty> __Marshaller_Empty = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Empty.Parser.ParseFrom);
   static readonly grpc::Marshaller<global::NeosObservation> __Marshaller_NeosObservation = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NeosObservation.Parser.ParseFrom);
+  static readonly grpc::Marshaller<global::TextureObservation> __Marshaller_TextureObservation = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::TextureObservation.Parser.ParseFrom);
   static readonly grpc::Marshaller<global::NeosAction> __Marshaller_NeosAction = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NeosAction.Parser.ParseFrom);
   static readonly grpc::Marshaller<global::Response> __Marshaller_Response = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Response.Parser.ParseFrom);
 
@@ -22,6 +23,13 @@ public static partial class DataComm
       "GetObs",
       __Marshaller_Empty,
       __Marshaller_NeosObservation);
+
+  static readonly grpc::Method<global::Empty, global::TextureObservation> __Method_GetTextureObs = new grpc::Method<global::Empty, global::TextureObservation>(
+      grpc::MethodType.Unary,
+      __ServiceName,
+      "GetTextureObs",
+      __Marshaller_Empty,
+      __Marshaller_TextureObservation);
 
   static readonly grpc::Method<global::NeosAction, global::Response> __Method_SendAct = new grpc::Method<global::NeosAction, global::Response>(
       grpc::MethodType.Unary,
@@ -60,6 +68,11 @@ public static partial class DataComm
     /// <param name="context">The context of the server-side call handler being invoked.</param>
     /// <returns>The response to send back to the client (wrapped by a task).</returns>
     public virtual global::System.Threading.Tasks.Task<global::NeosObservation> GetObs(global::Empty request, grpc::ServerCallContext context)
+    {
+      throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+    }
+
+    public virtual global::System.Threading.Tasks.Task<global::TextureObservation> GetTextureObs(global::Empty request, grpc::ServerCallContext context)
     {
       throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
     }
@@ -148,6 +161,22 @@ public static partial class DataComm
     {
       return CallInvoker.AsyncUnaryCall(__Method_GetObs, null, options, request);
     }
+    public virtual global::TextureObservation GetTextureObs(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    {
+      return GetTextureObs(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+    }
+    public virtual global::TextureObservation GetTextureObs(global::Empty request, grpc::CallOptions options)
+    {
+      return CallInvoker.BlockingUnaryCall(__Method_GetTextureObs, null, options, request);
+    }
+    public virtual grpc::AsyncUnaryCall<global::TextureObservation> GetTextureObsAsync(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    {
+      return GetTextureObsAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+    }
+    public virtual grpc::AsyncUnaryCall<global::TextureObservation> GetTextureObsAsync(global::Empty request, grpc::CallOptions options)
+    {
+      return CallInvoker.AsyncUnaryCall(__Method_GetTextureObs, null, options, request);
+    }
     public virtual global::Response SendAct(global::NeosAction request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
     {
       return SendAct(request, new grpc::CallOptions(headers, deadline, cancellationToken));
@@ -209,6 +238,7 @@ public static partial class DataComm
   {
     return grpc::ServerServiceDefinition.CreateBuilder()
         .AddMethod(__Method_GetObs, serviceImpl.GetObs)
+        .AddMethod(__Method_GetTextureObs, serviceImpl.GetTextureObs)
         .AddMethod(__Method_SendAct, serviceImpl.SendAct)
         .AddMethod(__Method_ResetAgent, serviceImpl.ResetAgent)
         .AddMethod(__Method_GatherAct, serviceImpl.GatherAct).Build();

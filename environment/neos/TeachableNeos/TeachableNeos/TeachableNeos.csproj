@@ -96,6 +96,6 @@
     <PostBuildEvent>copy /B "$(ProjectDir)$(OutDir)TeachableNeos.dll" "C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>"$(ProjectDir)..\..\make_for_win.bat"</PreBuildEvent>
+    <PreBuildEvent>rem cd "$(ProjectDir)..\..\" &amp;&amp; make_for_win.bat</PreBuildEvent>
   </PropertyGroup>
 </Project>

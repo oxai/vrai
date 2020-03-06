@@ -23,20 +23,24 @@ public static partial class BasicCommReflection {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
           "ChBiYXNpY19jb21tLnByb3RvIgcKBUVtcHR5IhcKCFJlc3BvbnNlEgsKA3Jl",
-          "cxgBIAEoCSIuCgpOZW9zQWN0aW9uEg8KB2JvZHlfdngYASABKAISDwoHYm9k",
-          "eV92ehgCIAEoAiJCCg9OZW9zT2JzZXJ2YXRpb24SCQoBeBgBIAEoAhIJCgF5",
-          "GAIgASgCEgkKAXoYAyABKAISDgoGcmV3YXJkGAQgASgCMpQBCghEYXRhQ29t",
-          "bRIiCgZHZXRPYnMSBi5FbXB0eRoQLk5lb3NPYnNlcnZhdGlvbhIhCgdTZW5k",
-          "QWN0EgsuTmVvc0FjdGlvbhoJLlJlc3BvbnNlEh8KClJlc2V0QWdlbnQSBi5F",
-          "bXB0eRoJLlJlc3BvbnNlEiAKCUdhdGhlckFjdBIGLkVtcHR5GgsuTmVvc0Fj",
-          "dGlvbmIGcHJvdG8z"));
+          "cxgBIAEoCSI/CgpOZW9zQWN0aW9uEg8KB2JvZHlfdngYASABKAISDwoHYm9k",
+          "eV92ehgCIAEoAhIPCgdib2R5X3d5GAMgASgCIiUKElRleHR1cmVPYnNlcnZh",
+          "dGlvbhIPCgd0ZXh0dXJlGAEgASgMIlgKD05lb3NPYnNlcnZhdGlvbhIJCgF4",
+          "GAEgASgCEgkKAXkYAiABKAISCQoBehgDIAEoAhIOCgZyZXdhcmQYBCABKAIS",
+          "FAoMc2hvdWxkX3Jlc2V0GAUgASgIMsIBCghEYXRhQ29tbRIiCgZHZXRPYnMS",
+          "Bi5FbXB0eRoQLk5lb3NPYnNlcnZhdGlvbhIsCg1HZXRUZXh0dXJlT2JzEgYu",
+          "RW1wdHkaEy5UZXh0dXJlT2JzZXJ2YXRpb24SIQoHU2VuZEFjdBILLk5lb3NB",
+          "Y3Rpb24aCS5SZXNwb25zZRIfCgpSZXNldEFnZW50EgYuRW1wdHkaCS5SZXNw",
+          "b25zZRIgCglHYXRoZXJBY3QSBi5FbXB0eRoLLk5lb3NBY3Rpb25iBnByb3Rv",
+          "Mw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::Empty), global::Empty.Parser, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::Response), global::Response.Parser, new[]{ "Res" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::NeosAction), global::NeosAction.Parser, new[]{ "BodyVx", "BodyVz" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::NeosObservation), global::NeosObservation.Parser, new[]{ "X", "Y", "Z", "Reward" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::NeosAction), global::NeosAction.Parser, new[]{ "BodyVx", "BodyVz", "BodyWy" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::TextureObservation), global::TextureObservation.Parser, new[]{ "Texture" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::NeosObservation), global::NeosObservation.Parser, new[]{ "X", "Y", "Z", "Reward", "ShouldReset" }, null, null, null)
         }));
   }
   #endregion
@@ -300,6 +304,7 @@ public sealed partial class NeosAction : pb::IMessage<NeosAction> {
   public NeosAction(NeosAction other) : this() {
     bodyVx_ = other.bodyVx_;
     bodyVz_ = other.bodyVz_;
+    bodyWy_ = other.bodyWy_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -330,6 +335,17 @@ public sealed partial class NeosAction : pb::IMessage<NeosAction> {
     }
   }
 
+  /// <summary>Field number for the "body_wy" field.</summary>
+  public const int BodyWyFieldNumber = 3;
+  private float bodyWy_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public float BodyWy {
+    get { return bodyWy_; }
+    set {
+      bodyWy_ = value;
+    }
+  }
+
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
     return Equals(other as NeosAction);
@@ -345,6 +361,7 @@ public sealed partial class NeosAction : pb::IMessage<NeosAction> {
     }
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(BodyVx, other.BodyVx)) return false;
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(BodyVz, other.BodyVz)) return false;
+    if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(BodyWy, other.BodyWy)) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -353,6 +370,7 @@ public sealed partial class NeosAction : pb::IMessage<NeosAction> {
     int hash = 1;
     if (BodyVx != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(BodyVx);
     if (BodyVz != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(BodyVz);
+    if (BodyWy != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(BodyWy);
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -374,6 +392,10 @@ public sealed partial class NeosAction : pb::IMessage<NeosAction> {
       output.WriteRawTag(21);
       output.WriteFloat(BodyVz);
     }
+    if (BodyWy != 0F) {
+      output.WriteRawTag(29);
+      output.WriteFloat(BodyWy);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -386,6 +408,9 @@ public sealed partial class NeosAction : pb::IMessage<NeosAction> {
       size += 1 + 4;
     }
     if (BodyVz != 0F) {
+      size += 1 + 4;
+    }
+    if (BodyWy != 0F) {
       size += 1 + 4;
     }
     if (_unknownFields != null) {
@@ -404,6 +429,9 @@ public sealed partial class NeosAction : pb::IMessage<NeosAction> {
     }
     if (other.BodyVz != 0F) {
       BodyVz = other.BodyVz;
+    }
+    if (other.BodyWy != 0F) {
+      BodyWy = other.BodyWy;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -424,6 +452,139 @@ public sealed partial class NeosAction : pb::IMessage<NeosAction> {
           BodyVz = input.ReadFloat();
           break;
         }
+        case 29: {
+          BodyWy = input.ReadFloat();
+          break;
+        }
+      }
+    }
+  }
+
+}
+
+public sealed partial class TextureObservation : pb::IMessage<TextureObservation> {
+  private static readonly pb::MessageParser<TextureObservation> _parser = new pb::MessageParser<TextureObservation>(() => new TextureObservation());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pb::MessageParser<TextureObservation> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::BasicCommReflection.Descriptor.MessageTypes[3]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public TextureObservation() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public TextureObservation(TextureObservation other) : this() {
+    texture_ = other.texture_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public TextureObservation Clone() {
+    return new TextureObservation(this);
+  }
+
+  /// <summary>Field number for the "texture" field.</summary>
+  public const int TextureFieldNumber = 1;
+  private pb::ByteString texture_ = pb::ByteString.Empty;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public pb::ByteString Texture {
+    get { return texture_; }
+    set {
+      texture_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override bool Equals(object other) {
+    return Equals(other as TextureObservation);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool Equals(TextureObservation other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (Texture != other.Texture) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (Texture.Length != 0) hash ^= Texture.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void WriteTo(pb::CodedOutputStream output) {
+    if (Texture.Length != 0) {
+      output.WriteRawTag(10);
+      output.WriteBytes(Texture);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int CalculateSize() {
+    int size = 0;
+    if (Texture.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeBytesSize(Texture);
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(TextureObservation other) {
+    if (other == null) {
+      return;
+    }
+    if (other.Texture.Length != 0) {
+      Texture = other.Texture;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(pb::CodedInputStream input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 10: {
+          Texture = input.ReadBytes();
+          break;
+        }
       }
     }
   }
@@ -438,7 +599,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::BasicCommReflection.Descriptor.MessageTypes[3]; }
+    get { return global::BasicCommReflection.Descriptor.MessageTypes[4]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -459,6 +620,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
     y_ = other.y_;
     z_ = other.z_;
     reward_ = other.reward_;
+    shouldReset_ = other.shouldReset_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
 
@@ -514,6 +676,17 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
     }
   }
 
+  /// <summary>Field number for the "should_reset" field.</summary>
+  public const int ShouldResetFieldNumber = 5;
+  private bool shouldReset_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool ShouldReset {
+    get { return shouldReset_; }
+    set {
+      shouldReset_ = value;
+    }
+  }
+
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public override bool Equals(object other) {
     return Equals(other as NeosObservation);
@@ -531,6 +704,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Y, other.Y)) return false;
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Z, other.Z)) return false;
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Reward, other.Reward)) return false;
+    if (ShouldReset != other.ShouldReset) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
 
@@ -541,6 +715,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
     if (Y != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Y);
     if (Z != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Z);
     if (Reward != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Reward);
+    if (ShouldReset != false) hash ^= ShouldReset.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
     }
@@ -570,6 +745,10 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
       output.WriteRawTag(37);
       output.WriteFloat(Reward);
     }
+    if (ShouldReset != false) {
+      output.WriteRawTag(40);
+      output.WriteBool(ShouldReset);
+    }
     if (_unknownFields != null) {
       _unknownFields.WriteTo(output);
     }
@@ -589,6 +768,9 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
     }
     if (Reward != 0F) {
       size += 1 + 4;
+    }
+    if (ShouldReset != false) {
+      size += 1 + 1;
     }
     if (_unknownFields != null) {
       size += _unknownFields.CalculateSize();
@@ -612,6 +794,9 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
     }
     if (other.Reward != 0F) {
       Reward = other.Reward;
+    }
+    if (other.ShouldReset != false) {
+      ShouldReset = other.ShouldReset;
     }
     _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
   }
@@ -638,6 +823,10 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
         }
         case 37: {
           Reward = input.ReadFloat();
+          break;
+        }
+        case 40: {
+          ShouldReset = input.ReadBool();
           break;
         }
       }

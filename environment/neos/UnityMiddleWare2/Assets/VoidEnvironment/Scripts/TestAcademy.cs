@@ -15,8 +15,8 @@ public class TestAcademy : Academy
     public Channel channel;
     public override async void InitializeAcademy()
     {
-        channel = new Channel("127.0.0.1:50052", ChannelCredentials.Insecure);
-        this.client = new DataComm.DataCommClient(channel);
+        //channel = new Channel("127.0.0.1:50053", ChannelCredentials.Insecure);
+        //this.client = new DataComm.DataCommClient(channel);
     }
 
 }

@@ -21,10 +21,11 @@ message Response {
 message NeosAction {
 	float body_vx = 1;
 	float body_vz = 2;
+	float body_wy = 3;
 }
 
 message TextureObservation {
-	byte[] texture = 1;
+	bytes texture = 1;
 }
 
 message NeosObservation {
@@ -33,4 +34,5 @@ message NeosObservation {
 	float y = 2;
 	float z = 3;
 	float reward = 4;
+	bool should_reset = 5;
 }
