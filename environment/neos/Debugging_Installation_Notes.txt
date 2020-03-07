@@ -1,0 +1,45 @@
+---- Note
+
+This is a set of instructions I've (Rian) written up to get Neos and Unity working. 
+They're not complete (and probably contain typos), but will get you a long way training in Neos via Unity.
+Feel free to update / correct this file. I'll try and do the same in the future.
+
+
+---- Background
+
+TeachableNeos contains all the relevent files for the Unity-Neos commincation.
+
+In Visual Studios you should be able to 'build' this project, which will create a bunch of dll files in /Debug/bin.
+
+These dlls go into the neos Library installation folder (in ProgramFiles x86..).
+
+Also copy in runneos.dat into the Neos installation folder. This (is like a bash script) that will start neos.exe with the dlls.
+
+
+---- When everything is working
+
+Given this all works, what happens is, as neos starts up (via runneos.dat), it also creates a Grpc server which unity will then communicate with.
+
+We then start the unity project.
+
+Then go to VoidEnviornment and open testenv. Press Play. If all went well (and you have neos running - via runneos.dat) then you should see the camera feed in Agent->canvas->RawImage.
+
+Note that all the magic is happeneing in TestAgent.cs (This is like the usual agent.cs scripts used in MLAgents).
+
+
+
+---- Installation Debugging Notes.
+
+Some notes about Unity, .Net versions etc.
+
+Unity 2019.3.4f1 seems to work (at least there are no compilation errors, etc) with UnityMiddelware2.
+To add the project, unity hub -> add -> navigate the UnityMiddleWare2 -> click open
+
+Visual Studios.
+	You need both the 461 and 462 versions of the .Net FrameWork.
+		461 to load the TeachableNeos project
+		Then select 462 when the project is open.
+			Note you might have install .Net Development Toolbox.. in VS - just use the help box to install.
+		Then right-click on TeachableNEos in the SolutionExplorere window. Select properties, and change the .Net frameword to the 462 version.
+	At this point you should be able to build.
+	The built dlls go into the bin directory.		
