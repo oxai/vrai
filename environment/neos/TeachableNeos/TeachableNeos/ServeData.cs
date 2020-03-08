@@ -10,6 +10,7 @@ using Grpc.Core;
 using CodeX;
 //using UnityEngine;
 using FrooxEngine.LogiX;
+using System.Threading;
 
 namespace FrooxEngine.LogiX.Network
 {
@@ -25,13 +26,15 @@ namespace FrooxEngine.LogiX.Network
         public float z_tmp;
         public readonly Input<float> reward;
         public float reward_tmp;
-        public readonly Input<bool> recording_demo;
+        //public Input<bool> recording_demo;
+        public bool recording_demo_tmp;
         public readonly Input<int> copy_idx;
         public int copy_idx_tmp;
         public readonly Impulse Pulse;
         public readonly Impulse ResetPulse;
         public byte[] texture;
         public bool should_reset = false;
+        public bool connected_to_mlagents = false;
 
         public readonly Input<Camera> camera;
 
@@ -53,14 +56,18 @@ namespace FrooxEngine.LogiX.Network
         public float body_vz_tmp;
         public float body_wy_tmp;
         public bool have_read;
+        public bool has_updated;
         public bool have_reset;
         //private DataComm.DataCommClient client;
         public Channel channel;
         public Server server;
+        public ManualResetEventSlim NeosUpdateEvent = new ManualResetEventSlim(false);
+        public ManualResetEventSlim MLAgentsUpdateEvent = new ManualResetEventSlim(false);
 
         public override void RunStartup()
         {
             base.RunStartup();
+            copy_idx_tmp = this.copy_idx.Evaluate();
             //StartRPCServer();
             StartRPCServer();
         }
@@ -73,6 +80,7 @@ namespace FrooxEngine.LogiX.Network
                     //channel = new Channel("127.0.0.1:50052", ChannelCredentials.Insecure);
                     //this.client = new DataComm.DataCommClient(channel);
                     int Port = 50052+copy_idx_tmp;
+                    Debug.Log("Hiii, starting server at " + Port.ToString());
 
                     server = new Server
                     {
@@ -108,16 +116,19 @@ namespace FrooxEngine.LogiX.Network
         [ImpulseTarget]
         public void PerformAction()
         {
+            if (connected_to_mlagents)
+            {
+                //MLAgentsUpdateEvent.Wait();
+                //MLAgentsUpdateEvent.Reset();
+                while (!(have_read)) { }
+                have_read = false;
+            }
             body_vx.Value = this.body_vx_tmp;
             body_vz.Value = this.body_vz_tmp;
             body_wy.Value = this.body_wy_tmp;
-            if (have_read)
+            if (!recording_demo_tmp)
             {
-                if (!recording_demo.Evaluate())
-                {
-                    Pulse.Trigger();
-                }
-                have_read = false;
+                Pulse.Trigger();
             }
             if (have_reset)
             {
@@ -136,6 +147,11 @@ namespace FrooxEngine.LogiX.Network
             //texture = RenderManager.RenderToBitmap(camera.Evaluate().GetRenderSettings(new int2(84,84))).Wait().RawData();
             texture = base.World.Render.Connector.Render(camera.Evaluate().GetRenderSettings(new int2(84,84)));
             //Debug.Log(texture[1].ToString());
+            //if (connected_to_mlagents)
+            //{
+            //NeosUpdateEvent.Set();
+            //}
+            has_updated = true;
         }
 
         [ImpulseTarget]
@@ -156,64 +172,6 @@ namespace FrooxEngine.LogiX.Network
             //Pass the callback to the base so the outputs are updated on the node
             base.OnChanges();
         }
-
-        //protected override void OnEvaluate()
-        //{
-        //    var number1 = TestNumber.EvaluateRaw();
-        //    var number2 = TestNumber2.EvaluateRaw();
-        //    //Feature request = new Feature { Thing = number1, Thing2 = number2 };
-        //    //Classification c = this.client.SendFeatures(request);
-        //    //int k = c.K;
-        //    TestOutput.Value = 1;
-        //}
-
-            //protected override void InitializeSyncMembers()
-            //{
-            //    base.InitializeSyncMembers();
-            //    this.TestNumber = new Input<float>();
-            //    this.TestNumber2 = new Input<float>();
-            //    this.TestOutput = new Output<float>();
-            //}
-
-
-            //public override ISyncMember GetSyncMember(int index)
-            //{
-            //    switch (index)
-            //    {
-            //        case 0:
-            //            return (ISyncMember)this.persistent;
-            //        case 1:
-            //            return (ISyncMember)this.updateOrder;
-            //        case 2:
-            //            return (ISyncMember)this.EnabledField;
-            //        case 3:
-            //            return (ISyncMember)this._activeVisual;
-            //        case 4:
-            //            return (ISyncMember)this.TestNumber;
-            //        case 5:
-            //            return (ISyncMember)this.TestNumber2;
-            //        case 6:
-            //            return (ISyncMember)this.TestOutput;
-            //        default:
-            //            throw new ArgumentOutOfRangeException();
-            //    }
-            //}
-
-            //public static ServeData __New()
-            //{
-            //    return new ServeData();
-            //}
-
-            //protected override void NotifyOutputsOfChange()
-            //{
-            //    ((IOutputElement)this.TestOutput).NotifyChange();
-            //}
-
-            //[ImpulseTarget]
-            //public void Run()
-            //{
-
-            //}
 
         public override void RunOnDestroying()
         {

@@ -16,6 +16,7 @@ public static partial class DataComm
   static readonly grpc::Marshaller<global::TextureObservation> __Marshaller_TextureObservation = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::TextureObservation.Parser.ParseFrom);
   static readonly grpc::Marshaller<global::NeosAction> __Marshaller_NeosAction = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NeosAction.Parser.ParseFrom);
   static readonly grpc::Marshaller<global::Response> __Marshaller_Response = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Response.Parser.ParseFrom);
+  static readonly grpc::Marshaller<global::ConnectionParams> __Marshaller_ConnectionParams = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ConnectionParams.Parser.ParseFrom);
 
   static readonly grpc::Method<global::Empty, global::NeosObservation> __Method_GetObs = new grpc::Method<global::Empty, global::NeosObservation>(
       grpc::MethodType.Unary,
@@ -42,6 +43,20 @@ public static partial class DataComm
       grpc::MethodType.Unary,
       __ServiceName,
       "ResetAgent",
+      __Marshaller_Empty,
+      __Marshaller_Response);
+
+  static readonly grpc::Method<global::ConnectionParams, global::Response> __Method_EstablishConnection = new grpc::Method<global::ConnectionParams, global::Response>(
+      grpc::MethodType.Unary,
+      __ServiceName,
+      "EstablishConnection",
+      __Marshaller_ConnectionParams,
+      __Marshaller_Response);
+
+  static readonly grpc::Method<global::Empty, global::Response> __Method_StopConnection = new grpc::Method<global::Empty, global::Response>(
+      grpc::MethodType.Unary,
+      __ServiceName,
+      "StopConnection",
       __Marshaller_Empty,
       __Marshaller_Response);
 
@@ -83,6 +98,16 @@ public static partial class DataComm
     }
 
     public virtual global::System.Threading.Tasks.Task<global::Response> ResetAgent(global::Empty request, grpc::ServerCallContext context)
+    {
+      throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+    }
+
+    public virtual global::System.Threading.Tasks.Task<global::Response> EstablishConnection(global::ConnectionParams request, grpc::ServerCallContext context)
+    {
+      throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
+    }
+
+    public virtual global::System.Threading.Tasks.Task<global::Response> StopConnection(global::Empty request, grpc::ServerCallContext context)
     {
       throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
     }
@@ -209,6 +234,38 @@ public static partial class DataComm
     {
       return CallInvoker.AsyncUnaryCall(__Method_ResetAgent, null, options, request);
     }
+    public virtual global::Response EstablishConnection(global::ConnectionParams request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    {
+      return EstablishConnection(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+    }
+    public virtual global::Response EstablishConnection(global::ConnectionParams request, grpc::CallOptions options)
+    {
+      return CallInvoker.BlockingUnaryCall(__Method_EstablishConnection, null, options, request);
+    }
+    public virtual grpc::AsyncUnaryCall<global::Response> EstablishConnectionAsync(global::ConnectionParams request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    {
+      return EstablishConnectionAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+    }
+    public virtual grpc::AsyncUnaryCall<global::Response> EstablishConnectionAsync(global::ConnectionParams request, grpc::CallOptions options)
+    {
+      return CallInvoker.AsyncUnaryCall(__Method_EstablishConnection, null, options, request);
+    }
+    public virtual global::Response StopConnection(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    {
+      return StopConnection(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+    }
+    public virtual global::Response StopConnection(global::Empty request, grpc::CallOptions options)
+    {
+      return CallInvoker.BlockingUnaryCall(__Method_StopConnection, null, options, request);
+    }
+    public virtual grpc::AsyncUnaryCall<global::Response> StopConnectionAsync(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    {
+      return StopConnectionAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
+    }
+    public virtual grpc::AsyncUnaryCall<global::Response> StopConnectionAsync(global::Empty request, grpc::CallOptions options)
+    {
+      return CallInvoker.AsyncUnaryCall(__Method_StopConnection, null, options, request);
+    }
     public virtual global::NeosAction GatherAct(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
     {
       return GatherAct(request, new grpc::CallOptions(headers, deadline, cancellationToken));
@@ -241,6 +298,8 @@ public static partial class DataComm
         .AddMethod(__Method_GetTextureObs, serviceImpl.GetTextureObs)
         .AddMethod(__Method_SendAct, serviceImpl.SendAct)
         .AddMethod(__Method_ResetAgent, serviceImpl.ResetAgent)
+        .AddMethod(__Method_EstablishConnection, serviceImpl.EstablishConnection)
+        .AddMethod(__Method_StopConnection, serviceImpl.StopConnection)
         .AddMethod(__Method_GatherAct, serviceImpl.GatherAct).Build();
   }
 

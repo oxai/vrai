@@ -25,6 +25,7 @@ public class TestAgent : Agent
     public bool should_reset = false;
     public int texture_width = 84, texture_height = 84;
     public int agent_index = 0;
+    bool is_recording = false;
     Texture2D tex;
     RawImage image;
     public Camera dummyCamera;
@@ -35,20 +36,12 @@ public class TestAgent : Agent
     {
         var channel = new Channel("127.0.0.1:5005"+(2+agent_index).ToString(), ChannelCredentials.Insecure);
         this.client = new DataComm.DataCommClient(channel);
-        //inputs = new List<float>() {0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
-        //academy = FindObjectOfType<TestAcademy>();
-        //client = academy.client;
+        is_recording =this.GetComponent<DemonstrationRecorder>().record;
         cameraToNeos = dummyCamera.GetComponent<ConnectToNeos>();
         image = raw_image.GetComponent<RawImage>();
-        //image.uvRect = new Rect(0,0, response.width, response.height);
-        //GameObject.Find("RawImage").GetComponent<RectTransform>().sizeDelta = new Vector2(texture_width, texture_height);
-        //GameObject.Find("RawImage").GetComponent<RectTransform>().
-        //Debug.Log("hi");
-        //rt = new RenderTexture(tex.width / 2, tex.height / 2, 0);
-        //m_BallRb = ball.GetComponent<Rigidbody>();
-        //var academy = FindObjectOfType<Academy>();
-        //m_ResetParams = academy.FloatProperties;
-        //SetResetParameters();
+        var res = client.EstablishConnection(new ConnectionParams { IsRecording = is_recording });
+        if (res.Res != "Ok")
+            Debug.Log(res.Res);
     }
 
     public override void CollectObservations()
@@ -71,7 +64,7 @@ public class TestAgent : Agent
         tex = new Texture2D(texture_width, texture_height, TextureFormat.ARGB32, false);
         tex.LoadRawTextureData(texture_bytes);
         tex.Apply();
-        image.texture = tex;
+        //image.texture = tex;
         cameraToNeos.texture = tex;
 
     }
@@ -81,15 +74,17 @@ public class TestAgent : Agent
         //Debug.Log("vx: " + vectorAction[0].ToString());
         //Debug.Log("vz: " + vectorAction[1].ToString());
         //Debug.Log("wy: " + vectorAction[2].ToString());
-        if (should_reset || GetStepCount() >= 2500)
+        Response res;
+        //if (should_reset || GetStepCount() >= 2500)
+        if (should_reset || GetStepCount() >= 25000)
         {
-            Response res = client.SendAct(new NeosAction { BodyVx = vectorAction[0], BodyVz = vectorAction[1], BodyWy = vectorAction[2] });
+            res = client.SendAct(new NeosAction { BodyVx = vectorAction[0], BodyVz = vectorAction[1], BodyWy = vectorAction[2] });
             if (res.Res != "Ok")
                 Debug.Log(res.Res);
             Done();
         } else
         {
-            Response res = client.SendAct(new NeosAction { BodyVx = vectorAction[0], BodyVz = vectorAction[1], BodyWy = vectorAction[2] });
+            res = client.SendAct(new NeosAction { BodyVx = vectorAction[0], BodyVz = vectorAction[1], BodyWy = vectorAction[2] });
             if (res.Res != "Ok")
                 Debug.Log(res.Res);
         }
@@ -116,6 +111,13 @@ public class TestAgent : Agent
         action[2] = action_message.BodyWy;
         //Debug.Log(action[0]);
         return action;
+    }
+
+    private void OnApplicationQuit()
+    {
+        var res = client.StopConnection(new Empty());
+        if (res.Res != "Ok")
+            Debug.Log(res.Res);
     }
 
 }

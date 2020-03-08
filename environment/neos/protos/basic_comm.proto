@@ -7,11 +7,17 @@ service DataComm {
   rpc GetTextureObs(Empty) returns (TextureObservation);
   rpc SendAct(NeosAction) returns (Response);
   rpc ResetAgent(Empty) returns (Response);
+  rpc EstablishConnection(ConnectionParams) returns (Response);
+  rpc StopConnection(Empty) returns (Response);
   rpc GatherAct(Empty) returns (NeosAction);
 }
 
 message Empty {
 
+}
+
+message ConnectionParams {
+	bool is_recording = 1;
 }
 
 message Response {

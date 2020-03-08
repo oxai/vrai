@@ -22,21 +22,24 @@ public static partial class BasicCommReflection {
   static BasicCommReflection() {
     byte[] descriptorData = global::System.Convert.FromBase64String(
         string.Concat(
-          "ChBiYXNpY19jb21tLnByb3RvIgcKBUVtcHR5IhcKCFJlc3BvbnNlEgsKA3Jl",
-          "cxgBIAEoCSI/CgpOZW9zQWN0aW9uEg8KB2JvZHlfdngYASABKAISDwoHYm9k",
-          "eV92ehgCIAEoAhIPCgdib2R5X3d5GAMgASgCIiUKElRleHR1cmVPYnNlcnZh",
-          "dGlvbhIPCgd0ZXh0dXJlGAEgASgMIlgKD05lb3NPYnNlcnZhdGlvbhIJCgF4",
-          "GAEgASgCEgkKAXkYAiABKAISCQoBehgDIAEoAhIOCgZyZXdhcmQYBCABKAIS",
-          "FAoMc2hvdWxkX3Jlc2V0GAUgASgIMsIBCghEYXRhQ29tbRIiCgZHZXRPYnMS",
-          "Bi5FbXB0eRoQLk5lb3NPYnNlcnZhdGlvbhIsCg1HZXRUZXh0dXJlT2JzEgYu",
-          "RW1wdHkaEy5UZXh0dXJlT2JzZXJ2YXRpb24SIQoHU2VuZEFjdBILLk5lb3NB",
-          "Y3Rpb24aCS5SZXNwb25zZRIfCgpSZXNldEFnZW50EgYuRW1wdHkaCS5SZXNw",
-          "b25zZRIgCglHYXRoZXJBY3QSBi5FbXB0eRoLLk5lb3NBY3Rpb25iBnByb3Rv",
-          "Mw=="));
+          "ChBiYXNpY19jb21tLnByb3RvIgcKBUVtcHR5IigKEENvbm5lY3Rpb25QYXJh",
+          "bXMSFAoMaXNfcmVjb3JkaW5nGAEgASgIIhcKCFJlc3BvbnNlEgsKA3JlcxgB",
+          "IAEoCSI/CgpOZW9zQWN0aW9uEg8KB2JvZHlfdngYASABKAISDwoHYm9keV92",
+          "ehgCIAEoAhIPCgdib2R5X3d5GAMgASgCIiUKElRleHR1cmVPYnNlcnZhdGlv",
+          "bhIPCgd0ZXh0dXJlGAEgASgMIlgKD05lb3NPYnNlcnZhdGlvbhIJCgF4GAEg",
+          "ASgCEgkKAXkYAiABKAISCQoBehgDIAEoAhIOCgZyZXdhcmQYBCABKAISFAoM",
+          "c2hvdWxkX3Jlc2V0GAUgASgIMpwCCghEYXRhQ29tbRIiCgZHZXRPYnMSBi5F",
+          "bXB0eRoQLk5lb3NPYnNlcnZhdGlvbhIsCg1HZXRUZXh0dXJlT2JzEgYuRW1w",
+          "dHkaEy5UZXh0dXJlT2JzZXJ2YXRpb24SIQoHU2VuZEFjdBILLk5lb3NBY3Rp",
+          "b24aCS5SZXNwb25zZRIfCgpSZXNldEFnZW50EgYuRW1wdHkaCS5SZXNwb25z",
+          "ZRIzChNFc3RhYmxpc2hDb25uZWN0aW9uEhEuQ29ubmVjdGlvblBhcmFtcxoJ",
+          "LlJlc3BvbnNlEiMKDlN0b3BDb25uZWN0aW9uEgYuRW1wdHkaCS5SZXNwb25z",
+          "ZRIgCglHYXRoZXJBY3QSBi5FbXB0eRoLLk5lb3NBY3Rpb25iBnByb3RvMw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::Empty), global::Empty.Parser, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionParams), global::ConnectionParams.Parser, new[]{ "IsRecording" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::Response), global::Response.Parser, new[]{ "Res" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NeosAction), global::NeosAction.Parser, new[]{ "BodyVx", "BodyVz", "BodyWy" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::TextureObservation), global::TextureObservation.Parser, new[]{ "Texture" }, null, null, null),
@@ -148,6 +151,135 @@ public sealed partial class Empty : pb::IMessage<Empty> {
 
 }
 
+public sealed partial class ConnectionParams : pb::IMessage<ConnectionParams> {
+  private static readonly pb::MessageParser<ConnectionParams> _parser = new pb::MessageParser<ConnectionParams>(() => new ConnectionParams());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pb::MessageParser<ConnectionParams> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::BasicCommReflection.Descriptor.MessageTypes[1]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public ConnectionParams() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public ConnectionParams(ConnectionParams other) : this() {
+    isRecording_ = other.isRecording_;
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public ConnectionParams Clone() {
+    return new ConnectionParams(this);
+  }
+
+  /// <summary>Field number for the "is_recording" field.</summary>
+  public const int IsRecordingFieldNumber = 1;
+  private bool isRecording_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool IsRecording {
+    get { return isRecording_; }
+    set {
+      isRecording_ = value;
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override bool Equals(object other) {
+    return Equals(other as ConnectionParams);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool Equals(ConnectionParams other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if (IsRecording != other.IsRecording) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override int GetHashCode() {
+    int hash = 1;
+    if (IsRecording != false) hash ^= IsRecording.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void WriteTo(pb::CodedOutputStream output) {
+    if (IsRecording != false) {
+      output.WriteRawTag(8);
+      output.WriteBool(IsRecording);
+    }
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int CalculateSize() {
+    int size = 0;
+    if (IsRecording != false) {
+      size += 1 + 1;
+    }
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(ConnectionParams other) {
+    if (other == null) {
+      return;
+    }
+    if (other.IsRecording != false) {
+      IsRecording = other.IsRecording;
+    }
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(pb::CodedInputStream input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 8: {
+          IsRecording = input.ReadBool();
+          break;
+        }
+      }
+    }
+  }
+
+}
+
 public sealed partial class Response : pb::IMessage<Response> {
   private static readonly pb::MessageParser<Response> _parser = new pb::MessageParser<Response>(() => new Response());
   private pb::UnknownFieldSet _unknownFields;
@@ -156,7 +288,7 @@ public sealed partial class Response : pb::IMessage<Response> {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::BasicCommReflection.Descriptor.MessageTypes[1]; }
+    get { return global::BasicCommReflection.Descriptor.MessageTypes[2]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -285,7 +417,7 @@ public sealed partial class NeosAction : pb::IMessage<NeosAction> {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::BasicCommReflection.Descriptor.MessageTypes[2]; }
+    get { return global::BasicCommReflection.Descriptor.MessageTypes[3]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -470,7 +602,7 @@ public sealed partial class TextureObservation : pb::IMessage<TextureObservation
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::BasicCommReflection.Descriptor.MessageTypes[3]; }
+    get { return global::BasicCommReflection.Descriptor.MessageTypes[4]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -599,7 +731,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::BasicCommReflection.Descriptor.MessageTypes[4]; }
+    get { return global::BasicCommReflection.Descriptor.MessageTypes[5]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
