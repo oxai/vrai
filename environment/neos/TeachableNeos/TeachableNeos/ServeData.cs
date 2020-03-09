@@ -64,9 +64,10 @@ namespace FrooxEngine.LogiX.Network
         public ManualResetEventSlim NeosUpdateEvent = new ManualResetEventSlim(false);
         public ManualResetEventSlim MLAgentsUpdateEvent = new ManualResetEventSlim(false);
 
-        public override void RunStartup()
+        public override void InternalRunStartup()
         {
-            base.RunStartup();
+            Debug.Log("starting Learn node!");
+            base.InternalRunStartup();
             copy_idx_tmp = this.copy_idx.Evaluate();
             //StartRPCServer();
             StartRPCServer();
