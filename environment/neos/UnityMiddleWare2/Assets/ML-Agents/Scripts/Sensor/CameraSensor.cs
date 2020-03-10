@@ -72,31 +72,32 @@ namespace MLAgents.Sensor
         /// <returns name="texture2D">Texture2D to render to.</returns>
         public static Texture2D ObservationToTexture(Camera obsCamera, int width, int height)
         {
-            var texture2D = new Texture2D(width, height, TextureFormat.RGB24, false);
-            var oldRec = obsCamera.rect;
-            obsCamera.rect = new Rect(0f, 0f, 1f, 1f);
-            var depth = 24;
-            var format = RenderTextureFormat.Default;
-            var readWrite = RenderTextureReadWrite.Default;
+            //var texture2D = new Texture2D(width, height, TextureFormat.RGB24, false);
+            var texture2D = obsCamera.GetComponent<ConnectToNeos>().texture;
+            //var oldRec = obsCamera.rect;
+            //obsCamera.rect = new Rect(0f, 0f, 1f, 1f);
+            //var depth = 24;
+            //var format = RenderTextureFormat.Default;
+            //var readWrite = RenderTextureReadWrite.Default;
 
-            var tempRt =
-                RenderTexture.GetTemporary(width, height, depth, format, readWrite);
+            //var tempRt =
+            //    RenderTexture.GetTemporary(width, height, depth, format, readWrite);
 
-            var prevActiveRt = RenderTexture.active;
-            var prevCameraRt = obsCamera.targetTexture;
+            //var prevActiveRt = RenderTexture.active;
+            //var prevCameraRt = obsCamera.targetTexture;
 
-            // render to offscreen texture (readonly from CPU side)
-            RenderTexture.active = tempRt;
-            obsCamera.targetTexture = tempRt;
+            //// render to offscreen texture (readonly from CPU side)
+            //RenderTexture.active = tempRt;
+            //obsCamera.targetTexture = tempRt;
 
-            obsCamera.Render();
+            //obsCamera.Render();
 
-            texture2D.ReadPixels(new Rect(0, 0, texture2D.width, texture2D.height), 0, 0);
+            //texture2D.ReadPixels(new Rect(0, 0, texture2D.width, texture2D.height), 0, 0);
 
-            obsCamera.targetTexture = prevCameraRt;
-            obsCamera.rect = oldRec;
-            RenderTexture.active = prevActiveRt;
-            RenderTexture.ReleaseTemporary(tempRt);
+            //obsCamera.targetTexture = prevCameraRt;
+            //obsCamera.rect = oldRec;
+            //RenderTexture.active = prevActiveRt;
+            //RenderTexture.ReleaseTemporary(tempRt);
             return texture2D;
         }
     }

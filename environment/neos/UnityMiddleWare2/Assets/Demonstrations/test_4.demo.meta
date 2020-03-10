@@ -1,9 +1,12 @@
 fileFormatVersion: 2
 guid: 65853c0d0108a3242a2451cded8ebfc1
 ScriptedImporter:
-  fileIDToRecycleName:
-    11400000: Assets/Demonstrations/test_4.demo
+  internalIDToNameTable:
+  - first:
+      114: 11400000
+    second: Assets/Demonstrations/test_4.demo
   externalObjects: {}
+  serializedVersion: 2
   userData: ' (MLAgents.Demonstration)'
   assetBundleName: 
   assetBundleVariant: 
