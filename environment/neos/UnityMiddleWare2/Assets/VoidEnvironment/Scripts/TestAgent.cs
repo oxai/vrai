@@ -64,16 +64,16 @@ public class TestAgent : Agent
         tex = new Texture2D(texture_width, texture_height, TextureFormat.ARGB32, false);
         tex.LoadRawTextureData(texture_bytes);
         tex.Apply();
-        //image.texture = tex;
+        image.texture = tex;
         cameraToNeos.texture = tex;
 
     }
 
     public override void AgentAction(float[] vectorAction)
     {
-        //Debug.Log("vx: " + vectorAction[0].ToString());
-        //Debug.Log("vz: " + vectorAction[1].ToString());
-        //Debug.Log("wy: " + vectorAction[2].ToString());
+        Debug.Log("vx: " + vectorAction[0].ToString());
+        Debug.Log("vz: " + vectorAction[1].ToString());
+        Debug.Log("wy: " + vectorAction[2].ToString());
         Response res;
         //if (should_reset || GetStepCount() >= 2500)
         if (should_reset || GetStepCount() >= 25000)

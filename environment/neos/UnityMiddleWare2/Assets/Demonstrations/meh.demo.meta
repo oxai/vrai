@@ -1,7 +1,10 @@
 fileFormatVersion: 2
 guid: e8da3777c1e0b8b4baa1452d10470a47
 ScriptedImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      114: 11400000
+    second: Assets/Demonstrations/meh.demo
   externalObjects: {}
   serializedVersion: 2
   userData: ' (MLAgents.Demonstration)'
