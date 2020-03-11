@@ -18,7 +18,7 @@ default:
     summary_freq: 1000
     tau: 0.005
     use_recurrent: false
-    vis_encode_type: resnet
+    vis_encode_type: simple
     reward_signals:
         extrinsic:
             strength: 1.0
@@ -116,14 +116,15 @@ NeosAgent:
     buffer_init_steps: 1000
     num_layers: 1
     max_steps: 5.0e7
-    buffer_size: 500000
+    buffer_size: 12800
     init_entcoef: 1.0
     tau: 0.01
     num_update: 1
     reward_signal_num_update: 1
+    vis_encode_type: simple
     behavioral_cloning:
         demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\virustestfixed2.demo
-        strength: 0.9
+        strength: 0.95
         steps: 10000
     reward_signals:
         gail:
