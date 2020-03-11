@@ -64,10 +64,10 @@ namespace FrooxEngine.LogiX.Network
         public ManualResetEventSlim NeosUpdateEvent = new ManualResetEventSlim(false);
         public ManualResetEventSlim MLAgentsUpdateEvent = new ManualResetEventSlim(false);
 
-        public override void InternalRunStartup()
+        protected override void OnStart()
         {
             Debug.Log("starting Learn node!");
-            base.InternalRunStartup();
+            base.OnStart();
             copy_idx_tmp = this.copy_idx.Evaluate();
             //StartRPCServer();
             StartRPCServer();
@@ -144,8 +144,10 @@ namespace FrooxEngine.LogiX.Network
                 UpdateObservations();
             }
             copy_idx_tmp = this.copy_idx.Evaluate();
-            
+
             //texture = RenderManager.RenderToBitmap(camera.Evaluate().GetRenderSettings(new int2(84,84))).Wait().RawData();
+            //Debug.Log("serveData");
+            //Debug.Log(this);
             texture = base.World.Render.Connector.Render(camera.Evaluate().GetRenderSettings(new int2(84,84)));
             //Debug.Log(texture[1].ToString());
             //if (connected_to_mlagents)

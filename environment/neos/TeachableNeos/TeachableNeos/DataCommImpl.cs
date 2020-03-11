@@ -85,6 +85,8 @@ namespace TeachableNeos
         {
             try
             {
+                //node.Debug.Log("DataCommImpl");
+                //node.Debug.Log(node);
                 return Task.FromResult(new TextureObservation
                 {
                     Texture = ByteString.CopyFrom(node.texture)
@@ -92,7 +94,7 @@ namespace TeachableNeos
             }
             catch (Exception exception)
             {
-                var error = "Server threw exeception : " + exception.Message;
+                var error = "Server threw exeception at GetTextureObs : " + exception.Message;
                 node.Debug.Log(error);
                 return Task.FromResult(new TextureObservation
                 {
