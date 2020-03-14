@@ -15,6 +15,7 @@ using Screen = System.Windows.Forms.Screen;
 using Google.Protobuf;
 using UnityEngine.UI;
 using Grpc.Core;
+using MLAgents.Sensor;
 
 public class TestAgent : Agent
 {
@@ -28,16 +29,23 @@ public class TestAgent : Agent
     bool is_recording = false;
     Texture2D tex;
     RawImage image;
-    public Camera dummyCamera;
+    //public Camera dummyCamera;
     public RawImage raw_image;
-    private ConnectToNeos cameraToNeos;
+    //public RenderTexture render_texture;
+    //private ConnectToNeos cameraToNeos;
+    TextureSensorComponent texture_sensor;
 
     public override void InitializeAgent()
     {
+        //render_texture = new RenderTexture(texture_width, texture_height, 16, RenderTextureFormat.ARGB32);
+        //render_texture.Create();
         var channel = new Channel("127.0.0.1:5005"+(2+agent_index).ToString(), ChannelCredentials.Insecure);
         this.client = new DataComm.DataCommClient(channel);
         is_recording =this.GetComponent<DemonstrationRecorder>().record;
-        cameraToNeos = dummyCamera.GetComponent<ConnectToNeos>();
+        //cameraToNeos = dummyCamera.GetComponent<ConnectToNeos>();
+        //var render_texture_sensor = GetComponent<RenderTextureSensorComponent>();
+        //render_texture_sensor.renderTexture = render_texture;
+        texture_sensor = GetComponent<TextureSensorComponent>();
         image = raw_image.GetComponent<RawImage>();
         var res = client.EstablishConnection(new ConnectionParams { IsRecording = is_recording });
         if (res.Res != "Ok")
@@ -46,12 +54,44 @@ public class TestAgent : Agent
 
     public override void CollectObservations()
     {
+        //Debug.Log("Collecting observations at step "+GetStepCount().ToString());
+        //NeosObservation obs = client.GetObs(new Empty());
+        ////Debug.Log("X: "+obs.X.ToString());
+        ////Debug.Log("Z: "+obs.Z.ToString());
+        ////Debug.Log(inputs.Count);
+        ////AddVectorObs(obs.X);
+        ////AddVectorObs(obs.Z);
+        //float reward = obs.Reward;
+        ////Debug.Log("Reward " + reward.ToString());
+        //AddReward(reward);
+        ////stop_training = 0f;
+        //should_reset = obs.ShouldReset;
+        //TextureObservation res = client.GetTextureObs(new Empty());
+        //byte[] texture_bytes = res.Texture.ToByteArray();
+        ////Debug.Log("Length of texture bytes: " + texture_bytes.Length.ToString());
+        //Destroy(tex);
+        //tex = new Texture2D(texture_width, texture_height, TextureFormat.ARGB32, false);
+        //tex.LoadRawTextureData(texture_bytes);
+        //tex.Apply();
+        texture_sensor.UpdateTexture(tex);
+        //UnityEngine.Graphics.Blit(tex, render_texture);
+        //image.texture = tex;
+        //Debug.Log(image);
+        //Debug.Log(tex);
+        //cameraToNeos.texture = tex;
+
+    }
+
+    void FixedUpdate()
+    {
+        //Debug.Log("FixedUpdate " + GetStepCount().ToString());
+        //Debug.Log("Collecting observations");
         NeosObservation obs = client.GetObs(new Empty());
         //Debug.Log("X: "+obs.X.ToString());
         //Debug.Log("Z: "+obs.Z.ToString());
         //Debug.Log(inputs.Count);
-        AddVectorObs(obs.X);
-        AddVectorObs(obs.Z);
+        //AddVectorObs(obs.X);
+        //AddVectorObs(obs.Z);
         float reward = obs.Reward;
         //Debug.Log("Reward " + reward.ToString());
         AddReward(reward);
@@ -59,21 +99,23 @@ public class TestAgent : Agent
         should_reset = obs.ShouldReset;
         TextureObservation res = client.GetTextureObs(new Empty());
         byte[] texture_bytes = res.Texture.ToByteArray();
-        //Debug.Log("Length of texture bytes: "+texture_bytes.Length.ToString());
+        //Debug.Log("Length of texture bytes: " + texture_bytes.Length.ToString());
         Destroy(tex);
         tex = new Texture2D(texture_width, texture_height, TextureFormat.ARGB32, false);
         tex.LoadRawTextureData(texture_bytes);
         tex.Apply();
+        //texture_sensor.UpdateTexture(tex);
+        //UnityEngine.Graphics.Blit(tex, render_texture);
         image.texture = tex;
-        cameraToNeos.texture = tex;
-
+        //Debug.Log(image);
+        //Debug.Log(tex);
     }
 
     public override void AgentAction(float[] vectorAction)
     {
-        Debug.Log("vx: " + vectorAction[0].ToString());
-        Debug.Log("vz: " + vectorAction[1].ToString());
-        Debug.Log("wy: " + vectorAction[2].ToString());
+        //Debug.Log("vx: " + vectorAction[0].ToString());
+        //Debug.Log("vz: " + vectorAction[1].ToString());
+        //Debug.Log("wy: " + vectorAction[2].ToString());
         Response res;
         //if (should_reset || GetStepCount() >= 2500)
         if (should_reset || GetStepCount() >= 25000)

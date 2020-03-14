@@ -10,6 +10,7 @@ namespace MLAgents.Sensor
         public int width = 84;
         public int height = 84;
         public bool grayscale;
+        public int num_channels = 3;
 
         public override ISensor CreateSensor()
         {
@@ -18,7 +19,8 @@ namespace MLAgents.Sensor
 
         public override int[] GetObservationShape()
         {
-            return new[] { height, width, grayscale ? 1 : 3 };
+            //return new[] { height, width, grayscale ? 1 : 3 };
+            return new[] { height, width, grayscale ? 1 : num_channels };
         }
     }
 }

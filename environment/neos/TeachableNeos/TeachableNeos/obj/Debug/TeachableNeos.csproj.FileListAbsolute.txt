@@ -90,7 +90,6 @@ C:\Users\Guillermo Valle\code\vrai\environment\neos\TeachableNeos\TeachableNeos\
 C:\Users\Guillermo Valle\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.csproj.CopyComplete
 C:\Users\Guillermo Valle\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.dll
 C:\Users\Guillermo Valle\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.pdb
-C:\Users\Guillermo Valle\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.csprojAssemblyReference.cache
 C:\Users\Guillermo Valle\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\LZ4.dll
 C:\Users\Guillermo Valle\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\Newtonsoft.Json.Bson.dll
 C:\Users\Guillermo Valle\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\JM.LinqFaster.dll

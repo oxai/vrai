@@ -72,35 +72,36 @@ CrawlerStatic:
 
 NeosAgent:
     max_steps: 1.0e10
-    batch_size: 200
-    buffer_size: 1000
+    batch_size: 1024
+    buffer_size: 2048
     lambd: 0.95
     epsilon: 0.21
-    num_epoch: 5
+    num_epoch: 2
     learning_rate: 5.0e-4
-    time_horizon: 64
-    beta: 1.0e-1
-    hidden_units: 512
+    time_horizon: 128
+    beta: 1.0e-2
+    hidden_units: 128
     summary_freq: 1000
     num_layers: 2
     use_recurrent: false
-    sequence_length: 4
-    vis_encode_type: resnet
+    sequence_length: 2
+    vis_encode_type: simple
     learning_rate_schedule: linear
     behavioral_cloning:
-        demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\virustestfixed2.demo
-        strength: 0.3
-        steps: 10000
+        demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\virustestcameraf.demo
+        strength: 0.9
         batch_size: 32
+        steps: 1000
     reward_signals:
         gail:
             strength: 1.0
-            gamma: 0.95
+            gamma: 0.9
             use_actions: false
             use_vail: false
-            encoding_size: 128
-            demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\virustestfixed2.demo
-            learning_rate: 1.0e-4
+            encoding_size: 64
+            demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\virustestcameraf.demo
+            learning_rate: 3.0e-4
+
 
 NeosAgent1:
     max_steps: 1.0e10
@@ -119,7 +120,7 @@ NeosAgent1:
     sequence_length: 4
     behavioral_cloning:
         demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\virustestfixed2.demo
-        strength: 0.90
+        strength: 0.3
         steps: 15000
     vis_encode_type: simple
     reward_signals:

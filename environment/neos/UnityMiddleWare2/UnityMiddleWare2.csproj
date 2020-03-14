@@ -797,6 +797,9 @@
     <Compile Include="Assets\VoidEnvironment\Grpc\BasicCommGrpc.cs" />
     <Compile Include="Assets\VoidEnvironment\Scripts\TestAcademy.cs" />
     <Compile Include="Assets\VoidEnvironment\Scripts\TestAgent.cs" />
+    <Compile Include="Assets\VoidEnvironment\Scripts\TextureSensor.cs" />
+    <Compile Include="Assets\VoidEnvironment\Scripts\TextureSensorComponent.cs" />
+    <Compile Include="Assets\dummyScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\ML-Agents\Plugins\ProtoBuffer\link.xml" />

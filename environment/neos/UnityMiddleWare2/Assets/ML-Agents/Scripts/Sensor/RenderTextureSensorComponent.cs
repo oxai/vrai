@@ -8,6 +8,7 @@ namespace MLAgents.Sensor
         public RenderTexture renderTexture;
         public string sensorName = "RenderTextureSensor";
         public bool grayscale;
+        public int num_channels = 3;
 
         public override ISensor CreateSensor()
         {
@@ -19,7 +20,7 @@ namespace MLAgents.Sensor
             var width = renderTexture != null ? renderTexture.width : 0;
             var height = renderTexture != null ? renderTexture.height : 0;
 
-            return new[] { height, width, grayscale ? 1 : 3 };
+            return new[] { height, width, grayscale ? 1 : num_channels };
         }
     }
 }
