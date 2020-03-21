@@ -113,9 +113,9 @@ public class TestAgent : Agent
 
     public override void AgentAction(float[] vectorAction)
     {
-        //Debug.Log("vx: " + vectorAction[0].ToString());
-        //Debug.Log("vz: " + vectorAction[1].ToString());
-        //Debug.Log("wy: " + vectorAction[2].ToString());
+        Debug.Log("vx: " + vectorAction[0].ToString());
+        Debug.Log("vz: " + vectorAction[1].ToString());
+        Debug.Log("wy: " + vectorAction[2].ToString());
         Response res;
         //if (should_reset || GetStepCount() >= 2500)
         if (should_reset || GetStepCount() >= 25000)

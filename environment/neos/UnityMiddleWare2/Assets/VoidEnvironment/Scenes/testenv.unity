@@ -2530,8 +2530,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50f710d360a49461cad67ff5e6bcefe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  record: 0
-  demonstrationName: virustest_camerafix
+  record: 1
+  demonstrationName: testt
 --- !u!114 &1424714332324752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2597,7 +2597,7 @@ MonoBehaviour:
     vectorActionSpaceType: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 0
+  m_BehaviorType: 1
   m_BehaviorName: NeosAgent
   m_TeamID: 0
   m_useChildSensors: 1

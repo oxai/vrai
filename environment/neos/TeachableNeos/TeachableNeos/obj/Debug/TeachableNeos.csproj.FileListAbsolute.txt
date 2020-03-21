@@ -213,3 +213,4 @@ C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\
 C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\SuperSocket.ClientEngine.dll
 C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\BaseX.xml
 C:\Users\guill\Documents\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\Debug\BaseX.dll.config
+C:\Users\Guillermo Valle\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\Debug\TeachableNeos.csprojAssemblyReference.cache
