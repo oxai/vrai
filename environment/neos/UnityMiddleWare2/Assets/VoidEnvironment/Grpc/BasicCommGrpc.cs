@@ -17,6 +17,7 @@ public static partial class DataComm
   static readonly grpc::Marshaller<global::NeosAction> __Marshaller_NeosAction = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NeosAction.Parser.ParseFrom);
   static readonly grpc::Marshaller<global::Response> __Marshaller_Response = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Response.Parser.ParseFrom);
   static readonly grpc::Marshaller<global::ConnectionParams> __Marshaller_ConnectionParams = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ConnectionParams.Parser.ParseFrom);
+  static readonly grpc::Marshaller<global::ConnectionConfig> __Marshaller_ConnectionConfig = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ConnectionConfig.Parser.ParseFrom);
 
   static readonly grpc::Method<global::Empty, global::NeosObservation> __Method_GetObs = new grpc::Method<global::Empty, global::NeosObservation>(
       grpc::MethodType.Unary,
@@ -46,12 +47,12 @@ public static partial class DataComm
       __Marshaller_Empty,
       __Marshaller_Response);
 
-  static readonly grpc::Method<global::ConnectionParams, global::Response> __Method_EstablishConnection = new grpc::Method<global::ConnectionParams, global::Response>(
+  static readonly grpc::Method<global::ConnectionParams, global::ConnectionConfig> __Method_EstablishConnection = new grpc::Method<global::ConnectionParams, global::ConnectionConfig>(
       grpc::MethodType.Unary,
       __ServiceName,
       "EstablishConnection",
       __Marshaller_ConnectionParams,
-      __Marshaller_Response);
+      __Marshaller_ConnectionConfig);
 
   static readonly grpc::Method<global::Empty, global::Response> __Method_StopConnection = new grpc::Method<global::Empty, global::Response>(
       grpc::MethodType.Unary,
@@ -102,7 +103,7 @@ public static partial class DataComm
       throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
     }
 
-    public virtual global::System.Threading.Tasks.Task<global::Response> EstablishConnection(global::ConnectionParams request, grpc::ServerCallContext context)
+    public virtual global::System.Threading.Tasks.Task<global::ConnectionConfig> EstablishConnection(global::ConnectionParams request, grpc::ServerCallContext context)
     {
       throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
     }
@@ -234,19 +235,19 @@ public static partial class DataComm
     {
       return CallInvoker.AsyncUnaryCall(__Method_ResetAgent, null, options, request);
     }
-    public virtual global::Response EstablishConnection(global::ConnectionParams request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    public virtual global::ConnectionConfig EstablishConnection(global::ConnectionParams request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
     {
       return EstablishConnection(request, new grpc::CallOptions(headers, deadline, cancellationToken));
     }
-    public virtual global::Response EstablishConnection(global::ConnectionParams request, grpc::CallOptions options)
+    public virtual global::ConnectionConfig EstablishConnection(global::ConnectionParams request, grpc::CallOptions options)
     {
       return CallInvoker.BlockingUnaryCall(__Method_EstablishConnection, null, options, request);
     }
-    public virtual grpc::AsyncUnaryCall<global::Response> EstablishConnectionAsync(global::ConnectionParams request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    public virtual grpc::AsyncUnaryCall<global::ConnectionConfig> EstablishConnectionAsync(global::ConnectionParams request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
     {
       return EstablishConnectionAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
     }
-    public virtual grpc::AsyncUnaryCall<global::Response> EstablishConnectionAsync(global::ConnectionParams request, grpc::CallOptions options)
+    public virtual grpc::AsyncUnaryCall<global::ConnectionConfig> EstablishConnectionAsync(global::ConnectionParams request, grpc::CallOptions options)
     {
       return CallInvoker.AsyncUnaryCall(__Method_EstablishConnection, null, options, request);
     }

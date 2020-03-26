@@ -7,14 +7,12 @@ service DataComm {
   rpc GetTextureObs(Empty) returns (TextureObservation);
   rpc SendAct(NeosAction) returns (Response);
   rpc ResetAgent(Empty) returns (Response);
-  rpc EstablishConnection(ConnectionParams) returns (Response);
+  rpc EstablishConnection(ConnectionParams) returns (ConnectionConfig);
   rpc StopConnection(Empty) returns (Response);
   rpc GatherAct(Empty) returns (NeosAction);
 }
 
-message Empty {
-
-}
+message Empty { }
 
 message ConnectionParams {
 	bool is_recording = 1;
@@ -24,21 +22,25 @@ message Response {
 	string res = 1;
 }
 
+message ConnectionConfig {
+    int32 action_dim = 1;
+    int32 obs_dim = 2;
+    int32 vis_obs_dim = 3;
+    bool do_recording = 4;
+    int32 agent_index = 5;
+    Response res = 6;
+}
+
 message NeosAction {
-	float body_vx = 1;
-	float body_vz = 2;
-	float body_wy = 3;
+	repeated float action = 1;
 }
 
 message TextureObservation {
-	bytes texture = 1;
+	repeated bytes textures = 1;
 }
 
 message NeosObservation {
-    //int32 k = 1;
-	float x = 1;
-	float y = 2;
-	float z = 3;
-	float reward = 4;
-	bool should_reset = 5;
+	repeated float obs = 1;
+	float reward = 2;
+	bool should_reset = 3;
 }

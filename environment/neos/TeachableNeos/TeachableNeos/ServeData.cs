@@ -11,50 +11,39 @@ using CodeX;
 //using UnityEngine;
 using FrooxEngine.LogiX;
 using System.Threading;
+using System.Linq;
 
-namespace FrooxEngine.LogiX.Network
+
+namespace FrooxEngine.LogiX
 {
-    [Category("LogiX/Network")]
+    [Category("LogiX/VRAI")]
     [NodeName("Learn")]
     public class ServeData : LogixNode
     {
-        public readonly Input<float> x;
-        public float x_tmp;
-        public readonly Input<float> y;
-        public float y_tmp;
-        public readonly Input<float> z;
-        public float z_tmp;
+        public readonly Input<float[]> obs;
+        public float[] obs_tmp;
         public readonly Input<float> reward;
         public float reward_tmp;
-        //public Input<bool> recording_demo;
-        public bool recording_demo_tmp;
+        public readonly Input<Camera[]> cameras;
         public readonly Input<int> copy_idx;
         public int copy_idx_tmp;
-        public readonly Impulse Pulse;
-        public readonly Impulse ResetPulse;
-        public byte[] texture;
+        public readonly Input<bool> record_demo;
+        public bool recording_demo_tmp;
+        public readonly Input<float[]> demo_actions;
+        public float[] demo_actions_tmp;
+
+        //Outputs
+        public readonly Impulse DoAction;
+        public readonly Impulse ResetAgent;
+        public readonly Output<float[]> actions;
+        //public readonly Sync<float[]> actions;
+        public float[] actions_tmp;
+
+        //Internal variables
+        public int action_dim, obs_dim, vis_obs_dim;
+        public byte[][] textures;
         public bool should_reset = false;
         public bool connected_to_mlagents = false;
-
-        public readonly Input<Camera> camera;
-
-        public readonly Input<float> body_vx_human;
-        public readonly Input<float> body_vz_human;
-        public readonly Input<float> body_wy_human;
-        public float body_vx_human_tmp;
-        public float body_vz_human_tmp;
-        public float body_wy_human_tmp;
-        //public readonly Output<int> TestOutput;
-        public readonly Output<float> body_vx;
-        public readonly Output<float> body_vz;
-        public readonly Output<float> body_wy;
-        //public readonly Sync<float> body_vx;
-        //public readonly Sync<float> body_vz;
-        //public readonly Sync<float> body_wy;
-
-        public float body_vx_tmp;
-        public float body_vz_tmp;
-        public float body_wy_tmp;
         public bool have_read;
         public bool has_updated;
         public bool have_reset;
@@ -75,12 +64,13 @@ namespace FrooxEngine.LogiX.Network
 
         private void StartRPCServer()
         {
-            Task.Run(()=> {
+            Task.Run(() =>
+            {
                 try
                 {
                     //channel = new Channel("127.0.0.1:50052", ChannelCredentials.Insecure);
                     //this.client = new DataComm.DataCommClient(channel);
-                    int Port = 50052+copy_idx_tmp;
+                    int Port = 50052 + copy_idx_tmp;
                     Debug.Log("Hiii, starting server at " + Port.ToString());
 
                     server = new Server
@@ -98,70 +88,89 @@ namespace FrooxEngine.LogiX.Network
 
         }
 
-        public void UpdateObservations()
+
+        public void CollectInputs()
         {
-                x_tmp = this.x.Evaluate();
-                y_tmp = this.y.Evaluate();
-                z_tmp = this.z.Evaluate();
-                reward_tmp = this.reward.Evaluate();
-                body_vx_human_tmp = this.body_vx_human.Evaluate();
-                body_vz_human_tmp = this.body_vz_human.Evaluate();
-                body_wy_human_tmp = this.body_wy_human.Evaluate();
-        }
-        [ImpulseTarget]
-        public void ResetAgent()
-        {
-            should_reset = true;
+            //vector obs
+            obs_tmp = this.obs.Evaluate();
+            //reward
+            reward_tmp = this.reward.Evaluate();
+            //demo actions
+            demo_actions_tmp = this.demo_actions.Evaluate();
+
+            //agent index and other brain configs
+            copy_idx_tmp = this.copy_idx.EvaluateRaw();
+            recording_demo_tmp = this.record_demo.EvaluateRaw();
+            action_dim = demo_actions_tmp.Length;
+            obs_dim = obs_tmp.Length;
+
+            //visual inputs
+            var cameras_evald = cameras.EvaluateRaw();
+            int num_cameras = cameras_evald.Length;
+            vis_obs_dim = num_cameras;
+            if (num_cameras != textures.Length) textures = new byte[num_cameras][];
+            for (int i = 0; i < num_cameras; i++)
+            {
+                textures[i] = base.World.Render.Connector.Render(cameras.EvaluateRaw()[i].GetRenderSettings(new int2(84, 84)));
+            }
+            //texture = RenderManager.RenderToBitmap(camera.Evaluate().GetRenderSettings(new int2(84,84))).Wait().RawData();
+            //texture = base.World.Render.Connector.Render(camera.Evaluate().GetRenderSettings(new int2(84, 84)));
         }
 
         [ImpulseTarget]
         public void PerformAction()
         {
+            //wait to receive action from MLAgents
             if (connected_to_mlagents)
             {
-                //MLAgentsUpdateEvent.Wait();
-                //MLAgentsUpdateEvent.Reset();
-                while (!(have_read)) { }
-                have_read = false;
+                MLAgentsUpdateEvent.Wait();
+                MLAgentsUpdateEvent.Reset();
             }
-            body_vx.Value = this.body_vx_tmp;
-            body_vz.Value = this.body_vz_tmp;
-            body_wy.Value = this.body_wy_tmp;
+
+            //update output to the latest action received
+            actions.Value = this.actions_tmp;
+            //if not recording then we perform the action
             if (!recording_demo_tmp)
             {
-                Pulse.Trigger();
+                DoAction.Trigger();
             }
+
+            //if MLAgents said we have to reset, then we send the reset trigger, and update inputs (but reset demo_actions, coz the agent may have jumped by the reset operation)
             if (have_reset)
             {
-                ResetPulse.Trigger();
+                ResetAgent.Trigger();
                 have_reset = false;
-                UpdateObservations();
-                body_vx_human_tmp = 0;
-                body_vz_human_tmp = 0;
-                body_wy_human_tmp = 0;
-            } else
-            {
-                UpdateObservations();
+                CollectInputs();
+                Array.Clear(demo_actions_tmp, 0, demo_actions_tmp.Length);
             }
-            copy_idx_tmp = this.copy_idx.Evaluate();
+            else //otherwise, we just collect the new inputs
+            {
+                CollectInputs();
+            }
 
-            //texture = RenderManager.RenderToBitmap(camera.Evaluate().GetRenderSettings(new int2(84,84))).Wait().RawData();
-            //Debug.Log("serveData");
-            //Debug.Log(this);
-            texture = base.World.Render.Connector.Render(camera.Evaluate().GetRenderSettings(new int2(84,84)));
-            //Debug.Log(texture[1].ToString());
-            //if (connected_to_mlagents)
-            //{
-            //NeosUpdateEvent.Set();
-            //}
-            has_updated = true;
+            //Tell DataComm, that Neos has finished running (and gathering new obs/demo_actions)
+            if (connected_to_mlagents)
+            {
+                NeosUpdateEvent.Set();
+            }
         }
 
         [ImpulseTarget]
-        public void reset_server()
+        public void SetAgentToReset()
         {
-                server.ShutdownAsync().Wait();
-                StartRPCServer();
+            should_reset = true;
+        }
+
+        [ImpulseTarget]
+        public void StartServer()
+        {
+            StartRPCServer();
+        }
+
+        [ImpulseTarget]
+        public void StopServer()
+        {
+            server.ShutdownAsync().Wait();
         }
 
         protected override void OnCommonUpdate()
@@ -183,15 +192,83 @@ namespace FrooxEngine.LogiX.Network
             server.ShutdownAsync().Wait();
         }
     }
-    //[OldNamespace("FrooxEngine")]
-    //[NodeName("hellothere")]
-    //[Category("LogiX/Network")]
-    //public class Dec_Int : LogixOperator<int>
-    //{
-    //    public readonly Input<int> A;
 
-    //    public override int Content { get { return (int)(A.EvaluateRaw() - 1); } }
+
+    [OldNamespace("FrooxEngine")]
+    [NodeName("To List")]
+    [Category(new string[] { "LogiX/VRAI" })]
+    //public class ToList : MultiInputOperator<Input<float>, List<float>>
+    public class ToList : MultiInputOperator<float>
+    {
+        //public readonly List<float> Content
+        public readonly Output<float[]> list;
+        
+        protected override void OnEvaluate()
+        {
+            base.OnEvaluate();
+            list.Value = new float[this.Operands.Count];
+            for (int index = 0; index < this.Operands.Count; ++index)
+                list.Value[index] = this.Operands.GetElement(index).EvaluateRaw(default(float));
+        }
+        public override float Content
+        {
+            get
+            {
+                return default(float);
+            }
+        }
+    }
+
+    [OldNamespace("FrooxEngine")]
+    [NodeName("Get Element")]
+    [Category(new string[] { "LogiX/VRAI" })]
+    public class GetElement: LogixNode
+    {
+        public readonly Input<float[]> list;
+        public readonly Input<int> index;
+        public readonly Output<float> element;
+
+        protected override void OnEvaluate()
+        {
+            base.OnEvaluate();
+            element.Value = list.EvaluateRaw()[index.EvaluateRaw()];
+        }
+
+    }
+
+    //[OldNamespace("FrooxEngine")]
+    //[NodeName("floatTofloat")]
+    //[Category(new string[] { "LogiX/Operators" })]
+    //[Category(new string[] { "Hidden" })]
+    //public class FloatToFloatList : Cast.CastNode<float, float[]>, Cast.ICastNode, IPassthroughNode, IComponent, IComponentBase, IDestroyable, IWorker, IWorldElement, IUpdatable, IChangeable, IAudioUpdatable, IInitializable, ILinkable
+    //{
+    //    public override float[] Content
+    //    {
+    //        get
+    //        {
+    //            float[] result = { this.In.EvaluateRaw() };
+    //            return result;
+    //        }
+    //    }
     //}
 
-}
 
+    //[OldNamespace("FrooxEngine")]
+    //[NodeName("To List")]
+    ////[NodeOverload("AddMulti")]
+    ////[HiddenNode]
+    //[Category(new string[] { "LogiX/Operators" })]
+    //public class ListToString : LogixOperator<float>
+    //{
+    //    public readonly Input<int> Index;
+    //    public readonly Input<float> list;
+    //    public override float Content
+    //    {
+    //        get
+    //        {
+    //            //return list.EvaluateRaw()[Index.EvaluateRaw()];
+    //            return list.EvaluateRaw();
+    //        }
+    //    }
+    //}
+}

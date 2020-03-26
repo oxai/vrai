@@ -96,7 +96,8 @@
     <Error Condition="!Exists('..\packages\Grpc.Core.1.10.0\build\net45\Grpc.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Grpc.Core.1.10.0\build\net45\Grpc.Core.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>copy /B "$(ProjectDir)$(OutDir)TeachableNeos.dll" "C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries"</PostBuildEvent>
+    <PostBuildEvent>copy /B "$(ProjectDir)$(OutDir)TeachableNeos.dll" "C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Libraries"
+copy /B "$(ProjectDir)$(OutDir)TeachableNeos.dll" "$(ProjectDir)$(OutDir)\..\..\..\..\dlls\Libraries\TeachableNeos.dll"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>rem cd "$(ProjectDir)..\..\" &amp;&amp; make_for_win.bat</PreBuildEvent>
