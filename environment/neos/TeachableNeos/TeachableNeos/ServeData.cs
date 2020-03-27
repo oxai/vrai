@@ -12,7 +12,7 @@ using CodeX;
 using FrooxEngine.LogiX;
 using System.Threading;
 using System.Linq;
-
+using FrooxEngine.UIX;
 
 namespace FrooxEngine.LogiX
 {
@@ -195,10 +195,10 @@ namespace FrooxEngine.LogiX
 
 
     [OldNamespace("FrooxEngine")]
-    [NodeName("To List")]
+    [NodeName("To Array")]
     [Category(new string[] { "LogiX/VRAI" })]
     //public class ToList : MultiInputOperator<Input<float>, List<float>>
-    public class ToList : MultiInputOperator<float>
+    public class ToArray : MultiInputOperator<float>
     {
         //public readonly List<float> Content
         public readonly Output<float[]> list;
@@ -233,6 +233,85 @@ namespace FrooxEngine.LogiX
             base.OnEvaluate();
             element.Value = list.EvaluateRaw()[index.EvaluateRaw()];
         }
+
+    }
+    [OldNamespace("FrooxEngine")]
+    [NodeName("Unpack Array")]
+    [Category(new string[] { "LogiX/VRAI" })]
+    public class UnpackArray<T> : LogixNode
+    {
+        public readonly Input<T[]> input_array;
+        public readonly SyncList<Output<T>> ValueOutputs;
+        public readonly Output<int> OutputCount;
+
+        protected override void OnAttach()
+        {
+            base.OnAttach();
+            this.ValueOutputs.Add();
+        }
+
+        protected override void OnEvaluate()
+        {
+            T[] raw1 = this.input_array.EvaluateRaw(default(T[]));
+            this.OutputCount.Value = raw1.Length;
+            int old_count = this.ValueOutputs.Count;
+            this.ValueOutputs.EnsureExactCount(raw1.Length);
+            int new_count = this.ValueOutputs.Count;
+            if (old_count != new_count) this.RefreshLogixBox();
+            for (int index = 0; index < new_count; ++index)
+                this.ValueOutputs[index].Value = raw1[index];
+        }
+
+        //protected override void OnGenerateVisual(Slot root)
+        //{
+        //    UIBuilder ui = this.GenerateUI(root, 0.0f, 0.0f, float.MaxValue);
+        //    ui.Panel();
+        //    RectTransform footer;
+        //    ui.HorizontalFooter(32f, out footer, out RectTransform _);
+        //    UIBuilder uiBuilder = new UIBuilder(footer);
+        //    uiBuilder.HorizontalLayout(4f, 0, new Alignment?());
+        //    uiBuilder.Button("+", color.White, new ButtonEventHandler(this.AddOutput), 0.0f);
+        //    uiBuilder.Button("-", color.White, new ButtonEventHandler(this.RemoveOutput), 0.0f);
+        //}
+
+        //private void AddOutput(IButton button, ButtonEventData eventData)
+        //{
+        //    this.ValueOutputs.Add();
+        //    this.RefreshLogixBox();
+        //}
+
+        //private void RemoveOutput(IButton button, ButtonEventData eventData)
+        //{
+        //    if (this.ValueOutputs.Count <= 2)
+        //        return;
+        //    this.ValueOutputs.RemoveAt(this.ValueOutputs.Count - 1);
+        //    this.RefreshLogixBox();
+        //}
+
+        protected override System.Type FindOverload(NodeTypes connectingTypes)
+        {
+            System.Type type;
+            if (!connectingTypes.inputs.TryGetValue("input_array", out type))
+                return (System.Type)null;
+            return typeof(UnpackArray<>).MakeGenericType(type.GetElementType());
+        }
+
+        //protected override bool OnInputConnect<I>(Input<I> input, IWorldElement output)
+        //{
+        //    T[] raw1 = this.input_array.EvaluateRaw(default(T[]));
+        //    this.ValueOutputs.EnsureExactCount(raw1.Length);
+        //    this.RefreshLogixBox();
+        //    return true;
+        //}
+
+        //internal override void OnSwapping(LogixNode oldNode)
+        //{
+        //    if (!(oldNode.GetSyncMember("ValueOutputs") is ISyncList syncMember))
+        //        return;
+        //    this.ValueOutputs.EnsureExactCount(syncMember.Count);
+        //    this.RefreshLogixBox();
+        //}
+
 
     }
 
