@@ -60,6 +60,7 @@ namespace FrooxEngine.LogiX
             copy_idx_tmp = this.copy_idx.Evaluate();
             //StartRPCServer();
             StartRPCServer();
+            actions.Value = new float[0];
         }
 
         private void StartRPCServer()
@@ -202,7 +203,7 @@ namespace FrooxEngine.LogiX
     {
         //public readonly List<float> Content
         public readonly Output<float[]> list;
-        
+
         protected override void OnEvaluate()
         {
             base.OnEvaluate();
@@ -217,7 +218,47 @@ namespace FrooxEngine.LogiX
                 return default(float);
             }
         }
+        protected override int MinInputs
+        {
+            get
+            {
+                return 0;
+            }
+        }
     }
+
+    [OldNamespace("FrooxEngine")]
+    [NodeName("To Camera Array")]
+    [Category(new string[] { "LogiX/VRAI" })]
+    //public class ToList : MultiInputOperator<Input<float>, List<float>>
+    public class ToCameraArray : MultiInputOperator<Camera>
+    {
+        //public readonly List<float> Content
+        public readonly Output<Camera[]> list;
+
+        protected override void OnEvaluate()
+        {
+            base.OnEvaluate();
+            list.Value = new Camera[this.Operands.Count];
+            for (int index = 0; index < this.Operands.Count; ++index)
+                list.Value[index] = this.Operands.GetElement(index).EvaluateRaw(default(Camera));
+        }
+        public override Camera Content
+        {
+            get
+            {
+                return default(Camera);
+            }
+        }
+        protected override int MinInputs
+        {
+            get
+            {
+                return 0;
+            }
+        }
+    }
+
 
     [OldNamespace("FrooxEngine")]
     [NodeName("Get Element")]
@@ -231,7 +272,10 @@ namespace FrooxEngine.LogiX
         protected override void OnEvaluate()
         {
             base.OnEvaluate();
-            element.Value = list.EvaluateRaw()[index.EvaluateRaw()];
+            float[] list = this.list.EvaluateRaw(default(float[]));
+            int index = this.index.EvaluateRaw();
+            if (index >= list.Length) index = list.Length - 1;
+            element.Value = list[index];
         }
 
     }
@@ -247,7 +291,7 @@ namespace FrooxEngine.LogiX
         protected override void OnAttach()
         {
             base.OnAttach();
-            this.ValueOutputs.Add();
+            //this.ValueOutputs.Add();
         }
 
         protected override void OnEvaluate()
@@ -258,7 +302,7 @@ namespace FrooxEngine.LogiX
             this.ValueOutputs.EnsureExactCount(raw1.Length);
             int new_count = this.ValueOutputs.Count;
             if (old_count != new_count) this.RefreshLogixBox();
-            for (int index = 0; index < new_count; ++index)
+            for (int index = 0; index < this.ValueOutputs.Count; ++index)
                 this.ValueOutputs[index].Value = raw1[index];
         }
 
@@ -299,9 +343,20 @@ namespace FrooxEngine.LogiX
         //protected override bool OnInputConnect<I>(Input<I> input, IWorldElement output)
         //{
         //    T[] raw1 = this.input_array.EvaluateRaw(default(T[]));
+        //    int old_count = this.ValueOutputs.Count;
         //    this.ValueOutputs.EnsureExactCount(raw1.Length);
-        //    this.RefreshLogixBox();
+        //    int new_count = this.ValueOutputs.Count;
+        //    if (old_count != new_count) this.RefreshLogixBox();
         //    return true;
+        //}
+
+        //protected override void OnInputChange()
+        //{
+        //    T[] raw1 = this.input_array.EvaluateRaw(default(T[]));
+        //    int old_count = this.ValueOutputs.Count;
+        //    this.ValueOutputs.EnsureExactCount(raw1.Length);
+        //    int new_count = this.ValueOutputs.Count;
+        //    if (old_count != new_count) this.RefreshLogixBox();
         //}
 
         //internal override void OnSwapping(LogixNode oldNode)
