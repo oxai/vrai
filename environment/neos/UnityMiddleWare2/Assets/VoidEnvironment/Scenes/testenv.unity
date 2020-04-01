@@ -2486,7 +2486,6 @@ GameObject:
   - component: {fileID: 114368073669078345}
   - component: {fileID: 1424714332324750}
   - component: {fileID: 1424714332324751}
-  - component: {fileID: 1424714332324752}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -2530,25 +2529,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50f710d360a49461cad67ff5e6bcefe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  record: 1
+  record: 0
   demonstrationName: testt
---- !u!114 &1424714332324752
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1424714332324749}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 167f5359dd315674f828e8951ac9560f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sensorName: TextureSensor
-  width: 84
-  height: 84
-  grayscale: 0
-  num_channels: 4
 --- !u!4 &4780098828252379
 Transform:
   m_ObjectHideFlags: 0
@@ -2597,7 +2579,7 @@ MonoBehaviour:
     vectorActionSpaceType: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 1
+  m_BehaviorType: 0
   m_BehaviorName: NeosAgent
   m_TeamID: 0
   m_useChildSensors: 1

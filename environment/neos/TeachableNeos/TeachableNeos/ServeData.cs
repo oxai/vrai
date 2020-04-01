@@ -21,27 +21,27 @@ namespace FrooxEngine.LogiX
     public class ServeData : LogixNode
     {
         public readonly Input<float[]> obs;
-        public float[] obs_tmp;
+        public float[] obs_tmp = new float[0];
         public readonly Input<float> reward;
-        public float reward_tmp;
+        public float reward_tmp = 0.0f;
         public readonly Input<Camera[]> cameras;
         public readonly Input<int> copy_idx;
-        public int copy_idx_tmp;
+        public int copy_idx_tmp = 0;
         public readonly Input<bool> record_demo;
-        public bool recording_demo_tmp;
+        public bool recording_demo_tmp = false;
         public readonly Input<float[]> demo_actions;
-        public float[] demo_actions_tmp;
+        public float[] demo_actions_tmp = new float[0];
 
         //Outputs
         public readonly Impulse DoAction;
         public readonly Impulse ResetAgent;
         public readonly Output<float[]> actions;
         //public readonly Sync<float[]> actions;
-        public float[] actions_tmp;
+        public float[] actions_tmp = new float[0];
 
         //Internal variables
         public int action_dim, obs_dim, vis_obs_dim;
-        public byte[][] textures;
+        public byte[][] textures = new byte[0][];
         public bool should_reset = false;
         public bool connected_to_mlagents = false;
         public bool have_read;
@@ -93,28 +93,29 @@ namespace FrooxEngine.LogiX
         public void CollectInputs()
         {
             //vector obs
-            obs_tmp = this.obs.Evaluate();
+            obs_tmp = this.obs.EvaluateRaw(new float[0]);
             //reward
-            reward_tmp = this.reward.Evaluate();
+            reward_tmp = this.reward.Evaluate(default);
             //demo actions
-            demo_actions_tmp = this.demo_actions.Evaluate();
+            demo_actions_tmp = this.demo_actions.EvaluateRaw(new float[0]);
 
             //agent index and other brain configs
-            copy_idx_tmp = this.copy_idx.EvaluateRaw();
-            recording_demo_tmp = this.record_demo.EvaluateRaw();
+            copy_idx_tmp = this.copy_idx.Evaluate(default);
+            recording_demo_tmp = this.record_demo.Evaluate(default);
             action_dim = demo_actions_tmp.Length;
+            if (action_dim != actions_tmp.Length) actions_tmp = new float[action_dim];
             obs_dim = obs_tmp.Length;
 
             //visual inputs
-            var cameras_evald = cameras.EvaluateRaw();
+            var cameras_evald = cameras.EvaluateRaw(new Camera[0]);
             int num_cameras = cameras_evald.Length;
             vis_obs_dim = num_cameras;
             if (num_cameras != textures.Length) textures = new byte[num_cameras][];
             for (int i = 0; i < num_cameras; i++)
             {
-                textures[i] = base.World.Render.Connector.Render(cameras.EvaluateRaw()[i].GetRenderSettings(new int2(84, 84)));
+                textures[i] = base.World.Render.Connector.Render(cameras_evald[i].GetRenderSettings(new int2(84, 84)));
             }
-            //texture = RenderManager.RenderToBitmap(camera.Evaluate().GetRenderSettings(new int2(84,84))).Wait().RawData();
+            //texture = RenderManager.RenderToBitmap(camera.Evaluate().GetRenderSettings(new int2(84, 84))).Wait().RawData();
             //texture = base.World.Render.Connector.Render(camera.Evaluate().GetRenderSettings(new int2(84, 84)));
         }
 
@@ -126,10 +127,16 @@ namespace FrooxEngine.LogiX
             {
                 MLAgentsUpdateEvent.Wait();
                 MLAgentsUpdateEvent.Reset();
+                //update output to the latest action received
+                actions.Value = this.actions_tmp;
+            }
+            else
+            {
+                //update output to the latest action received
+                //if (actions.Value.Length != action_dim) actions.Value = new float[action_dim];
+                actions.Value = new float[action_dim];
             }
 
-            //update output to the latest action received
-            actions.Value = this.actions_tmp;
             //if not recording then we perform the action
             if (!recording_demo_tmp)
             {
@@ -159,18 +166,21 @@ namespace FrooxEngine.LogiX
         [ImpulseTarget]
         public void SetAgentToReset()
         {
+            CollectInputs();
             should_reset = true;
         }
 
         [ImpulseTarget]
         public void StartServer()
         {
+            CollectInputs();
             StartRPCServer();
         }
 
         [ImpulseTarget]
         public void StopServer()
         {
+            CollectInputs();
             server.ShutdownAsync().Wait();
         }
 
@@ -272,10 +282,14 @@ namespace FrooxEngine.LogiX
         protected override void OnEvaluate()
         {
             base.OnEvaluate();
-            float[] list = this.list.EvaluateRaw(default(float[]));
+            float[] list = this.list.EvaluateRaw(new float[0]);
             int index = this.index.EvaluateRaw();
-            if (index >= list.Length) index = list.Length - 1;
-            element.Value = list[index];
+            if (list.Length == 0) element.Value = 0;
+            else if (index >= list.Length)
+            {
+                index = list.Length - 1;
+                element.Value = list[index];
+            }
         }
 
     }
@@ -296,7 +310,7 @@ namespace FrooxEngine.LogiX
 
         protected override void OnEvaluate()
         {
-            T[] raw1 = this.input_array.EvaluateRaw(default(T[]));
+            T[] raw1 = this.input_array.EvaluateRaw(new T[0]);
             this.OutputCount.Value = raw1.Length;
             int old_count = this.ValueOutputs.Count;
             this.ValueOutputs.EnsureExactCount(raw1.Length);

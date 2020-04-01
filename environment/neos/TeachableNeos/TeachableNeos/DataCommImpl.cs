@@ -39,7 +39,7 @@ namespace TeachableNeos
             }
             catch (Exception exception)
             {
-                var error = "Server threw exeception : " + exception.Message;
+                var error = "Server threw exeception at SendAct : " + exception.Message;
                 return Task.FromResult(new Response{ Res = error});
             }
 
@@ -49,6 +49,7 @@ namespace TeachableNeos
         {
             try
             {
+                node.MLAgentsUpdateEvent.Set();
                 //imitation learning synchronization assumes that neos is slower than unity hmm
                 //because we are not blocking the actual movement of the user-controlled agent
                 //this is fine if we use GAIL to imitate state sequences only, I think
@@ -61,7 +62,7 @@ namespace TeachableNeos
             }
             catch (Exception exception)
             {
-                var error = "Server threw exeception : " + exception.Message;
+                var error = "Server threw exeception at GatherAct : " + exception.Message;
                 node.Debug.Log(error);
                 return Task.FromResult(new NeosAction
                 {
@@ -105,6 +106,7 @@ namespace TeachableNeos
 
             try
             {
+                node.MLAgentsUpdateEvent.Set();
                 node.should_reset = false;
                 node.have_reset = true;
                 node.NeosUpdateEvent.Wait();
@@ -113,7 +115,7 @@ namespace TeachableNeos
             }
             catch (Exception exception)
             {
-                var error = "Server threw exeception : " + exception.Message;
+                var error = "Server threw exeception at ResetAgent : " + exception.Message;
                 node.Debug.Log(error);
                 return Task.FromResult(new Response{ Res = error});
             }
@@ -132,7 +134,7 @@ namespace TeachableNeos
             }
             catch (Exception exception)
             {
-                var error = "Server threw exeception : " + exception.Message;
+                var error = "Server threw exeception at EstablishConnection : " + exception.Message;
                 node.Debug.Log(error);
                 Response res = new Response { Res = error };
                 return Task.FromResult(new ConnectionConfig { ActionDim = node.action_dim, ObsDim = node.obs_dim, DoRecording = node.recording_demo_tmp, AgentIndex = node.copy_idx_tmp, Res = res, VisObsDim = node.vis_obs_dim});
@@ -144,12 +146,12 @@ namespace TeachableNeos
             {
                 node.connected_to_mlagents = false;
                 node.recording_demo_tmp = false;
-                node.have_read = true;
+                node.MLAgentsUpdateEvent.Set();
                 return Task.FromResult(new Response { Res = "Ok" });
             }
             catch (Exception exception)
             {
-                var error = "Server threw exeception : " + exception.Message;
+                var error = "Server threw exeception at StopConnection : " + exception.Message;
                 return Task.FromResult(new Response{ Res = error});
             }
         }

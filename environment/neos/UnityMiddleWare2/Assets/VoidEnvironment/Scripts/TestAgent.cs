@@ -45,7 +45,7 @@ public class TestAgent : Agent
         var response = client.EstablishConnection(new ConnectionParams { IsRecording = is_recording });
         action_dim = response.ActionDim;
         obs_dim = response.ObsDim;
-        vis_obs_dim = response.ObsDim;
+        vis_obs_dim = response.VisObsDim;
         neos_do_recording = response.DoRecording;
         agent_index = response.AgentIndex;
         Response res = response.Res;
@@ -82,7 +82,7 @@ public class TestAgent : Agent
         AddReward(reward);
         should_reset = obs.ShouldReset;
 
-        //visual obs
+        ////visual obs
         for (int i = 0; i < vis_obs_dim; i++) { texture_sensor.UpdateTexture(texs[i]); }
     }
 
@@ -95,15 +95,15 @@ public class TestAgent : Agent
         byte[][] texture_bytes = new byte[vis_obs_dim][];
         for (int i = 0; i < vis_obs_dim; i++)
         {
-           texture_bytes[i] = res.Textures[0].ToByteArray();
-           Destroy(texs[i]);
-           texs[i] = new Texture2D(texture_width, texture_height, TextureFormat.ARGB32, false);
-           texs[i].LoadRawTextureData(texture_bytes[0]);
-           texs[i].Apply();
-           if (i==0) image.texture = texs[i];
-           //Debug.Log("Length of texture bytes: " + texture_bytes[i].Length.ToString());
+            texture_bytes[i] = res.Textures[0].ToByteArray();
+            Destroy(texs[i]);
+            texs[i] = new Texture2D(texture_width, texture_height, TextureFormat.ARGB32, false);
+            texs[i].LoadRawTextureData(texture_bytes[0]);
+            texs[i].Apply();
+            if (i == 0) image.texture = texs[i];
+            //Debug.Log("Length of texture bytes: " + texture_bytes[i].Length.ToString());
         }
-        
+
     }
 
     public override void AgentAction(float[] vectorAction)
@@ -116,7 +116,8 @@ public class TestAgent : Agent
             if (res.Res != "Ok")
                 Debug.Log(res.Res);
             Done();
-        } else
+        }
+        else
         {
             res = client.SendAct(new NeosAction { Action = { vectorAction } });
             if (res.Res != "Ok")
