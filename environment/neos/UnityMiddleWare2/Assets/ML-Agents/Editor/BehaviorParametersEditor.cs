@@ -1,16 +1,17 @@
-using UnityEngine;
+using MLAgents.Sensors;
 using UnityEditor;
 using Barracuda;
-using MLAgents.Sensor;
+using MLAgents.Policies;
+using UnityEngine;
 
-namespace MLAgents
+namespace MLAgents.Editor
 {
     /*
      This code is meant to modify the behavior of the inspector on Agent Components.
     */
     [CustomEditor(typeof(BehaviorParameters))]
     [CanEditMultipleObjects]
-    public class BehaviorParametersEditor : Editor
+    internal class BehaviorParametersEditor : UnityEditor.Editor
     {
         const float k_TimeBetweenModelReloads = 2f;
         // Time since the last reload of the model
@@ -22,27 +23,55 @@ namespace MLAgents
         {
             var so = serializedObject;
             so.Update();
+            bool needPolicyUpdate; // Whether the name, model, inference device, or BehaviorType changed.
 
             // Drawing the Behavior Parameters
+            EditorGUI.indentLevel++;
+            EditorGUI.BeginChangeCheck(); // global
+
             EditorGUI.BeginChangeCheck();
-            EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(so.FindProperty("m_BehaviorName"));
-            EditorGUILayout.PropertyField(so.FindProperty("m_BrainParameters"), true);
-            EditorGUILayout.PropertyField(so.FindProperty("m_Model"), true);
-            EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(so.FindProperty("m_InferenceDevice"), true);
-            EditorGUI.indentLevel--;
-            EditorGUILayout.PropertyField(so.FindProperty("m_BehaviorType"));
-            EditorGUILayout.PropertyField(so.FindProperty("m_TeamID"));
-            EditorGUILayout.PropertyField(so.FindProperty("m_useChildSensors"), true);
-            // EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Heuristic"), true);
-            EditorGUI.indentLevel--;
-            if (EditorGUI.EndChangeCheck())
             {
-                m_RequireReload = true;
+                EditorGUILayout.PropertyField(so.FindProperty("m_BehaviorName"));
             }
+            needPolicyUpdate = EditorGUI.EndChangeCheck();
+
+            EditorGUI.BeginDisabledGroup(!EditorUtilities.CanUpdateModelProperties());
+            {
+                EditorGUILayout.PropertyField(so.FindProperty("m_BrainParameters"), true);
+            }
+            EditorGUI.EndDisabledGroup();
+
+            EditorGUI.BeginChangeCheck();
+            {
+                EditorGUILayout.PropertyField(so.FindProperty("m_Model"), true);
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(so.FindProperty("m_InferenceDevice"), true);
+                EditorGUI.indentLevel--;
+            }
+            needPolicyUpdate = needPolicyUpdate || EditorGUI.EndChangeCheck();
+
+            EditorGUI.BeginChangeCheck();
+            {
+                EditorGUILayout.PropertyField(so.FindProperty("m_BehaviorType"));
+            }
+            needPolicyUpdate = needPolicyUpdate || EditorGUI.EndChangeCheck();
+
+            EditorGUILayout.PropertyField(so.FindProperty("TeamId"));
+            EditorGUI.BeginDisabledGroup(!EditorUtilities.CanUpdateModelProperties());
+            {
+                EditorGUILayout.PropertyField(so.FindProperty("m_UseChildSensors"), true);
+            }
+            EditorGUI.EndDisabledGroup();
+
+            EditorGUI.indentLevel--;
+            m_RequireReload = EditorGUI.EndChangeCheck();
             DisplayFailedModelChecks();
             so.ApplyModifiedProperties();
+
+            if (needPolicyUpdate)
+            {
+                UpdateAgentPolicy();
+            }
         }
 
         /// <summary>
@@ -61,7 +90,7 @@ namespace MLAgents
             var model = (NNModel)serializedObject.FindProperty("m_Model").objectReferenceValue;
             var behaviorParameters = (BehaviorParameters)target;
             SensorComponent[] sensorComponents;
-            if(behaviorParameters.useChildSensors)
+            if (behaviorParameters.useChildSensors)
             {
                 sensorComponents = behaviorParameters.GetComponentsInChildren<SensorComponent>();
             }
@@ -72,12 +101,13 @@ namespace MLAgents
             var brainParameters = behaviorParameters.brainParameters;
             if (model != null)
             {
-                barracudaModel = ModelLoader.Load(model.Value);
+                barracudaModel = ModelLoader.Load(model);
             }
             if (brainParameters != null)
             {
-                var failedChecks = InferenceBrain.BarracudaModelParamLoader.CheckModel(
-                    barracudaModel, brainParameters, sensorComponents);
+                var failedChecks = Inference.BarracudaModelParamLoader.CheckModel(
+                    barracudaModel, brainParameters, sensorComponents, behaviorParameters.behaviorType
+                );
                 foreach (var check in failedChecks)
                 {
                     if (check != null)
@@ -86,6 +116,12 @@ namespace MLAgents
                     }
                 }
             }
+        }
+
+        void UpdateAgentPolicy()
+        {
+            var behaviorParameters = (BehaviorParameters)target;
+            behaviorParameters.UpdateAgentPolicy();
         }
     }
 }

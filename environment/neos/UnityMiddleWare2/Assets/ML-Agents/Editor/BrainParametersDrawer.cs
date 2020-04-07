@@ -1,14 +1,15 @@
 using UnityEngine;
 using UnityEditor;
+using MLAgents.Policies;
 
-namespace MLAgents
+namespace MLAgents.Editor
 {
     /// <summary>
     /// PropertyDrawer for BrainParameters. Defines how BrainParameters are displayed in the
     /// Inspector.
     /// </summary>
     [CustomPropertyDrawer(typeof(BrainParameters))]
-    public class BrainParametersDrawer : PropertyDrawer
+    internal class BrainParametersDrawer : PropertyDrawer
     {
         // The height of a line in the Unity Inspectors
         const float k_LineHeight = 17f;
@@ -24,13 +25,11 @@ namespace MLAgents
         {
             return GetHeightDrawVectorObservation() +
                 GetHeightDrawVectorAction(property);
-
         }
 
         /// <inheritdoc />
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-
             var indent = EditorGUI.indentLevel;
             EditorGUI.indentLevel = 0;
             position.height = k_LineHeight;
@@ -165,9 +164,9 @@ namespace MLAgents
         }
 
         /// <summary>
-        /// The Height required to draw the Vector Action parameters
+        /// The Height required to draw the Vector Action parameters.
         /// </summary>
-        /// <returns>The height of the drawer of the Vector Action </returns>
+        /// <returns>The height of the drawer of the Vector Action.</returns>
         static float GetHeightDrawVectorAction(SerializedProperty property)
         {
             var actionSize = 2 + property.FindPropertyRelative(k_ActionSizePropName).arraySize;

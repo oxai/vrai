@@ -15,6 +15,7 @@ default:
     time_horizon: 64
     sequence_length: 64
     summary_freq: 10000
+    keep-checkpoints: 1000
     use_recurrent: false
     reward_signals:
         extrinsic:
@@ -88,6 +89,69 @@ NeosAgent:
     vis_encode_type: simple
     learning_rate_schedule: linear
     behavioral_cloning:
+        demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\betatest.demo
+        strength: 0.7
+        batch_size: 32
+        steps: 0
+    reward_signals:
+        gail:
+            strength: 1.0
+            gamma: 0.9
+            use_actions: true
+            use_vail: false
+            encoding_size: 64
+            demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\betatest.demo
+
+NeosAgent_betali:
+    max_steps: 1.0e10
+    batch_size: 1024
+    buffer_size: 2048
+    lambd: 0.99
+    epsilon: 0.2
+    num_epoch: 2
+    learning_rate: 5.0e-4
+    time_horizon: 25
+    beta: 1.0e-2
+    hidden_units: 128
+    summary_freq: 1000
+    num_layers: 2
+    use_recurrent: false
+    sequence_length: 2
+    vis_encode_type: simple
+    learning_rate_schedule: linear
+    behavioral_cloning:
+        demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\betatest.demo
+        strength: 0.9
+        batch_size: 32
+        steps: 1000000
+    reward_signals:
+        gail:
+            strength: 1.0
+            gamma: 0.9
+            use_actions: true
+            use_vail: false
+            encoding_size: 64
+            demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\betatest.demo
+            learning_rate: 1.0e-5
+
+NeosAgent_virus:
+    max_steps: 1.0e10
+    batch_size: 1024
+    buffer_size: 2048
+    lambd: 0.99
+    epsilon: 0.2
+    num_epoch: 2
+    learning_rate: 5.0e-4
+    time_horizon: 25
+    beta: 1.0e-2
+    hidden_units: 128
+    summary_freq: 1000
+    num_layers: 2
+    use_recurrent: false
+    sequence_length: 2
+    vis_encode_type: simple
+    learning_rate_schedule: linear
+    behavioral_cloning:
         demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\virustestcameraf.demo
         strength: 0.9
         batch_size: 32
@@ -101,7 +165,6 @@ NeosAgent:
             encoding_size: 64
             demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\virustestcameraf.demo
             learning_rate: 1.0e-5
-
 
 NeosAgent1:
     max_steps: 1.0e10

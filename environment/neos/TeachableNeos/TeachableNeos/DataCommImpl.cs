@@ -49,12 +49,12 @@ namespace TeachableNeos
         {
             try
             {
-                node.MLAgentsUpdateEvent.Set();
+                //node.MLAgentsUpdateEvent.Set();
                 //imitation learning synchronization assumes that neos is slower than unity hmm
                 //because we are not blocking the actual movement of the user-controlled agent
                 //this is fine if we use GAIL to imitate state sequences only, I think
-                node.NeosUpdateEvent.Wait();
-                node.NeosUpdateEvent.Reset();
+                //node.NeosUpdateEvent.Wait();
+                //node.NeosUpdateEvent.Reset();
                 return Task.FromResult(new NeosAction
                 {
                     Action = { node.demo_actions_tmp },

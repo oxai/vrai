@@ -1,5 +1,4 @@
 using UnityEngine;
-using MLAgents;
 using System.Collections.Generic;
 using System.Net;
 using System;
@@ -15,12 +14,16 @@ using Screen = System.Windows.Forms.Screen;
 using Google.Protobuf;
 using UnityEngine.UI;
 using Grpc.Core;
-using MLAgents.Sensor;
+using MLAgents;
+using MLAgents.Sensors;
+using MLAgents.SideChannels;
+using MLAgents.Demonstrations;
+using MLAgents.Policies;
 
 public class TestAgent : Agent
 {
     private DataComm.DataCommClient client;
-    public TestAcademy academy;
+    //public TestAcademy academy;
     //public List<float> inputs; //can't call this variable observations, coz I guess that's being used for something else? dunno
     public float stop_training = 0;
     public bool should_reset = false;
@@ -34,10 +37,11 @@ public class TestAgent : Agent
     Texture2D[] texs;
     RawImage image;
     public RawImage raw_image;
-    TextureSensorComponent texture_sensor;
+    TextureSensorComponent[] texture_sensors;
 
-    public override void InitializeAgent()
+    public override void Initialize()
     {
+        Debug.Log("HII");
         var channel = new Channel("127.0.0.1:5005"+(2+agent_index).ToString(), ChannelCredentials.Insecure);
         this.client = new DataComm.DataCommClient(channel);
         is_recording =this.GetComponent<DemonstrationRecorder>().record;
@@ -54,12 +58,13 @@ public class TestAgent : Agent
         BehaviorParameters behavior_params = GetComponent<BehaviorParameters>();
         behavior_params.brainParameters.vectorActionSize = new int[] { action_dim };
         behavior_params.brainParameters.vectorObservationSize = obs_dim;
+        if (neos_do_recording) behavior_params.behaviorType = BehaviorType.HeuristicOnly;
 
         DemonstrationRecorder demo_recorder = GetComponent<DemonstrationRecorder>();
         demo_recorder.record = neos_do_recording;
 
         //TODO: set camera params from Neos too.
-        TextureSensorComponent[] texture_sensors = new TextureSensorComponent[vis_obs_dim];
+        texture_sensors = new TextureSensorComponent[vis_obs_dim];
         texs = new Texture2D[vis_obs_dim];
         for (int i = 0; i < vis_obs_dim; i++)
         {
@@ -67,23 +72,23 @@ public class TestAgent : Agent
             texture_sensor.num_channels = 4;
             texture_sensor.width = texture_width;
             texture_sensor.height = texture_height;
-            texture_sensor.name = "Texture Sensor " + i.ToString();
+            //texture_sensor.name = "Texture Sensor " + i.ToString();
             texture_sensors[i] = texture_sensor;
             image = raw_image.GetComponent<RawImage>();
         }
     }
 
-    public override void CollectObservations()
+    public override void CollectObservations(VectorSensor sensor)
     {
         NeosObservation obs = client.GetObs(new Empty());
-        for (int i = 0; i < obs.Obs.Count(); i++) { AddVectorObs(obs.Obs[i]); }
+        for (int i = 0; i < obs.Obs.Count(); i++) { sensor.AddObservation(obs.Obs[i]); }
         float reward = obs.Reward;
         //Debug.Log("Reward " + reward.ToString());
         AddReward(reward);
         should_reset = obs.ShouldReset;
 
         ////visual obs
-        for (int i = 0; i < vis_obs_dim; i++) { texture_sensor.UpdateTexture(texs[i]); }
+        for (int i = 0; i < vis_obs_dim; i++) { texture_sensors[i].UpdateTexture(texs[i]); }
     }
 
     /// <summary>
@@ -106,16 +111,17 @@ public class TestAgent : Agent
 
     }
 
-    public override void AgentAction(float[] vectorAction)
+    public override void OnActionReceived(float[] vectorAction)
     {
-        //Debug.Log("action1: " + vectorAction[0].ToString());
+        //vectorAction.ToList().ForEach(i => Debug.Log(i.ToString()));
+        //Debug.Log("Total steps: " + StepCount.ToString());
         Response res;
-        if (should_reset || GetStepCount() >= 25000)
+        if (should_reset || StepCount >= 1500)
         {
             res = client.SendAct(new NeosAction { Action = { vectorAction } });
             if (res.Res != "Ok")
                 Debug.Log(res.Res);
-            Done();
+            EndEpisode();
         }
         else
         {
@@ -126,7 +132,7 @@ public class TestAgent : Agent
 
     }
 
-    public override void AgentReset()
+    public override void OnEpisodeBegin()
     {
         Response res = client.ResetAgent(new Empty());
         if (res.Res != "Ok")
@@ -138,6 +144,7 @@ public class TestAgent : Agent
         NeosAction action_message = client.GatherAct(new Empty());
         var action = new float[action_dim];
         action_message.Action.CopyTo(action, 0);
+        //action.ToList().ForEach(i => Debug.Log(i.ToString()));
         return action;
     }
 

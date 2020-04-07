@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MLAgents.Sensor
+namespace MLAgents.Sensors
 {
     public class TextureSensor : ISensor
     {
@@ -24,32 +24,26 @@ namespace MLAgents.Sensor
             return m_Name;
         }
 
-        public int[] GetFloatObservationShape()
+        public int[] GetObservationShape()
         {
             return m_Shape;
         }
 
         public byte[] GetCompressedObservation()
         {
-            using(TimerStack.Instance.Scoped("TexSensor.GetCompressedObservation"))
-            {
-                var texture = m_Texture;
-                // TODO support more types here, e.g. JPG
-                var compressed = texture.EncodeToPNG();
-                UnityEngine.Object.Destroy(texture);
-                return compressed;
-            }
+            var texture = m_Texture;
+            // TODO support more types here, e.g. JPG
+            var compressed = texture.EncodeToPNG();
+            UnityEngine.Object.Destroy(texture);
+            return compressed;
         }
 
         public int Write(WriteAdapter adapter)
         {
-            using (TimerStack.Instance.Scoped("TexSensor.GetCompressedObservation"))
-            {
-                var texture = m_Texture;
-                var numWritten = Utilities.TextureToTensorProxy(texture, adapter, m_Grayscale);
-                UnityEngine.Object.Destroy(texture);
-                return numWritten;
-            }
+            var texture = m_Texture;
+            var numWritten = Utilities.TextureToTensorProxy(texture, adapter, m_Grayscale);
+            UnityEngine.Object.Destroy(texture);
+            return numWritten;
         }
 
         public void Update() { }
