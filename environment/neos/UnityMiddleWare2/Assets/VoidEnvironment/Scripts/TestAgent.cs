@@ -57,7 +57,8 @@ public class TestAgent : Agent
             Debug.Log(res.Res);
         BehaviorParameters behavior_params = GetComponent<BehaviorParameters>();
         behavior_params.brainParameters.vectorActionSize = new int[] { action_dim };
-        behavior_params.brainParameters.vectorObservationSize = obs_dim;
+        //behavior_params.brainParameters.vectorObservationSize = obs_dim;
+        behavior_params.brainParameters.vectorObservationSize = 0;
         if (neos_do_recording) behavior_params.behaviorType = BehaviorType.HeuristicOnly;
 
         DemonstrationRecorder demo_recorder = GetComponent<DemonstrationRecorder>();
@@ -74,19 +75,38 @@ public class TestAgent : Agent
             texture_sensor.height = texture_height;
             //texture_sensor.name = "Texture Sensor " + i.ToString();
             texture_sensors[i] = texture_sensor;
-            image = raw_image.GetComponent<RawImage>();
         }
+        image = raw_image.GetComponent<RawImage>();
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
         NeosObservation obs = client.GetObs(new Empty());
-        for (int i = 0; i < obs.Obs.Count(); i++) { sensor.AddObservation(obs.Obs[i]); }
+        //for (int i = 0; i < obs.Obs.Count(); i++) { sensor.AddObservation(obs.Obs[i]); }
+        //Debug.Log("OBS");
+        //obs.Obs.ToList().ForEach(i => Debug.Log(i.ToString()));
         float reward = obs.Reward;
         //Debug.Log("Reward " + reward.ToString());
         AddReward(reward);
         should_reset = obs.ShouldReset;
 
+        TextureObservation res = client.GetTextureObs(new Empty());
+        //byte[][] texture_bytes = new byte[vis_obs_dim][];
+        //Debug.Log(vis_obs_dim.ToString());
+        for (int i = 0; i < vis_obs_dim; i++)
+        {
+            //texture_bytes[i] = res.Textures[i].ToByteArray();
+            //Debug.Log(texture_bytes[i][1].ToString());
+            Destroy(texs[i]);
+            texs[i] = new Texture2D(texture_width, texture_height, TextureFormat.ARGB32, false);
+            texs[i].LoadRawTextureData(res.Textures[i].ToByteArray());
+            texs[i].Apply();
+            //if (i == 0) image.texture = texs[0];
+            //Debug.Log("Length of texture bytes: " + texture_bytes[i].Length.ToString());
+        }
+        //Debug.Log(texs[0].GetRawTextureData()[0].ToString());
+        //Debug.Log(texs[0].GetRawTextureData()[10].ToString());
+        //image.texture = texs[0];
         ////visual obs
         for (int i = 0; i < vis_obs_dim; i++) { texture_sensors[i].UpdateTexture(texs[i]); }
     }
@@ -96,23 +116,32 @@ public class TestAgent : Agent
     /// </summary>
     void FixedUpdate()
     {
-        TextureObservation res = client.GetTextureObs(new Empty());
-        byte[][] texture_bytes = new byte[vis_obs_dim][];
-        for (int i = 0; i < vis_obs_dim; i++)
-        {
-            texture_bytes[i] = res.Textures[0].ToByteArray();
-            Destroy(texs[i]);
-            texs[i] = new Texture2D(texture_width, texture_height, TextureFormat.ARGB32, false);
-            texs[i].LoadRawTextureData(texture_bytes[0]);
-            texs[i].Apply();
-            if (i == 0) image.texture = texs[i];
-            //Debug.Log("Length of texture bytes: " + texture_bytes[i].Length.ToString());
-        }
+        //TextureObservation res = client.GetTextureObs(new Empty());
+        //byte[][] texture_bytes = new byte[vis_obs_dim][];
+        ////Debug.Log(vis_obs_dim.ToString());
+        //for (int i = 0; i < vis_obs_dim; i++)
+        //{
+        //    texture_bytes[i] = res.Textures[i].ToByteArray();
+        //    //Debug.Log(texture_bytes[i][1].ToString());
+        //    Destroy(texs[i]);
+        //    texs[i] = new Texture2D(texture_width, texture_height, TextureFormat.ARGB32, false);
+        //    texs[i].LoadRawTextureData(texture_bytes[i]);
+        //    texs[i].Apply();
+        //    if (i == 0) image.texture = texs[0];
+        //    //Debug.Log("Length of texture bytes: " + texture_bytes[i].Length.ToString());
+        //}
+        //image.texture = texs[0];
 
+    }
+
+    void Update()
+    {
+        //image.texture = texs[0];
     }
 
     public override void OnActionReceived(float[] vectorAction)
     {
+        //Debug.Log("ACTIONS");
         //vectorAction.ToList().ForEach(i => Debug.Log(i.ToString()));
         //Debug.Log("Total steps: " + StepCount.ToString());
         Response res;
@@ -141,6 +170,7 @@ public class TestAgent : Agent
 
     public override float[] Heuristic()
     {
+        //Debug.Log("HIIII HEURISTICAAA");
         NeosAction action_message = client.GatherAct(new Empty());
         var action = new float[action_dim];
         action_message.Action.CopyTo(action, 0);

@@ -11,6 +11,7 @@ namespace MLAgents.Sensors
         public bool grayscale;
         public int num_channels = 3;
         TextureSensor sensor;
+        public Texture2D texture;
 
         public override ISensor CreateSensor()
         {

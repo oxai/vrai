@@ -549,7 +549,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   record: 0
-  demonstrationName: betatest
+  demonstrationName: betatest2
   demonstrationDirectory: 
 --- !u!114 &1424714332324752
 MonoBehaviour:

@@ -31,6 +31,7 @@ environment/vrchat/UnityMiddleWare/Unity\ Environment_Data
 environment/vrchat/VrcaiMlaCommunicator/packages/*
 # environment/vrchat/VrcaiMlaCommunicator/VrcaiMlaCommunicator/bin/*
 agent/mlagents/summaries/*
+agent/mlagents/models/*
 **/Temp/**
 **/*db.lock
 **/PackageCache/*
