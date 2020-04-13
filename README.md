@@ -90,4 +90,4 @@ Version history
 
 ----
 
-Disclaimer. `.bat` files in this repo have been tested and free from coronavirus.
+Disclaimer: `.bat` files in this repo have been tested and free from coronavirus.
