@@ -87,3 +87,7 @@ Version history
 
 - **Alphali**. Only three actions (x-z velociy and y-rotation). Succesfully learnt simple find-and-reach task with only visual observations.
 - **Betali**. Full d.o.f. control of head and both hands (position+rotation). Observations are visual + current pose. Actions and pose are parametrized relative to itself in a way that doesn't rely on any global coordinates, to help generalization. Learn some simple motion, but still not showing satisfactory results.
+
+----
+
+Disclaimer. `.bat` files in this repo have been tested and free from coronavirus.
