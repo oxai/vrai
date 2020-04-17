@@ -78,33 +78,32 @@ NeosAgent:
     lambd: 0.99
     epsilon: 0.2
     num_epoch: 10
-    learning_rate: 5.0e-4
+    learning_rate: 1.0e-3
     time_horizon: 25
-    beta: 1.0e-4
+    beta: 1.0e-3
     hidden_units: 1024
     summary_freq: 1000
     num_layers: 2
-    use_recurrent: false
+    use_recurrent: true
     sequence_length: 5
     vis_encode_type: simple
     learning_rate_schedule: linear
-    init_path: models\betali_testtt2\NeosAgent
     behavioral_cloning:
         demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\betatest2.demo
-        strength: 0.9
+        strength: 0.0
         batch_size: 1024
-        steps: 2000000
-        samples_per_update: 2048
-        num_epoch: 10
+        steps: 0
+        samples_per_update: 10000
+        num_epoch: 0
     reward_signals:
         gail:
             strength: 1.0
             gamma: 0.9
             use_actions: true
             use_vail: false
-            encoding_size: 64
+            encoding_size: 256
             demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\betatest2.demo
-            learning_rate: 5.0e-6
+            learning_rate: 2.0e-7
 
 NeosAgent_betali:
     max_steps: 1.0e10
