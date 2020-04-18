@@ -31,6 +31,8 @@ namespace FrooxEngine.LogiX
         public bool recording_demo_tmp = false;
         public readonly Input<float[]> demo_actions;
         public float[] demo_actions_tmp = new float[0];
+        public readonly Input<int> number_agents;
+        public int number_agents_tmp = 1;
 
         //Outputs
         public readonly Impulse DoAction;
@@ -101,6 +103,7 @@ namespace FrooxEngine.LogiX
 
             //agent index and other brain configs
             copy_idx_tmp = this.copy_idx.Evaluate(default);
+            number_agents_tmp = this.number_agents.Evaluate(default);
             recording_demo_tmp = this.record_demo.Evaluate(default);
             action_dim = demo_actions_tmp.Length;
             if (action_dim != actions_tmp.Length) actions_tmp = new float[action_dim];

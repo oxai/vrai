@@ -760,6 +760,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ConnectToNeos.cs" />
+    <Compile Include="Assets\VoidEnvSettingsOverrides.cs" />
     <Compile Include="Assets\VoidEnvironment\Grpc\BasicComm.cs" />
     <Compile Include="Assets\VoidEnvironment\Grpc\BasicCommGrpc.cs" />
     <Compile Include="Assets\VoidEnvironment\Scripts\TestAcademy.cs" />

@@ -42,41 +42,46 @@ public class TestAgent : Agent
     public override void Initialize()
     {
         Debug.Log("HII");
-        var channel = new Channel("127.0.0.1:5005"+(2+agent_index).ToString(), ChannelCredentials.Insecure);
-        this.client = new DataComm.DataCommClient(channel);
-        is_recording =this.GetComponent<DemonstrationRecorder>().record;
-
-        var response = client.EstablishConnection(new ConnectionParams { IsRecording = is_recording });
-        action_dim = response.ActionDim;
-        obs_dim = response.ObsDim;
-        vis_obs_dim = response.VisObsDim;
-        neos_do_recording = response.DoRecording;
-        agent_index = response.AgentIndex;
-        Response res = response.Res;
-        if (res.Res != "Ok")
-            Debug.Log(res.Res);
-        BehaviorParameters behavior_params = GetComponent<BehaviorParameters>();
-        behavior_params.brainParameters.vectorActionSize = new int[] { action_dim };
-        //behavior_params.brainParameters.vectorObservationSize = obs_dim;
-        behavior_params.brainParameters.vectorObservationSize = 0;
-        if (neos_do_recording) behavior_params.behaviorType = BehaviorType.HeuristicOnly;
-
-        DemonstrationRecorder demo_recorder = GetComponent<DemonstrationRecorder>();
-        demo_recorder.record = neos_do_recording;
-
-        //TODO: set camera params from Neos too.
-        texture_sensors = new TextureSensorComponent[vis_obs_dim];
-        texs = new Texture2D[vis_obs_dim];
-        for (int i = 0; i < vis_obs_dim; i++)
+        try
         {
-            TextureSensorComponent texture_sensor = gameObject.AddComponent<TextureSensorComponent>() as TextureSensorComponent;
-            texture_sensor.num_channels = 4;
-            texture_sensor.width = texture_width;
-            texture_sensor.height = texture_height;
-            //texture_sensor.name = "Texture Sensor " + i.ToString();
-            texture_sensors[i] = texture_sensor;
+            var channel = new Channel("127.0.0.1:5005"+(2+agent_index).ToString(), ChannelCredentials.Insecure);
+            this.client = new DataComm.DataCommClient(channel);
+            is_recording =this.GetComponent<DemonstrationRecorder>().record;
+
+            var response = client.EstablishConnection(new ConnectionParams { IsRecording = is_recording });
+            action_dim = response.ActionDim;
+            obs_dim = response.ObsDim;
+            vis_obs_dim = response.VisObsDim;
+            neos_do_recording = response.DoRecording;
+            agent_index = response.AgentIndex;
+            Response res = response.Res;
+            if (res.Res != "Ok")
+                Debug.Log(res.Res);
+            BehaviorParameters behavior_params = GetComponent<BehaviorParameters>();
+            behavior_params.brainParameters.vectorActionSize = new int[] { action_dim };
+            behavior_params.brainParameters.vectorObservationSize = obs_dim;
+            if (neos_do_recording) behavior_params.behaviorType = BehaviorType.HeuristicOnly;
+
+            DemonstrationRecorder demo_recorder = GetComponent<DemonstrationRecorder>();
+            demo_recorder.record = neos_do_recording;
+
+            //TODO: set camera params from Neos too.
+            texture_sensors = new TextureSensorComponent[vis_obs_dim];
+            texs = new Texture2D[vis_obs_dim];
+            for (int i = 0; i < vis_obs_dim; i++)
+            {
+                TextureSensorComponent texture_sensor = gameObject.AddComponent<TextureSensorComponent>() as TextureSensorComponent;
+                texture_sensor.num_channels = 4;
+                texture_sensor.width = texture_width;
+                texture_sensor.height = texture_height;
+                //texture_sensor.name = "Texture Sensor " + i.ToString();
+                texture_sensors[i] = texture_sensor;
+            }
+            image = raw_image.GetComponent<RawImage>();
+        } catch (Exception e) {
+            Debug.Log("Exception caught "+e.ToString());
+            this.gameObject.SetActive(false);
         }
-        image = raw_image.GetComponent<RawImage>();
     }
 
     public override void CollectObservations(VectorSensor sensor)

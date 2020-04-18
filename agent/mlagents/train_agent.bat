@@ -1,1 +1,1 @@
-mlagents-learn trainer_config.yaml --run-id=testt --train
+mlagents-learn trainer_config.yaml --env="..\..\environment\neos\built_env\Unity Environment" --no-graphics --run-id=hecc --train

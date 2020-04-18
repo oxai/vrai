@@ -24,27 +24,27 @@ public static partial class BasicCommReflection {
         string.Concat(
           "ChBiYXNpY19jb21tLnByb3RvIgcKBUVtcHR5IigKEENvbm5lY3Rpb25QYXJh",
           "bXMSFAoMaXNfcmVjb3JkaW5nGAEgASgIIhcKCFJlc3BvbnNlEgsKA3JlcxgB",
-          "IAEoCSKPAQoQQ29ubmVjdGlvbkNvbmZpZxISCgphY3Rpb25fZGltGAEgASgF",
+          "IAEoCSKmAQoQQ29ubmVjdGlvbkNvbmZpZxISCgphY3Rpb25fZGltGAEgASgF",
           "Eg8KB29ic19kaW0YAiABKAUSEwoLdmlzX29ic19kaW0YAyABKAUSFAoMZG9f",
-          "cmVjb3JkaW5nGAQgASgIEhMKC2FnZW50X2luZGV4GAUgASgFEhYKA3JlcxgG",
-          "IAEoCzIJLlJlc3BvbnNlIhwKCk5lb3NBY3Rpb24SDgoGYWN0aW9uGAEgAygC",
-          "IiYKElRleHR1cmVPYnNlcnZhdGlvbhIQCgh0ZXh0dXJlcxgBIAMoDCJECg9O",
-          "ZW9zT2JzZXJ2YXRpb24SCwoDb2JzGAEgAygCEg4KBnJld2FyZBgCIAEoAhIU",
-          "CgxzaG91bGRfcmVzZXQYAyABKAgypAIKCERhdGFDb21tEiIKBkdldE9icxIG",
-          "LkVtcHR5GhAuTmVvc09ic2VydmF0aW9uEiwKDUdldFRleHR1cmVPYnMSBi5F",
-          "bXB0eRoTLlRleHR1cmVPYnNlcnZhdGlvbhIhCgdTZW5kQWN0EgsuTmVvc0Fj",
-          "dGlvbhoJLlJlc3BvbnNlEh8KClJlc2V0QWdlbnQSBi5FbXB0eRoJLlJlc3Bv",
-          "bnNlEjsKE0VzdGFibGlzaENvbm5lY3Rpb24SES5Db25uZWN0aW9uUGFyYW1z",
-          "GhEuQ29ubmVjdGlvbkNvbmZpZxIjCg5TdG9wQ29ubmVjdGlvbhIGLkVtcHR5",
-          "GgkuUmVzcG9uc2USIAoJR2F0aGVyQWN0EgYuRW1wdHkaCy5OZW9zQWN0aW9u",
-          "YgZwcm90bzM="));
+          "cmVjb3JkaW5nGAQgASgIEhMKC2FnZW50X2luZGV4GAUgASgFEhUKDW51bWJl",
+          "cl9hZ2VudHMYBiABKAUSFgoDcmVzGAcgASgLMgkuUmVzcG9uc2UiHAoKTmVv",
+          "c0FjdGlvbhIOCgZhY3Rpb24YASADKAIiJgoSVGV4dHVyZU9ic2VydmF0aW9u",
+          "EhAKCHRleHR1cmVzGAEgAygMIkQKD05lb3NPYnNlcnZhdGlvbhILCgNvYnMY",
+          "ASADKAISDgoGcmV3YXJkGAIgASgCEhQKDHNob3VsZF9yZXNldBgDIAEoCDKk",
+          "AgoIRGF0YUNvbW0SIgoGR2V0T2JzEgYuRW1wdHkaEC5OZW9zT2JzZXJ2YXRp",
+          "b24SLAoNR2V0VGV4dHVyZU9icxIGLkVtcHR5GhMuVGV4dHVyZU9ic2VydmF0",
+          "aW9uEiEKB1NlbmRBY3QSCy5OZW9zQWN0aW9uGgkuUmVzcG9uc2USHwoKUmVz",
+          "ZXRBZ2VudBIGLkVtcHR5GgkuUmVzcG9uc2USOwoTRXN0YWJsaXNoQ29ubmVj",
+          "dGlvbhIRLkNvbm5lY3Rpb25QYXJhbXMaES5Db25uZWN0aW9uQ29uZmlnEiMK",
+          "DlN0b3BDb25uZWN0aW9uEgYuRW1wdHkaCS5SZXNwb25zZRIgCglHYXRoZXJB",
+          "Y3QSBi5FbXB0eRoLLk5lb3NBY3Rpb25iBnByb3RvMw=="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::Empty), global::Empty.Parser, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionParams), global::ConnectionParams.Parser, new[]{ "IsRecording" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::Response), global::Response.Parser, new[]{ "Res" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionConfig), global::ConnectionConfig.Parser, new[]{ "ActionDim", "ObsDim", "VisObsDim", "DoRecording", "AgentIndex", "Res" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionConfig), global::ConnectionConfig.Parser, new[]{ "ActionDim", "ObsDim", "VisObsDim", "DoRecording", "AgentIndex", "NumberAgents", "Res" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NeosAction), global::NeosAction.Parser, new[]{ "Action" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::TextureObservation), global::TextureObservation.Parser, new[]{ "Textures" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NeosObservation), global::NeosObservation.Parser, new[]{ "Obs", "Reward", "ShouldReset" }, null, null, null)
@@ -443,6 +443,7 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
     visObsDim_ = other.visObsDim_;
     doRecording_ = other.doRecording_;
     agentIndex_ = other.agentIndex_;
+    numberAgents_ = other.numberAgents_;
     Res = other.res_ != null ? other.Res.Clone() : null;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
@@ -507,8 +508,19 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
     }
   }
 
+  /// <summary>Field number for the "number_agents" field.</summary>
+  public const int NumberAgentsFieldNumber = 6;
+  private int numberAgents_;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int NumberAgents {
+    get { return numberAgents_; }
+    set {
+      numberAgents_ = value;
+    }
+  }
+
   /// <summary>Field number for the "res" field.</summary>
-  public const int ResFieldNumber = 6;
+  public const int ResFieldNumber = 7;
   private global::Response res_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public global::Response Res {
@@ -536,6 +548,7 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
     if (VisObsDim != other.VisObsDim) return false;
     if (DoRecording != other.DoRecording) return false;
     if (AgentIndex != other.AgentIndex) return false;
+    if (NumberAgents != other.NumberAgents) return false;
     if (!object.Equals(Res, other.Res)) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -548,6 +561,7 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
     if (VisObsDim != 0) hash ^= VisObsDim.GetHashCode();
     if (DoRecording != false) hash ^= DoRecording.GetHashCode();
     if (AgentIndex != 0) hash ^= AgentIndex.GetHashCode();
+    if (NumberAgents != 0) hash ^= NumberAgents.GetHashCode();
     if (res_ != null) hash ^= Res.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -582,8 +596,12 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
       output.WriteRawTag(40);
       output.WriteInt32(AgentIndex);
     }
+    if (NumberAgents != 0) {
+      output.WriteRawTag(48);
+      output.WriteInt32(NumberAgents);
+    }
     if (res_ != null) {
-      output.WriteRawTag(50);
+      output.WriteRawTag(58);
       output.WriteMessage(Res);
     }
     if (_unknownFields != null) {
@@ -608,6 +626,9 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
     }
     if (AgentIndex != 0) {
       size += 1 + pb::CodedOutputStream.ComputeInt32Size(AgentIndex);
+    }
+    if (NumberAgents != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeInt32Size(NumberAgents);
     }
     if (res_ != null) {
       size += 1 + pb::CodedOutputStream.ComputeMessageSize(Res);
@@ -637,6 +658,9 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
     }
     if (other.AgentIndex != 0) {
       AgentIndex = other.AgentIndex;
+    }
+    if (other.NumberAgents != 0) {
+      NumberAgents = other.NumberAgents;
     }
     if (other.res_ != null) {
       if (res_ == null) {
@@ -675,7 +699,11 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
           AgentIndex = input.ReadInt32();
           break;
         }
-        case 50: {
+        case 48: {
+          NumberAgents = input.ReadInt32();
+          break;
+        }
+        case 58: {
           if (res_ == null) {
             res_ = new global::Response();
           }

@@ -28,7 +28,8 @@ message ConnectionConfig {
     int32 vis_obs_dim = 3;
     bool do_recording = 4;
     int32 agent_index = 5;
-    Response res = 6;
+    int32 number_agents = 6;
+    Response res = 7;
 }
 
 message NeosAction {

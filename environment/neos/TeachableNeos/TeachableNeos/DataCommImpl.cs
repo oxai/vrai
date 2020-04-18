@@ -130,15 +130,27 @@ namespace TeachableNeos
                 if (parameters.IsRecording)
                     node.recording_demo_tmp = parameters.IsRecording;
                 Response res = new Response { Res = "Ok" };
-                return Task.FromResult(new ConnectionConfig { ActionDim = node.action_dim, ObsDim = node.obs_dim, DoRecording = node.recording_demo_tmp, AgentIndex = node.copy_idx_tmp, Res = res, VisObsDim = node.vis_obs_dim});
+                return Task.FromResult(new ConnectionConfig { ActionDim = node.action_dim,
+                                                              ObsDim = node.obs_dim,
+                                                              DoRecording = node.recording_demo_tmp,
+                                                              AgentIndex = node.copy_idx_tmp,
+                                                              NumberAgents = node.number_agents_tmp,
+                                                              Res = res,
+                                                              VisObsDim = node.vis_obs_dim});
             }
             catch (Exception exception)
             {
                 var error = "Server threw exeception at EstablishConnection : " + exception.Message;
                 node.Debug.Log(error);
                 Response res = new Response { Res = error };
-                return Task.FromResult(new ConnectionConfig { ActionDim = node.action_dim, ObsDim = node.obs_dim, DoRecording = node.recording_demo_tmp, AgentIndex = node.copy_idx_tmp, Res = res, VisObsDim = node.vis_obs_dim});
-            }
+                return Task.FromResult(new ConnectionConfig { ActionDim = node.action_dim,
+                                                              ObsDim = node.obs_dim,
+                                                              DoRecording = node.recording_demo_tmp,
+                                                              AgentIndex = node.copy_idx_tmp,
+                                                              NumberAgents = node.number_agents_tmp,
+                                                              Res = res,
+                                                              VisObsDim = node.vis_obs_dim});
+                }
         }
         public override Task<Response> StopConnection(Empty f, ServerCallContext context)
         {
