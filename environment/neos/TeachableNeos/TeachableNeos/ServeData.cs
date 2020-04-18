@@ -72,7 +72,7 @@ namespace FrooxEngine.LogiX
                     //channel = new Channel("127.0.0.1:50052", ChannelCredentials.Insecure);
                     //this.client = new DataComm.DataCommClient(channel);
                     int Port = 50052 + copy_idx_tmp;
-                    Debug.Log("Hiii, starting server at " + Port.ToString());
+                    Debug.Log("Hiiii, starting server at " + Port.ToString());
 
                     server = new Server
                     {
