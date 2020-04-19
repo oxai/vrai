@@ -84,17 +84,17 @@ NeosAgent:
     hidden_units: 1024
     summary_freq: 1000
     num_layers: 2
-    use_recurrent: true
+    use_recurrent: false
     sequence_length: 5
     vis_encode_type: simple
     learning_rate_schedule: linear
     behavioral_cloning:
-        demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\betatest2.demo
-        strength: 0.0
+        demo_path: '..\..\environment\neos\built_env\Unity Environment_Data\Demonstrations\betatest2_3.demo'
+        strength: 0.9
         batch_size: 1024
-        steps: 0
+        steps: 500000
         samples_per_update: 10000
-        num_epoch: 0
+        num_epoch: 100
     reward_signals:
         gail:
             strength: 1.0
@@ -102,8 +102,8 @@ NeosAgent:
             use_actions: true
             use_vail: false
             encoding_size: 256
-            demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\betatest2.demo
-            learning_rate: 2.0e-7
+            demo_path: '..\..\environment\neos\built_env\Unity Environment_Data\Demonstrations\betatest2_3.demo'
+            learning_rate: 5.0e-6
 
 NeosAgent_betali:
     max_steps: 1.0e10
