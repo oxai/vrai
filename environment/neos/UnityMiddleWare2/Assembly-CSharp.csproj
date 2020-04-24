@@ -63,79 +63,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ConnectToNeos.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Academy.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\ActionMasker.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Agent.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Demonstration.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\DemonstrationRecorder.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\DemonstrationStore.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\AgentAction.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\AgentInfo.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\AgentInfoActionPair.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\BrainParameters.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\Command.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\CustomResetParameters.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\DemonstrationMeta.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\EngineConfiguration.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\Header.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\Observation.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\SpaceType.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\UnityInput.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\UnityMessage.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\UnityOutput.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\UnityRlInitializationInput.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\UnityRlInitializationOutput.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\UnityRlInput.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\UnityRlOutput.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\UnityToExternal.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\CommunicatorObjects\UnityToExternalGrpc.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\GrpcExtensions.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Grpc\RpcCommunicator.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\ICommunicator.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\InferenceBrain\ApplierImpl.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\InferenceBrain\BarracudaModelParamLoader.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\InferenceBrain\GeneratorImpl.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\InferenceBrain\ModelRunner.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\InferenceBrain\TensorApplier.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\InferenceBrain\TensorGenerator.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\InferenceBrain\TensorNames.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\InferenceBrain\TensorProxy.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\InferenceBrain\Utils\Multinomial.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\InferenceBrain\Utils\RandomNormal.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Monitor.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Policy\BarracudaPolicy.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Policy\BehaviorParameters.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Policy\BrainParameters.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Policy\HeuristicPolicy.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Policy\IPolicy.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Policy\RemotePolicy.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\CameraSensor.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\CameraSensorComponent.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\ISensor.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\Observation.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\RayPerceptionSensor.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\RayPerceptionSensorComponent2D.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\RayPerceptionSensorComponent3D.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\RayPerceptionSensorComponentBase.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\RenderTextureSensor.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\RenderTextureSensorComponent.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\SensorBase.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\SensorComponent.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\StackingSensor.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\VectorSensor.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Sensor\WriteAdapter.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\SideChannel\EngineConfigurationChannel.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\SideChannel\FloatPropertiesChannel.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\SideChannel\RawBytesChannel.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\SideChannel\SideChannel.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Startup.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Timer.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\UnityAgentsException.cs" />
-    <Compile Include="Assets\ML-Agents\Scripts\Utilities.cs" />
+    <Compile Include="Assets\VoidEnvSettingsOverrides.cs" />
     <Compile Include="Assets\VoidEnvironment\Grpc\BasicComm.cs" />
     <Compile Include="Assets\VoidEnvironment\Grpc\BasicCommGrpc.cs" />
     <Compile Include="Assets\VoidEnvironment\Scripts\TestAcademy.cs" />
     <Compile Include="Assets\VoidEnvironment\Scripts\TestAgent.cs" />
+    <Compile Include="Assets\VoidEnvironment\Scripts\TextureSensor.cs" />
+    <Compile Include="Assets\VoidEnvironment\Scripts\TextureSensorComponent.cs" />
+    <Compile Include="Assets\dummyScript.cs" />
     <None Include="Assets\ML-Agents\Plugins\ProtoBuffer\link.xml" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
@@ -143,14 +78,17 @@
     <Reference Include="MacBLAS">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/MacBLAS.dll</HintPath>
     </Reference>
-    <Reference Include="com.unity.multiplayer-hlapi.Editor">
-      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Editor.dll</HintPath>
+    <Reference Include="Unity.Burst">
+      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Unity.Burst.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Barracuda-editor">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Barracuda-editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst.Editor">
+      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
@@ -161,20 +99,26 @@
     <Reference Include="Unity.Timeline">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
+    <Reference Include="Barracuda">
+      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Barracuda.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="iOSBLAS">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/iOSBLAS.dll</HintPath>
     </Reference>
-    <Reference Include="com.unity.multiplayer-weaver.Editor">
-      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/com.unity.multiplayer-weaver.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.XR.LegacyInputHelpers">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="BurstBLAS">
+      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/BurstBLAS.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics">
+      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Sprite.Editor">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
@@ -188,6 +132,9 @@
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Mathematics.Editor">
+      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Unity.Mathematics.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
@@ -199,6 +146,12 @@
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="com.unity.multiplayer-hlapi.Editor">
+      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="com.unity.multiplayer-weaver.Editor">
+      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/com.unity.multiplayer-weaver.Editor.dll</HintPath>
     </Reference>
     <Reference Include="com.unity.multiplayer-hlapi.Runtime">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
@@ -401,11 +354,11 @@
     <Reference Include="Unity.Analytics.StandardEvents">
       <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.analytics@3.3.5/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
-    <Reference Include="Barracuda">
-      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.barracuda@0.3.2-preview/Barracuda/Barracuda.dll</HintPath>
-    </Reference>
     <Reference Include="Google.Protobuf">
-      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.barracuda@0.3.2-preview/Barracuda/Plugins/ProtoBuffer/Google.Protobuf.dll</HintPath>
+      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.barracuda@0.6.3-preview/Barracuda/Plugins/ProtoBuffer/Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst.Unsafe">
+      <HintPath>C:/Users/guill/Documents/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.burst@1.2.3/Unity.Burst.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/2019.3.4f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -767,6 +720,20 @@
     <Reference Include="System.Drawing">
       <HintPath>C:/Program Files/2019.3.4f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Drawing.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Unity.ML-Agents.CommunicatorObjects.csproj">
+      <Project>{4B3D0F3E-A704-1634-0315-6ADD9DA1DC7A}</Project>
+      <Name>Unity.ML-Agents.CommunicatorObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.ML-Agents.Editor.csproj">
+      <Project>{5A2C549C-31C6-901E-0EC1-1B96208C753C}</Project>
+      <Name>Unity.ML-Agents.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.ML-Agents.csproj">
+      <Project>{90D85886-F8EE-F0D1-42B6-A8AD4028B834}</Project>
+      <Name>Unity.ML-Agents</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
