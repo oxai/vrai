@@ -13,21 +13,18 @@ original project proposal google doc https://docs.google.com/document/d/1_GhhYuY
 ### Set up
 
 - Install NeosVR
-- Install Unity Editor (>2018)
 - Install ML-Agents (version 0.15.X)
 - Copy the dlls in `environment/neos/dlls/Libraries` to the `Libraries` folder in the Neos installation folder (from now on refered to as "Neos folder"), often in `C:\Program Files (x86)\Steam\steamapps\common\NeosVR`.
 - Copy the file `run_neos.bat` in `environment/neos/dlls` to Neos folder.
 - If you want to use one of the existing environments (right now, only up to date environment is the betali environment I'm using with the 18dof agent (actions are head, 2 hands)), then you'd need to ask it for me. Just register on Neos, send me a friend request (I'm guillefix), and I'll send you the world.
-- The current training uses imitation learning, and that requires a demo file. I am not pusshing those because they can be too large for Github. They are in `environment/neos/UnityMiddleWare2/Assets/Demonstrations`. I uploaded the current demo [here](environment/neos/UnityMiddleWare2/Assets/Demonstrations), so copy that to `environment/neos/UnityMiddleWare2/Assets/Demonstrations` to use it if you want. This is quite a complex task to learn, sorry don't have a simple demo rn for testing :P maybe Rian can provide one he's working on.
+- The current training uses imitation learning, and that requires a demo file. I am not pusshing those because they can be too large for Github. They are in `environment/neos/built_env/Unity Environment_Data/Demonstrations`. I uploaded the current demo [here](environment/neos/UnityMiddleWare2/Assets/Demonstrations), so copy that to `environment/neos/built_env/Unity Environment_Data/Demonstrations` to use it if you want. This is quite a complex task to learn, sorry don't have a simple demo rn for testing :P maybe Rian can provide one he's working on.
 
 ### Running
 
 - Open Neos with plugins, by running `run_neos.bat` (now found in Neos folder).
 - Open the world (which would be wherever you left it after opening it from the message I sent, unless you have moved it somewhere else). This is done by double clicking on the orb. If using Neos in desktop mode, refer to here for the basic controls: http://wiki.neosvr.com/subdom/wiki/index.php?title=Basic_Controls. If you have VR, then we can meet in Neos and I can teach you the basics (or just ask me etc)
-- Open Unity Hub, and open the project in `environment/neos/UnityMiddleWare2`. The first time, you'll have to click "Add", and find the folder, and select the folder. After that, Unity Hub will save the project and you can just click on it.
-- Open cmd terminal and navigate to `agent/mlagents`. You can run `train_agent.bat`, but I recommend actually just using the command `mlagents-learn trainer_config.yaml --run-id=whatever-run-id-you-want --train` and also opening (a copy of) `gail_config.yaml`. Then you can change the training settings (which are the ones under `NeosAgent`). See https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Training-ML-Agents.md, https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Training-PPO.md, and https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Reward-Signals.md for documentation on what the different options mean, and intuitions on what they do.
-- Just after running the `mlagents-learn` command, you should go to the `UnityMiddleWare2` open in the Unity Editor, and click the play button on the top. Training should soon begin
-- You can stop the training by clicking the play button again, or ctrl+c on the cmd.
+- Open cmd terminal and navigate to `agent/mlagents`. You can run `train_agent.bat`, but I recommend actually just using the command `mlagents-learn trainer_config.yaml --env="..\..\environment\neos\built_env\Unity Environment" --run-id=whatever-run-id-you-want --train` and also opening (a copy of) `gail_config.yaml`. Then you can change the training settings (which are the ones under `NeosAgent`). See https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Training-ML-Agents.md, https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Training-PPO.md, and https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Reward-Signals.md for documentation on what the different options mean, and intuitions on what they do.
+- You can stop the training by pressing ctrl+c on the cmd.
 - You can open also another cmd and navigate to `agent/mlagents` and run `tensorboard --logdir summaries --port 6006` and go to `localhost:6006` to see the tensorboard with learning metrics.
 
 ## Instructions for development
@@ -47,6 +44,7 @@ original project proposal google doc https://docs.google.com/document/d/1_GhhYuY
 ### Modifying the UnityMiddleware
 
 - Just open the scripts in `Assets/VoidEnvironment/Scripts` in the UnityMiddleWare2 project. The main functionality is in `TestAgent.cs` which request obsevations from TeachableNeos server, and sends it actions. `TextureSensor.cs` and `TextureSensorComponent.cs` define a custom ML-Agents sensor to implement visual observsations via an image array received from Neos, rather than a Unity camera. Just save after making any modification and that's it.
+- Build the environment into the built_env folder.
 
 ### Modifying Neos environment.
 
@@ -58,9 +56,8 @@ original project proposal google doc https://docs.google.com/document/d/1_GhhYuY
 - Go to the Neos world
 - Press Pulse on set_recording in the in-world control panel
 - Equip alphali avatar
-- Press play in UnityMiddleWare2 (mlagents-learn not runing)
 - Do stuff
-- Press play in UnityMiddleWare2 to stop recording demo.
+- Run `mlagents-learn trainer_config.yaml --env="..\..\environment\neos\built_env\Unity Environment" --run-id=whatever-run-id-you-want`
 - Press Pulse on unset_recording in the in-world control panel, to return to normal "training mode".
 
 ### Others
