@@ -1,1 +1,1 @@
-Neos.exe -LoadAssembly Libraries\Google.Protobuf.dll -LoadAssembly Libraries\Grpc.Core.Api.dll -LoadAssembly Libraries\Grpc.Core.dll -LoadAssembly Libraries\grpc_csharp_ext.x64.dll -LoadAssembly Libraries\System.Interactive.Async.dll -LoadAssembly Libraries\TeachableNeos.dll
+Neos.exe -LoadAssembly Libraries\Google.Protobuf.dll -LoadAssembly Libraries\Grpc.Core.Api.dll -LoadAssembly Libraries\Grpc.Core.dll -LoadAssembly Libraries\grpc_csharp_ext.x64.dll -LoadAssembly Libraries\System.Interactive.Async.dll -LoadAssembly Libraries\TeachableNeos.dll -screen-fullscreen 0
