@@ -87,10 +87,11 @@ public class TestAgent : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         NeosObservation obs = client.GetObs(new Empty());
-        //for (int i = 0; i < obs.Obs.Count(); i++) { sensor.AddObservation(obs.Obs[i]); }
+        for (int i = 0; i < obs.Obs.Count(); i++) { sensor.AddObservation(obs.Obs[i]); }
         //Debug.Log("OBS");
         //obs.Obs.ToList().ForEach(i => Debug.Log(i.ToString()));
         float reward = obs.Reward;
+        //obs.Obs;
         //Debug.Log("Reward " + reward.ToString());
         AddReward(reward);
         should_reset = obs.ShouldReset;

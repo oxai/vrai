@@ -185,25 +185,31 @@ def load_demonstration(
         )
     return group_spec, info_action_pairs, total_expected
 
+#%%
+
 print("#########################################")
-group_spec, info_action_pairs, total_expected = load_demonstration("Assets/Demonstrations/HSSI.demo")
+group_spec, info_action_pairs, total_expected = load_demonstration("..\\..\\environment\\neos\\built_env\\Unity Environment_Data\\Demonstrations\\betatest2.demo")
 print(group_spec)
+group_spec
 print("#######")
 print( info_action_pairs)
+type(info_action_pairs)
+len(info_action_pairs)
+info_action_pairs[0]
+
+info_action_pairs[100]
+
 print("#######")
 print( total_expected)
 print("#######")
 
 
-print("#########################################")
-
-group_spec, info_action_pairs, total_expected = load_demonstration("Assets/Demonstrations/QQHSA.demo")
-print(group_spec)
-print("#######")
-print( info_action_pairs)
-print("#######")
-print( total_expected)
-print("#######")
-
-
-
+# print("#########################################")
+#
+# group_spec, info_action_pairs, total_expected = load_demonstration("..\..\environment\neos\built_env\Unity Environment_Data\Demonstrations\betatest2.demo")
+# print(group_spec)
+# print("#######")
+# print( info_action_pairs)
+# print("#######")
+# print( total_expected)
+# print("#######")

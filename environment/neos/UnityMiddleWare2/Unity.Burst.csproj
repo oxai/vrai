@@ -262,6 +262,9 @@
     <Reference Include="UnityEditor.LinuxStandalone.Extensions">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.3f1/Editor/Data/PlaybackEngines/LinuxStandaloneSupport/UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor.Android.Extensions">
+      <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.3f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.UWP.Extensions">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.3f1/Editor/Data/PlaybackEngines/MetroSupport/UnityEditor.UWP.Extensions.dll</HintPath>
     </Reference>
@@ -293,10 +296,10 @@
       <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.analytics@3.3.5/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Google.Protobuf">
-      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.barracuda@0.6.2-preview/Barracuda/Plugins/ProtoBuffer/Google.Protobuf.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.barracuda@0.6.3-preview/Barracuda/Plugins/ProtoBuffer/Google.Protobuf.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Unsafe">
-      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.burst@1.1.1/Unity.Burst.Unsafe.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.burst@1.2.3/Unity.Burst.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.purchasing@2.0.6/Editor/UnityEditor.Purchasing.dll</HintPath>
@@ -667,13 +670,24 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Packages\com.unity.burst\Runtime\BurstAliasing.cs" />
     <Compile Include="Packages\com.unity.burst\Runtime\BurstCompileAttribute.cs" />
     <Compile Include="Packages\com.unity.burst\Runtime\BurstCompiler.cs" />
     <Compile Include="Packages\com.unity.burst\Runtime\BurstCompilerOptions.cs" />
     <Compile Include="Packages\com.unity.burst\Runtime\BurstExecutionEnvironment.cs" />
     <Compile Include="Packages\com.unity.burst\Runtime\BurstRuntime.cs" />
+    <Compile Include="Packages\com.unity.burst\Runtime\DebugView.cs" />
+    <Compile Include="Packages\com.unity.burst\Runtime\DiagnosticId.cs" />
     <Compile Include="Packages\com.unity.burst\Runtime\FunctionPointer.cs" />
+    <Compile Include="Packages\com.unity.burst\Runtime\Intrinsics.cs" />
     <Compile Include="Packages\com.unity.burst\Runtime\SharedStatic.cs" />
+    <Compile Include="Packages\com.unity.burst\Runtime\x86\Common.cs" />
+    <Compile Include="Packages\com.unity.burst\Runtime\x86\Csr.cs" />
+    <Compile Include="Packages\com.unity.burst\Runtime\x86\Sse.cs" />
+    <Compile Include="Packages\com.unity.burst\Runtime\x86\Sse2.cs" />
+    <Compile Include="Packages\com.unity.burst\Runtime\x86\Sse3.cs" />
+    <Compile Include="Packages\com.unity.burst\Runtime\x86\Sse4_1.cs" />
+    <Compile Include="Packages\com.unity.burst\Runtime\x86\Ssse3.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\ML-Agents\Plugins\ProtoBuffer\link.xml" />
