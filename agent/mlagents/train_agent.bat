@@ -1,1 +1,1 @@
-mlagents-learn abc_config.yaml --env="..\..\environment\neos\built_env\Unity Environment" --run-id=hecc --train --time-scale=1.0
+mlagents-learn abc_config.yaml --env="..\..\environment\neos\built_env\Unity Environment" --run-id=test_headless --train --time-scale=3.0

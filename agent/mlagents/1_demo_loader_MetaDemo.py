@@ -189,6 +189,9 @@ def load_demonstration(
 
 print("#########################################")
 group_spec, info_action_pairs, total_expected = load_demonstration("..\\..\\environment\\neos\\built_env\\Unity Environment_Data\\Demonstrations\\betatest2.demo")
+group_spec, info_action_pairs, total_expected = load_demonstration("D:\code\\temp\\built_env\\Unity Environment_Data\\Demonstrations\\betatest2_4.demo")
+group_spec, info_action_pairs, total_expected = load_demonstration("D:\code\\temp\\built_env\\Unity Environment_Data\\Demonstrations\\older\\betatest2_3.demo")
+# group_spec, info_action_pairs, total_expected = load_demonstration("D:\code\\temp\\built_env\\Unity Environment_Data\\Demonstrations\\older\\betatest2_0.demo")
 print(group_spec)
 group_spec
 print("#######")
