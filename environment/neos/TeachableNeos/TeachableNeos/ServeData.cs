@@ -7,7 +7,7 @@ using BaseX;
 using FrooxEngine;
 using FrooxEngine.LogiX;
 using Grpc.Core;
-using CodeX;
+//using CodeX;
 //using UnityEngine;
 using FrooxEngine.LogiX;
 using System.Threading;
@@ -74,7 +74,8 @@ namespace FrooxEngine.LogiX
                     //channel = new Channel("127.0.0.1:50052", ChannelCredentials.Insecure);
                     //this.client = new DataComm.DataCommClient(channel);
                     int Port = 50052 + copy_idx_tmp;
-                    Debug.Log("Hiiii, starting server at " + Port.ToString());
+                    Debug.Log("Hiiiia, starting server at " + Port.ToString());
+                    GrpcEnvironment.SetLogger(new Grpc.Core.Logging.ConsoleLogger());
 
                     server = new Server
                     {
@@ -86,6 +87,8 @@ namespace FrooxEngine.LogiX
                 catch (Exception exception)
                 {
                     Debug.Log("Server threw exeception : " + exception.Message);
+                    Debug.Log("Server threw exeception : " + exception.InnerException.Message);
+                    Debug.Log("Server threw exeception : " + exception.InnerException.InnerException.Message);
                 }
             });
 

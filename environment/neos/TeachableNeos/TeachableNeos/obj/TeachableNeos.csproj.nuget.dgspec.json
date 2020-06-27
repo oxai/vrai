@@ -1,0 +1,65 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\code\\vrai\\environment\\neos\\TeachableNeos\\TeachableNeos\\TeachableNeos.csproj": {}
+  },
+  "projects": {
+    "D:\\code\\vrai\\environment\\neos\\TeachableNeos\\TeachableNeos\\TeachableNeos.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\code\\vrai\\environment\\neos\\TeachableNeos\\TeachableNeos\\TeachableNeos.csproj",
+        "projectName": "TeachableNeos",
+        "projectPath": "D:\\code\\vrai\\environment\\neos\\TeachableNeos\\TeachableNeos\\TeachableNeos.csproj",
+        "packagesPath": "C:\\Users\\Guillermo Valle\\.nuget\\packages\\",
+        "outputPath": "D:\\code\\vrai\\environment\\neos\\TeachableNeos\\TeachableNeos\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Guillermo Valle\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        ],
+        "originalTargetFrameworks": [
+          "net462"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net462": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net462": {
+          "dependencies": {
+            "Google.Protobuf": {
+              "target": "Package",
+              "version": "[3.12.3, )"
+            },
+            "Grpc": {
+              "target": "Package",
+              "version": "[2.30.0, )"
+            },
+            "Grpc.Tools": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.30.0, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
