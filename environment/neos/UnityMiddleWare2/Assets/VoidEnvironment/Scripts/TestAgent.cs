@@ -19,6 +19,9 @@ using MLAgents.Sensors;
 using MLAgents.SideChannels;
 using MLAgents.Demonstrations;
 using MLAgents.Policies;
+using System.IO;
+using Newtonsoft.Json;
+using Random = System.Random;
 
 public class TestAgent : Agent
 {
@@ -34,10 +37,17 @@ public class TestAgent : Agent
     int vis_obs_dim;
     bool neos_do_recording;
     bool is_recording = false;
+    string demo_file;
+    StreamWriter demo_file_writer;
+    float[][] demo_obss;
+    List<List<float>> demo_obss_list;
+    bool has_loaded_demo = false;
     Texture2D[] texs;
     RawImage image;
     public RawImage raw_image;
     TextureSensorComponent[] texture_sensors;
+    Random rnd = new Random();
+
 
     public override void Initialize()
     {
@@ -54,6 +64,7 @@ public class TestAgent : Agent
             vis_obs_dim = response.VisObsDim;
             neos_do_recording = response.DoRecording;
             agent_index = response.AgentIndex;
+            demo_file = response.DemoFile;
             Response res = response.Res;
             if (res.Res != "Ok")
                 Debug.Log(res.Res);
@@ -78,9 +89,48 @@ public class TestAgent : Agent
                 texture_sensors[i] = texture_sensor;
             }
             image = raw_image.GetComponent<RawImage>();
+
+            if (neos_do_recording)
+            {
+                demo_file_writer = new StreamWriter("Assets\\Demonstrations\\" + demo_file + "_side_info.csv", true);
+            }
+            else
+            {
+                if (File.Exists("Assets\\Demonstrations\\" + demo_file + "_side_info.csv"))
+                {
+                    demo_obss_list = new List<List<float>>();
+                    using (StreamReader r = new StreamReader("Assets\\Demonstrations\\" + demo_file + "_side_info.csv"))
+                    {
+                        while (!r.EndOfStream)
+                        {
+                            string line = r.ReadLine();
+                            List<float> values = line.Split(',').Select((x)=>float.Parse(x)).ToList();
+                            demo_obss_list.Add(values);
+                        }
+                    }
+                    demo_obss = demo_obss_list.Select(a => a.ToArray()).ToArray();
+                    has_loaded_demo = true;
+                }
+            }
+            //if (File.Exists("Assets\\Demonstrations\\"+demo_file+"_side_info.csv")) {
+            //    Debug.Log("loading demo file");
+            //    using (StreamReader r = new StreamReader("Assets\\Demonstrations\\current_demo_floats.json"))
+            //    {
+            //        string json = r.ReadToEnd();
+            //        demo_obss_list = JsonConvert.DeserializeObject<List<List<float>>>(json);
+            //        //Debug.Log(demo_obss_list.ToString());
+            //        //demo_obss_list.ForEach((x) => x.ForEach((y) => Debug.Log(y.ToString())));
+            //        demo_obss = demo_obss_list.Select(a => a.ToArray()).ToArray();
+            //        Debug.Log(demo_obss[0][0]);
+            //    }
+            //    has_loaded_demo = true;
+            //}
         } catch (Exception e) {
             Debug.Log("Exception caught "+e.ToString());
             this.gameObject.SetActive(false);
+            var res = client.StopConnection(new Empty());
+            if (res.Res != "Ok")
+                Debug.Log(res.Res);
         }
     }
 
@@ -90,6 +140,11 @@ public class TestAgent : Agent
         for (int i = 0; i < obs.Obs.Count(); i++) { sensor.AddObservation(obs.Obs[i]); }
         //Debug.Log("OBS");
         //obs.Obs.ToList().ForEach(i => Debug.Log(i.ToString()));
+        if (neos_do_recording)
+        {
+            float[] side_info = obs.SideInfo.ToArray();
+            demo_file_writer.WriteLine(String.Join(",", side_info.Select((x) => x.ToString())));
+        }
         float reward = obs.Reward;
         //obs.Obs;
         //Debug.Log("Reward " + reward.ToString());
@@ -150,6 +205,12 @@ public class TestAgent : Agent
         //Debug.Log("ACTIONS");
         //vectorAction.ToList().ForEach(i => Debug.Log(i.ToString()));
         //Debug.Log("Total steps: " + StepCount.ToString());
+        //vectorAction[0] = 0;
+        //vectorAction[1] = 0;
+        //vectorAction[2] = 0;
+        //vectorAction[9] = 0;
+        //vectorAction[10] = 0;
+        //vectorAction[11] = 0;
         Response res;
         if (should_reset || StepCount >= 1500)
         {
@@ -169,7 +230,21 @@ public class TestAgent : Agent
 
     public override void OnEpisodeBegin()
     {
-        Response res = client.ResetAgent(new Empty());
+        Response res;
+        float[] observations = new float[obs_dim];
+        if (has_loaded_demo)
+        {
+            int idx = rnd.Next(0,demo_obss.Length-1);
+            float[] demo_obs = demo_obss[idx];
+            observations = demo_obs;
+        }
+        else
+        {
+            Array.Clear(observations, 0, observations.Length);
+        }
+        //Debug.Log("hello");
+        //Debug.Log(observations[0]);
+        res = client.ResetAgent(new BareObs { Obs = { observations } });
         if (res.Res != "Ok")
             Debug.Log(res.Res);
     }
@@ -186,6 +261,8 @@ public class TestAgent : Agent
 
     private void OnApplicationQuit()
     {
+        if (neos_do_recording)
+            demo_file_writer.Close();
         var res = client.StopConnection(new Empty());
         if (res.Res != "Ok")
             Debug.Log(res.Res);

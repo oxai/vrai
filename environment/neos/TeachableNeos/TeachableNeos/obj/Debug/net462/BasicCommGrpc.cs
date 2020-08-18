@@ -16,6 +16,7 @@ public static partial class DataComm
   static readonly grpc::Marshaller<global::TextureObservation> __Marshaller_TextureObservation = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::TextureObservation.Parser.ParseFrom);
   static readonly grpc::Marshaller<global::NeosAction> __Marshaller_NeosAction = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::NeosAction.Parser.ParseFrom);
   static readonly grpc::Marshaller<global::Response> __Marshaller_Response = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Response.Parser.ParseFrom);
+  static readonly grpc::Marshaller<global::BareObs> __Marshaller_BareObs = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::BareObs.Parser.ParseFrom);
   static readonly grpc::Marshaller<global::ConnectionParams> __Marshaller_ConnectionParams = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ConnectionParams.Parser.ParseFrom);
   static readonly grpc::Marshaller<global::ConnectionConfig> __Marshaller_ConnectionConfig = grpc::Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::ConnectionConfig.Parser.ParseFrom);
 
@@ -40,11 +41,11 @@ public static partial class DataComm
       __Marshaller_NeosAction,
       __Marshaller_Response);
 
-  static readonly grpc::Method<global::Empty, global::Response> __Method_ResetAgent = new grpc::Method<global::Empty, global::Response>(
+  static readonly grpc::Method<global::BareObs, global::Response> __Method_ResetAgent = new grpc::Method<global::BareObs, global::Response>(
       grpc::MethodType.Unary,
       __ServiceName,
       "ResetAgent",
-      __Marshaller_Empty,
+      __Marshaller_BareObs,
       __Marshaller_Response);
 
   static readonly grpc::Method<global::ConnectionParams, global::ConnectionConfig> __Method_EstablishConnection = new grpc::Method<global::ConnectionParams, global::ConnectionConfig>(
@@ -99,7 +100,7 @@ public static partial class DataComm
       throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
     }
 
-    public virtual global::System.Threading.Tasks.Task<global::Response> ResetAgent(global::Empty request, grpc::ServerCallContext context)
+    public virtual global::System.Threading.Tasks.Task<global::Response> ResetAgent(global::BareObs request, grpc::ServerCallContext context)
     {
       throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
     }
@@ -220,19 +221,19 @@ public static partial class DataComm
     {
       return CallInvoker.AsyncUnaryCall(__Method_SendAct, null, options, request);
     }
-    public virtual global::Response ResetAgent(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    public virtual global::Response ResetAgent(global::BareObs request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
     {
       return ResetAgent(request, new grpc::CallOptions(headers, deadline, cancellationToken));
     }
-    public virtual global::Response ResetAgent(global::Empty request, grpc::CallOptions options)
+    public virtual global::Response ResetAgent(global::BareObs request, grpc::CallOptions options)
     {
       return CallInvoker.BlockingUnaryCall(__Method_ResetAgent, null, options, request);
     }
-    public virtual grpc::AsyncUnaryCall<global::Response> ResetAgentAsync(global::Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+    public virtual grpc::AsyncUnaryCall<global::Response> ResetAgentAsync(global::BareObs request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
     {
       return ResetAgentAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
     }
-    public virtual grpc::AsyncUnaryCall<global::Response> ResetAgentAsync(global::Empty request, grpc::CallOptions options)
+    public virtual grpc::AsyncUnaryCall<global::Response> ResetAgentAsync(global::BareObs request, grpc::CallOptions options)
     {
       return CallInvoker.AsyncUnaryCall(__Method_ResetAgent, null, options, request);
     }
@@ -314,7 +315,7 @@ public static partial class DataComm
     serviceBinder.AddMethod(__Method_GetObs, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Empty, global::NeosObservation>(serviceImpl.GetObs));
     serviceBinder.AddMethod(__Method_GetTextureObs, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Empty, global::TextureObservation>(serviceImpl.GetTextureObs));
     serviceBinder.AddMethod(__Method_SendAct, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::NeosAction, global::Response>(serviceImpl.SendAct));
-    serviceBinder.AddMethod(__Method_ResetAgent, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Empty, global::Response>(serviceImpl.ResetAgent));
+    serviceBinder.AddMethod(__Method_ResetAgent, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::BareObs, global::Response>(serviceImpl.ResetAgent));
     serviceBinder.AddMethod(__Method_EstablishConnection, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::ConnectionParams, global::ConnectionConfig>(serviceImpl.EstablishConnection));
     serviceBinder.AddMethod(__Method_StopConnection, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Empty, global::Response>(serviceImpl.StopConnection));
     serviceBinder.AddMethod(__Method_GatherAct, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::Empty, global::NeosAction>(serviceImpl.GatherAct));

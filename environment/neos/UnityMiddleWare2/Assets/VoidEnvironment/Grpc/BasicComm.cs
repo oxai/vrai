@@ -24,30 +24,33 @@ public static partial class BasicCommReflection {
         string.Concat(
           "ChBiYXNpY19jb21tLnByb3RvIgcKBUVtcHR5IigKEENvbm5lY3Rpb25QYXJh",
           "bXMSFAoMaXNfcmVjb3JkaW5nGAEgASgIIhcKCFJlc3BvbnNlEgsKA3JlcxgB",
-          "IAEoCSKmAQoQQ29ubmVjdGlvbkNvbmZpZxISCgphY3Rpb25fZGltGAEgASgF",
+          "IAEoCSK5AQoQQ29ubmVjdGlvbkNvbmZpZxISCgphY3Rpb25fZGltGAEgASgF",
           "Eg8KB29ic19kaW0YAiABKAUSEwoLdmlzX29ic19kaW0YAyABKAUSFAoMZG9f",
           "cmVjb3JkaW5nGAQgASgIEhMKC2FnZW50X2luZGV4GAUgASgFEhUKDW51bWJl",
-          "cl9hZ2VudHMYBiABKAUSFgoDcmVzGAcgASgLMgkuUmVzcG9uc2UiHAoKTmVv",
-          "c0FjdGlvbhIOCgZhY3Rpb24YASADKAIiJgoSVGV4dHVyZU9ic2VydmF0aW9u",
-          "EhAKCHRleHR1cmVzGAEgAygMIkQKD05lb3NPYnNlcnZhdGlvbhILCgNvYnMY",
-          "ASADKAISDgoGcmV3YXJkGAIgASgCEhQKDHNob3VsZF9yZXNldBgDIAEoCDKk",
-          "AgoIRGF0YUNvbW0SIgoGR2V0T2JzEgYuRW1wdHkaEC5OZW9zT2JzZXJ2YXRp",
-          "b24SLAoNR2V0VGV4dHVyZU9icxIGLkVtcHR5GhMuVGV4dHVyZU9ic2VydmF0",
-          "aW9uEiEKB1NlbmRBY3QSCy5OZW9zQWN0aW9uGgkuUmVzcG9uc2USHwoKUmVz",
-          "ZXRBZ2VudBIGLkVtcHR5GgkuUmVzcG9uc2USOwoTRXN0YWJsaXNoQ29ubmVj",
-          "dGlvbhIRLkNvbm5lY3Rpb25QYXJhbXMaES5Db25uZWN0aW9uQ29uZmlnEiMK",
-          "DlN0b3BDb25uZWN0aW9uEgYuRW1wdHkaCS5SZXNwb25zZRIgCglHYXRoZXJB",
-          "Y3QSBi5FbXB0eRoLLk5lb3NBY3Rpb25iBnByb3RvMw=="));
+          "cl9hZ2VudHMYBiABKAUSEQoJZGVtb19maWxlGAcgASgJEhYKA3JlcxgIIAEo",
+          "CzIJLlJlc3BvbnNlIhwKCk5lb3NBY3Rpb24SDgoGYWN0aW9uGAEgAygCIiYK",
+          "ElRleHR1cmVPYnNlcnZhdGlvbhIQCgh0ZXh0dXJlcxgBIAMoDCIWCgdCYXJl",
+          "T2JzEgsKA29icxgBIAMoAiJXCg9OZW9zT2JzZXJ2YXRpb24SCwoDb2JzGAEg",
+          "AygCEhEKCXNpZGVfaW5mbxgCIAMoAhIOCgZyZXdhcmQYAyABKAISFAoMc2hv",
+          "dWxkX3Jlc2V0GAQgASgIMqYCCghEYXRhQ29tbRIiCgZHZXRPYnMSBi5FbXB0",
+          "eRoQLk5lb3NPYnNlcnZhdGlvbhIsCg1HZXRUZXh0dXJlT2JzEgYuRW1wdHka",
+          "Ey5UZXh0dXJlT2JzZXJ2YXRpb24SIQoHU2VuZEFjdBILLk5lb3NBY3Rpb24a",
+          "CS5SZXNwb25zZRIhCgpSZXNldEFnZW50EgguQmFyZU9icxoJLlJlc3BvbnNl",
+          "EjsKE0VzdGFibGlzaENvbm5lY3Rpb24SES5Db25uZWN0aW9uUGFyYW1zGhEu",
+          "Q29ubmVjdGlvbkNvbmZpZxIjCg5TdG9wQ29ubmVjdGlvbhIGLkVtcHR5Ggku",
+          "UmVzcG9uc2USIAoJR2F0aGVyQWN0EgYuRW1wdHkaCy5OZW9zQWN0aW9uYgZw",
+          "cm90bzM="));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
           new pbr::GeneratedClrTypeInfo(typeof(global::Empty), global::Empty.Parser, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionParams), global::ConnectionParams.Parser, new[]{ "IsRecording" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::Response), global::Response.Parser, new[]{ "Res" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionConfig), global::ConnectionConfig.Parser, new[]{ "ActionDim", "ObsDim", "VisObsDim", "DoRecording", "AgentIndex", "NumberAgents", "Res" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionConfig), global::ConnectionConfig.Parser, new[]{ "ActionDim", "ObsDim", "VisObsDim", "DoRecording", "AgentIndex", "NumberAgents", "DemoFile", "Res" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NeosAction), global::NeosAction.Parser, new[]{ "Action" }, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::TextureObservation), global::TextureObservation.Parser, new[]{ "Textures" }, null, null, null),
-          new pbr::GeneratedClrTypeInfo(typeof(global::NeosObservation), global::NeosObservation.Parser, new[]{ "Obs", "Reward", "ShouldReset" }, null, null, null)
+          new pbr::GeneratedClrTypeInfo(typeof(global::BareObs), global::BareObs.Parser, new[]{ "Obs" }, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::NeosObservation), global::NeosObservation.Parser, new[]{ "Obs", "SideInfo", "Reward", "ShouldReset" }, null, null, null)
         }));
   }
   #endregion
@@ -444,6 +447,7 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
     doRecording_ = other.doRecording_;
     agentIndex_ = other.agentIndex_;
     numberAgents_ = other.numberAgents_;
+    demoFile_ = other.demoFile_;
     Res = other.res_ != null ? other.Res.Clone() : null;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
   }
@@ -519,8 +523,19 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
     }
   }
 
+  /// <summary>Field number for the "demo_file" field.</summary>
+  public const int DemoFileFieldNumber = 7;
+  private string demoFile_ = "";
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public string DemoFile {
+    get { return demoFile_; }
+    set {
+      demoFile_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+    }
+  }
+
   /// <summary>Field number for the "res" field.</summary>
-  public const int ResFieldNumber = 7;
+  public const int ResFieldNumber = 8;
   private global::Response res_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public global::Response Res {
@@ -549,6 +564,7 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
     if (DoRecording != other.DoRecording) return false;
     if (AgentIndex != other.AgentIndex) return false;
     if (NumberAgents != other.NumberAgents) return false;
+    if (DemoFile != other.DemoFile) return false;
     if (!object.Equals(Res, other.Res)) return false;
     return Equals(_unknownFields, other._unknownFields);
   }
@@ -562,6 +578,7 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
     if (DoRecording != false) hash ^= DoRecording.GetHashCode();
     if (AgentIndex != 0) hash ^= AgentIndex.GetHashCode();
     if (NumberAgents != 0) hash ^= NumberAgents.GetHashCode();
+    if (DemoFile.Length != 0) hash ^= DemoFile.GetHashCode();
     if (res_ != null) hash ^= Res.GetHashCode();
     if (_unknownFields != null) {
       hash ^= _unknownFields.GetHashCode();
@@ -600,8 +617,12 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
       output.WriteRawTag(48);
       output.WriteInt32(NumberAgents);
     }
-    if (res_ != null) {
+    if (DemoFile.Length != 0) {
       output.WriteRawTag(58);
+      output.WriteString(DemoFile);
+    }
+    if (res_ != null) {
+      output.WriteRawTag(66);
       output.WriteMessage(Res);
     }
     if (_unknownFields != null) {
@@ -629,6 +650,9 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
     }
     if (NumberAgents != 0) {
       size += 1 + pb::CodedOutputStream.ComputeInt32Size(NumberAgents);
+    }
+    if (DemoFile.Length != 0) {
+      size += 1 + pb::CodedOutputStream.ComputeStringSize(DemoFile);
     }
     if (res_ != null) {
       size += 1 + pb::CodedOutputStream.ComputeMessageSize(Res);
@@ -661,6 +685,9 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
     }
     if (other.NumberAgents != 0) {
       NumberAgents = other.NumberAgents;
+    }
+    if (other.DemoFile.Length != 0) {
+      DemoFile = other.DemoFile;
     }
     if (other.res_ != null) {
       if (res_ == null) {
@@ -704,6 +731,10 @@ public sealed partial class ConnectionConfig : pb::IMessage<ConnectionConfig> {
           break;
         }
         case 58: {
+          DemoFile = input.ReadString();
+          break;
+        }
+        case 66: {
           if (res_ == null) {
             res_ = new global::Response();
           }
@@ -959,6 +990,128 @@ public sealed partial class TextureObservation : pb::IMessage<TextureObservation
 
 }
 
+public sealed partial class BareObs : pb::IMessage<BareObs> {
+  private static readonly pb::MessageParser<BareObs> _parser = new pb::MessageParser<BareObs>(() => new BareObs());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pb::MessageParser<BareObs> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::BasicCommReflection.Descriptor.MessageTypes[6]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public BareObs() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public BareObs(BareObs other) : this() {
+    obs_ = other.obs_.Clone();
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public BareObs Clone() {
+    return new BareObs(this);
+  }
+
+  /// <summary>Field number for the "obs" field.</summary>
+  public const int ObsFieldNumber = 1;
+  private static readonly pb::FieldCodec<float> _repeated_obs_codec
+      = pb::FieldCodec.ForFloat(10);
+  private readonly pbc::RepeatedField<float> obs_ = new pbc::RepeatedField<float>();
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public pbc::RepeatedField<float> Obs {
+    get { return obs_; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override bool Equals(object other) {
+    return Equals(other as BareObs);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool Equals(BareObs other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if(!obs_.Equals(other.obs_)) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override int GetHashCode() {
+    int hash = 1;
+    hash ^= obs_.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void WriteTo(pb::CodedOutputStream output) {
+    obs_.WriteTo(output, _repeated_obs_codec);
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int CalculateSize() {
+    int size = 0;
+    size += obs_.CalculateSize(_repeated_obs_codec);
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(BareObs other) {
+    if (other == null) {
+      return;
+    }
+    obs_.Add(other.obs_);
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(pb::CodedInputStream input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 10:
+        case 13: {
+          obs_.AddEntriesFrom(input, _repeated_obs_codec);
+          break;
+        }
+      }
+    }
+  }
+
+}
+
 public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
   private static readonly pb::MessageParser<NeosObservation> _parser = new pb::MessageParser<NeosObservation>(() => new NeosObservation());
   private pb::UnknownFieldSet _unknownFields;
@@ -967,7 +1120,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::BasicCommReflection.Descriptor.MessageTypes[6]; }
+    get { return global::BasicCommReflection.Descriptor.MessageTypes[7]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -985,6 +1138,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public NeosObservation(NeosObservation other) : this() {
     obs_ = other.obs_.Clone();
+    sideInfo_ = other.sideInfo_.Clone();
     reward_ = other.reward_;
     shouldReset_ = other.shouldReset_;
     _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -1005,8 +1159,18 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
     get { return obs_; }
   }
 
+  /// <summary>Field number for the "side_info" field.</summary>
+  public const int SideInfoFieldNumber = 2;
+  private static readonly pb::FieldCodec<float> _repeated_sideInfo_codec
+      = pb::FieldCodec.ForFloat(18);
+  private readonly pbc::RepeatedField<float> sideInfo_ = new pbc::RepeatedField<float>();
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public pbc::RepeatedField<float> SideInfo {
+    get { return sideInfo_; }
+  }
+
   /// <summary>Field number for the "reward" field.</summary>
-  public const int RewardFieldNumber = 2;
+  public const int RewardFieldNumber = 3;
   private float reward_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public float Reward {
@@ -1017,7 +1181,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
   }
 
   /// <summary>Field number for the "should_reset" field.</summary>
-  public const int ShouldResetFieldNumber = 3;
+  public const int ShouldResetFieldNumber = 4;
   private bool shouldReset_;
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public bool ShouldReset {
@@ -1041,6 +1205,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
       return true;
     }
     if(!obs_.Equals(other.obs_)) return false;
+    if(!sideInfo_.Equals(other.sideInfo_)) return false;
     if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Reward, other.Reward)) return false;
     if (ShouldReset != other.ShouldReset) return false;
     return Equals(_unknownFields, other._unknownFields);
@@ -1050,6 +1215,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
   public override int GetHashCode() {
     int hash = 1;
     hash ^= obs_.GetHashCode();
+    hash ^= sideInfo_.GetHashCode();
     if (Reward != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Reward);
     if (ShouldReset != false) hash ^= ShouldReset.GetHashCode();
     if (_unknownFields != null) {
@@ -1066,12 +1232,13 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public void WriteTo(pb::CodedOutputStream output) {
     obs_.WriteTo(output, _repeated_obs_codec);
+    sideInfo_.WriteTo(output, _repeated_sideInfo_codec);
     if (Reward != 0F) {
-      output.WriteRawTag(21);
+      output.WriteRawTag(29);
       output.WriteFloat(Reward);
     }
     if (ShouldReset != false) {
-      output.WriteRawTag(24);
+      output.WriteRawTag(32);
       output.WriteBool(ShouldReset);
     }
     if (_unknownFields != null) {
@@ -1083,6 +1250,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
   public int CalculateSize() {
     int size = 0;
     size += obs_.CalculateSize(_repeated_obs_codec);
+    size += sideInfo_.CalculateSize(_repeated_sideInfo_codec);
     if (Reward != 0F) {
       size += 1 + 4;
     }
@@ -1101,6 +1269,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
       return;
     }
     obs_.Add(other.obs_);
+    sideInfo_.Add(other.sideInfo_);
     if (other.Reward != 0F) {
       Reward = other.Reward;
     }
@@ -1123,11 +1292,16 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
           obs_.AddEntriesFrom(input, _repeated_obs_codec);
           break;
         }
+        case 18:
         case 21: {
+          sideInfo_.AddEntriesFrom(input, _repeated_sideInfo_codec);
+          break;
+        }
+        case 29: {
           Reward = input.ReadFloat();
           break;
         }
-        case 24: {
+        case 32: {
           ShouldReset = input.ReadBool();
           break;
         }

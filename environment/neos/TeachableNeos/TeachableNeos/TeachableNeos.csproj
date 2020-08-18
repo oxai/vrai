@@ -2,6 +2,7 @@
 
       <PropertyGroup>
         <TargetFramework>net462</TargetFramework>
+        <Platforms>AnyCPU;x64</Platforms>
       </PropertyGroup>
 
     <ItemGroup>
@@ -16,11 +17,15 @@
 
     <ItemGroup>
       <Reference Include="BaseX">
-        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\NeosVR\HeadlessClient\BaseX.dll</HintPath>
+        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Neos_Data\Managed\BaseX.dll</HintPath>
       </Reference>
       <Reference Include="FrooxEngine">
-        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\NeosVR\HeadlessClient\FrooxEngine.dll</HintPath>
+        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\NeosVR\Neos_Data\Managed\FrooxEngine.dll</HintPath>
       </Reference>
     </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="copy /Y &quot;$(TargetDir)\grpc_csharp_ext.x64.dll&quot; &quot;$(TargetDir)\grpc_csharp_ext.dll&quot;" />
+    </Target>
     
 </Project>

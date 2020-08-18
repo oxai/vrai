@@ -29,15 +29,16 @@ public static partial class BasicCommReflection {
           "cmVjb3JkaW5nGAQgASgIEhMKC2FnZW50X2luZGV4GAUgASgFEhUKDW51bWJl",
           "cl9hZ2VudHMYBiABKAUSFgoDcmVzGAcgASgLMgkuUmVzcG9uc2UiHAoKTmVv",
           "c0FjdGlvbhIOCgZhY3Rpb24YASADKAIiJgoSVGV4dHVyZU9ic2VydmF0aW9u",
-          "EhAKCHRleHR1cmVzGAEgAygMIkQKD05lb3NPYnNlcnZhdGlvbhILCgNvYnMY",
-          "ASADKAISDgoGcmV3YXJkGAIgASgCEhQKDHNob3VsZF9yZXNldBgDIAEoCDKk",
-          "AgoIRGF0YUNvbW0SIgoGR2V0T2JzEgYuRW1wdHkaEC5OZW9zT2JzZXJ2YXRp",
-          "b24SLAoNR2V0VGV4dHVyZU9icxIGLkVtcHR5GhMuVGV4dHVyZU9ic2VydmF0",
-          "aW9uEiEKB1NlbmRBY3QSCy5OZW9zQWN0aW9uGgkuUmVzcG9uc2USHwoKUmVz",
-          "ZXRBZ2VudBIGLkVtcHR5GgkuUmVzcG9uc2USOwoTRXN0YWJsaXNoQ29ubmVj",
-          "dGlvbhIRLkNvbm5lY3Rpb25QYXJhbXMaES5Db25uZWN0aW9uQ29uZmlnEiMK",
-          "DlN0b3BDb25uZWN0aW9uEgYuRW1wdHkaCS5SZXNwb25zZRIgCglHYXRoZXJB",
-          "Y3QSBi5FbXB0eRoLLk5lb3NBY3Rpb25iBnByb3RvMw=="));
+          "EhAKCHRleHR1cmVzGAEgAygMIhYKB0JhcmVPYnMSCwoDb2JzGAEgAygCIkQK",
+          "D05lb3NPYnNlcnZhdGlvbhILCgNvYnMYASADKAISDgoGcmV3YXJkGAIgASgC",
+          "EhQKDHNob3VsZF9yZXNldBgDIAEoCDKmAgoIRGF0YUNvbW0SIgoGR2V0T2Jz",
+          "EgYuRW1wdHkaEC5OZW9zT2JzZXJ2YXRpb24SLAoNR2V0VGV4dHVyZU9icxIG",
+          "LkVtcHR5GhMuVGV4dHVyZU9ic2VydmF0aW9uEiEKB1NlbmRBY3QSCy5OZW9z",
+          "QWN0aW9uGgkuUmVzcG9uc2USIQoKUmVzZXRBZ2VudBIILkJhcmVPYnMaCS5S",
+          "ZXNwb25zZRI7ChNFc3RhYmxpc2hDb25uZWN0aW9uEhEuQ29ubmVjdGlvblBh",
+          "cmFtcxoRLkNvbm5lY3Rpb25Db25maWcSIwoOU3RvcENvbm5lY3Rpb24SBi5F",
+          "bXB0eRoJLlJlc3BvbnNlEiAKCUdhdGhlckFjdBIGLkVtcHR5GgsuTmVvc0Fj",
+          "dGlvbmIGcHJvdG8z"));
     descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
         new pbr::FileDescriptor[] { },
         new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -47,6 +48,7 @@ public static partial class BasicCommReflection {
           new pbr::GeneratedClrTypeInfo(typeof(global::ConnectionConfig), global::ConnectionConfig.Parser, new[]{ "ActionDim", "ObsDim", "VisObsDim", "DoRecording", "AgentIndex", "NumberAgents", "Res" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NeosAction), global::NeosAction.Parser, new[]{ "Action" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::TextureObservation), global::TextureObservation.Parser, new[]{ "Textures" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(typeof(global::BareObs), global::BareObs.Parser, new[]{ "Obs" }, null, null, null, null),
           new pbr::GeneratedClrTypeInfo(typeof(global::NeosObservation), global::NeosObservation.Parser, new[]{ "Obs", "Reward", "ShouldReset" }, null, null, null, null)
         }));
   }
@@ -959,6 +961,128 @@ public sealed partial class TextureObservation : pb::IMessage<TextureObservation
 
 }
 
+public sealed partial class BareObs : pb::IMessage<BareObs> {
+  private static readonly pb::MessageParser<BareObs> _parser = new pb::MessageParser<BareObs>(() => new BareObs());
+  private pb::UnknownFieldSet _unknownFields;
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pb::MessageParser<BareObs> Parser { get { return _parser; } }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public static pbr::MessageDescriptor Descriptor {
+    get { return global::BasicCommReflection.Descriptor.MessageTypes[6]; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  pbr::MessageDescriptor pb::IMessage.Descriptor {
+    get { return Descriptor; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public BareObs() {
+    OnConstruction();
+  }
+
+  partial void OnConstruction();
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public BareObs(BareObs other) : this() {
+    obs_ = other.obs_.Clone();
+    _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public BareObs Clone() {
+    return new BareObs(this);
+  }
+
+  /// <summary>Field number for the "obs" field.</summary>
+  public const int ObsFieldNumber = 1;
+  private static readonly pb::FieldCodec<float> _repeated_obs_codec
+      = pb::FieldCodec.ForFloat(10);
+  private readonly pbc::RepeatedField<float> obs_ = new pbc::RepeatedField<float>();
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public pbc::RepeatedField<float> Obs {
+    get { return obs_; }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override bool Equals(object other) {
+    return Equals(other as BareObs);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public bool Equals(BareObs other) {
+    if (ReferenceEquals(other, null)) {
+      return false;
+    }
+    if (ReferenceEquals(other, this)) {
+      return true;
+    }
+    if(!obs_.Equals(other.obs_)) return false;
+    return Equals(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override int GetHashCode() {
+    int hash = 1;
+    hash ^= obs_.GetHashCode();
+    if (_unknownFields != null) {
+      hash ^= _unknownFields.GetHashCode();
+    }
+    return hash;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public override string ToString() {
+    return pb::JsonFormatter.ToDiagnosticString(this);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void WriteTo(pb::CodedOutputStream output) {
+    obs_.WriteTo(output, _repeated_obs_codec);
+    if (_unknownFields != null) {
+      _unknownFields.WriteTo(output);
+    }
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public int CalculateSize() {
+    int size = 0;
+    size += obs_.CalculateSize(_repeated_obs_codec);
+    if (_unknownFields != null) {
+      size += _unknownFields.CalculateSize();
+    }
+    return size;
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(BareObs other) {
+    if (other == null) {
+      return;
+    }
+    obs_.Add(other.obs_);
+    _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+  public void MergeFrom(pb::CodedInputStream input) {
+    uint tag;
+    while ((tag = input.ReadTag()) != 0) {
+      switch(tag) {
+        default:
+          _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+          break;
+        case 10:
+        case 13: {
+          obs_.AddEntriesFrom(input, _repeated_obs_codec);
+          break;
+        }
+      }
+    }
+  }
+
+}
+
 public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
   private static readonly pb::MessageParser<NeosObservation> _parser = new pb::MessageParser<NeosObservation>(() => new NeosObservation());
   private pb::UnknownFieldSet _unknownFields;
@@ -967,7 +1091,7 @@ public sealed partial class NeosObservation : pb::IMessage<NeosObservation> {
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
   public static pbr::MessageDescriptor Descriptor {
-    get { return global::BasicCommReflection.Descriptor.MessageTypes[6]; }
+    get { return global::BasicCommReflection.Descriptor.MessageTypes[7]; }
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

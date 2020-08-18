@@ -6,7 +6,7 @@ service DataComm {
   rpc GetObs(Empty) returns (NeosObservation);
   rpc GetTextureObs(Empty) returns (TextureObservation);
   rpc SendAct(NeosAction) returns (Response);
-  rpc ResetAgent(Empty) returns (Response);
+  rpc ResetAgent(BareObs) returns (Response);
   rpc EstablishConnection(ConnectionParams) returns (ConnectionConfig);
   rpc StopConnection(Empty) returns (Response);
   rpc GatherAct(Empty) returns (NeosAction);
@@ -29,7 +29,8 @@ message ConnectionConfig {
     bool do_recording = 4;
     int32 agent_index = 5;
     int32 number_agents = 6;
-    Response res = 7;
+	string demo_file = 7;
+    Response res = 8;
 }
 
 message NeosAction {
@@ -40,8 +41,13 @@ message TextureObservation {
 	repeated bytes textures = 1;
 }
 
+message BareObs {
+	repeated float obs = 1;
+}
+
 message NeosObservation {
 	repeated float obs = 1;
-	float reward = 2;
-	bool should_reset = 3;
+	repeated float side_info = 2;
+	float reward = 3;
+	bool should_reset = 4;
 }

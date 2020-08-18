@@ -22,7 +22,7 @@ namespace TeachableNeos
         {
             return Task.FromResult(new NeosObservation
             {
-                Obs = {node.obs_tmp}, Reward = node.reward_tmp, ShouldReset = node.should_reset
+                Obs = {node.obs_tmp}, SideInfo = { node.side_info_tmp }, Reward = node.reward_tmp, ShouldReset = node.should_reset
             });
         }
 
@@ -101,7 +101,7 @@ namespace TeachableNeos
             }
         }
 
-        public override Task<Response> ResetAgent(Empty f, ServerCallContext context)
+        public override Task<Response> ResetAgent(BareObs f, ServerCallContext context)
         {
 
             try
@@ -111,6 +111,7 @@ namespace TeachableNeos
                 node.have_reset = true;
                 node.NeosUpdateEvent.Wait();
                 node.NeosUpdateEvent.Reset();
+                f.Obs.CopyTo(node.reset_obs_tmp, 0);
                 return Task.FromResult(new Response { Res = "Ok" });
             }
             catch (Exception exception)
@@ -135,6 +136,7 @@ namespace TeachableNeos
                                                               DoRecording = node.recording_demo_tmp,
                                                               AgentIndex = node.copy_idx_tmp,
                                                               NumberAgents = node.number_agents_tmp,
+                                                              DemoFile = node.demo_file_tmp,
                                                               Res = res,
                                                               VisObsDim = node.vis_obs_dim});
             }

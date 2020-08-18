@@ -46,7 +46,41 @@ NeosAgent_test:
             strength: 1.0
             gamma: 0.99
 
-NeosAgent:
+NeosAgent_betali:
+    max_steps: 1.0e10
+    batch_size: 1024
+    buffer_size: 2048
+    lambd: 0.99
+    epsilon: 0.2
+    num_epoch: 2
+    learning_rate: 3.0e-4
+    time_horizon: 25
+    beta: 1.0e-3
+    hidden_units: 128
+    summary_freq: 1000
+    num_layers: 2
+    use_recurrent: false
+    sequence_length: 2
+    vis_encode_type: simple
+    learning_rate_schedule: linear
+    behavioral_cloning:
+        demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\betatest2_13.demo
+        strength: 0.9
+        batch_size: 32
+        steps: 1000000
+        samples_per_update: 0
+        num_epoch: 2000
+    reward_signals:
+        gail:
+            strength: 1.0
+            gamma: 0.9
+            use_actions: true
+            use_vail: false
+            encoding_size: 64
+            demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\betatest2_13.demo
+            learning_rate: 3.0e-5
+            
+NeosAgent_betali3:
     max_steps: 1.0e10
     batch_size: 1024
     buffer_size: 10024
@@ -55,31 +89,31 @@ NeosAgent:
     num_epoch: 10
     learning_rate: 5.0e-6
     time_horizon: 50
-    beta: -1.0e-3
+    beta: 1.0e-4
     hidden_units: 2048
     summary_freq: 1000
     num_layers: 2
-    use_recurrent: false
-    sequence_length: 5
+    use_recurrent: true
+    sequence_length: 10
     vis_encode_type: simple
     learning_rate_schedule: linear
     use_latent: false
     latent_size: 3
     behavioral_cloning:
-        demo_path: '..\..\environment\neos\built_env\Unity Environment_Data\Demonstrations\betatest2.demo'
-        strength: 0.4
+        demo_path: '..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\betatest2_13.demo'
+        strength: 1.0
         batch_size: 1024
-        steps: 100000
-        samples_per_update: 1024
-        num_epoch: 1
+        steps: 3000000
+        samples_per_update: 0
+        num_epoch: 2000
     reward_signals:
         gail:
-            strength: 0.9
+            strength: 0.0
             gamma: 0.9
             use_actions: true
             use_vail: true
             encoding_size: 512
-            demo_path: '..\..\environment\neos\built_env\Unity Environment_Data\Demonstrations\betatest2.demo'
+            demo_path: '..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\betatest2_13.demo'
             learning_rate: 1.0e-6
 
 NeosAgent_betali2:

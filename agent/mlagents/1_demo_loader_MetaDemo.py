@@ -1,5 +1,7 @@
 import logging
 import os
+print("hi")
+import sys
 from typing import List, Tuple
 import numpy as np
 from mlagents.trainers.buffer import AgentBuffer
@@ -188,19 +190,34 @@ def load_demonstration(
 #%%
 
 print("#########################################")
-group_spec, info_action_pairs, total_expected = load_demonstration("..\\..\\environment\\neos\\built_env\\Unity Environment_Data\\Demonstrations\\betatest2.demo")
-group_spec, info_action_pairs, total_expected = load_demonstration("D:\code\\temp\\built_env\\Unity Environment_Data\\Demonstrations\\betatest2_4.demo")
-group_spec, info_action_pairs, total_expected = load_demonstration("D:\code\\temp\\built_env\\Unity Environment_Data\\Demonstrations\\older\\betatest2_3.demo")
+demo_file=sys.argv[1]
+group_spec, info_action_pairs, total_expected = load_demonstration(demo_file)
+# group_spec, info_action_pairs, total_expected = load_demonstration("..\\..\\environment\\neos\\built_env\\Unity Environment_Data\\Demonstrations\\betatest2.demo")
+# group_spec, info_action_pairs, total_expected = load_demonstration("D:\code\\temp\\built_env\\Unity Environment_Data\\Demonstrations\\betatest2_4.demo")
+# group_spec, info_action_pairs, total_expected = load_demonstration("D:\code\\temp\\built_env\\Unity Environment_Data\\Demonstrations\\older\\betatest2_3.demo")
 # group_spec, info_action_pairs, total_expected = load_demonstration("D:\code\\temp\\built_env\\Unity Environment_Data\\Demonstrations\\older\\betatest2_0.demo")
 print(group_spec)
 group_spec
 print("#######")
-print( info_action_pairs)
-type(info_action_pairs)
-len(info_action_pairs)
-info_action_pairs[0]
+print("Example obs-action pair")
+print(info_action_pairs[0])
+print("#######")
+# type(info_action_pairs)
+# len(info_action_pairs)
+# info_action_pairs[0]
 
-info_action_pairs[100]
+# type(info_action_pairs[0])
+
+# list(info_action_pairs[0].agent_info.observations[1].float_data.data)[0])
+
+float_obs=[list(pair.agent_info.observations[1].float_data.data) for pair in info_action_pairs]
+import json
+open("..\\..\\environment\\neos\\built_env\\Unity Environment_Data\\Demonstrations\\current_demo_floats.json","w").write(json.dumps(float_obs))
+open("..\\..\\environment\\neos\\UnityMiddleWare2\\Assets\\Demonstrations\\current_demo_floats.json","w").write(json.dumps(float_obs))
+# json.load(open("test.json","r"))
+# info_action_pairs[0].agent_info.observations[0].compressed_data
+
+# info_action_pairs[100]
 
 print("#######")
 print( total_expected)
