@@ -1,0 +1,162 @@
+Mono path[0] = 'D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Managed'
+Mono config path = 'D:/code/vrai/environment/neos/built_env/MonoBleedingEdge/etc'
+PlayerConnection initialized from D:/code/vrai/environment/neos/built_env/Unity Environment_Data (debug = 0)
+PlayerConnection initialized network socket : 0.0.0.0 55357
+Multi-casting "[IP] 192.168.50.172 [Port] 55357 [Flags] 2 [Guid] 1066201173 [EditorId] 225712597 [Version] 1048832 [Id] WindowsPlayer(DESKTOP-EA9HHQB) [Debug] 0 [PackageName] WindowsPlayer [ProjectName] Unity Environment" to [225.0.0.222:54997]...
+Started listening to [0.0.0.0:55357]
+PlayerConnection already initialized - listening to [0.0.0.0:55357]
+Initialize engine version: 2019.3.3f1 (7ceaae5f7503)
+[Subsystems] Discovering subsystems at path D:/code/vrai/environment/neos/built_env/Unity Environment_Data/UnitySubsystems
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce GTX 1080 Ti (ID=0x1b06)
+    Vendor:   
+    VRAM:     11127 MB
+    Driver:   26.21.14.4259
+Begin MonoManager ReloadAssembly
+- Completed reload, in  0.209 seconds
+D3D11 device created for Microsoft Media Foundation video decoding.
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 0.752900 ms
+Plugins: Failed to load 'libcoreclr' because one or more of its dependencies could not be loaded.
+Grpc.Core.Internal.UnmanagedLibrary:.ctor(String[])
+Grpc.Core.Internal.NativeExtension:Load()
+Grpc.Core.Internal.NativeExtension:.ctor()
+Grpc.Core.Internal.NativeExtension:Get()
+Grpc.Core.Internal.NativeMethods:Get()
+Grpc.Core.GrpcEnvironment:GrpcNativeInit()
+Grpc.Core.GrpcEnvironment:.ctor()
+Grpc.Core.GrpcEnvironment:AddRef()
+Grpc.Core.Channel:.ctor(String, ChannelCredentials, IEnumerable`1)
+Grpc.Core.Channel:.ctor(String, ChannelCredentials)
+VoidEnvSettingsOverrides:Awake() (at D:\code\vrai\environment\neos\UnityMiddleWare2\Assets\VoidEnvSettingsOverrides.cs:18)
+
+[C:\buildslave\unity\build\Runtime/Misc/Plugins.cpp line 292] 
+(Filename: D:/code/vrai/environment/neos/UnityMiddleWare2/Assets/VoidEnvSettingsOverrides.cs Line: 18)
+
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libcoreclr.so
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libcoreclr.so.dll
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libcoreclr.so
+Plugins: Failed to load 'libdl' because one or more of its dependencies could not be loaded.
+Grpc.Core.Internal.UnmanagedLibrary:.ctor(String[])
+Grpc.Core.Internal.NativeExtension:Load()
+Grpc.Core.Internal.NativeExtension:.ctor()
+Grpc.Core.Internal.NativeExtension:Get()
+Grpc.Core.Internal.NativeMethods:Get()
+Grpc.Core.GrpcEnvironment:GrpcNativeInit()
+Grpc.Core.GrpcEnvironment:.ctor()
+Grpc.Core.GrpcEnvironment:AddRef()
+Grpc.Core.Channel:.ctor(String, ChannelCredentials, IEnumerable`1)
+Grpc.Core.Channel:.ctor(String, ChannelCredentials)
+VoidEnvSettingsOverrides:Awake() (at D:\code\vrai\environment\neos\UnityMiddleWare2\Assets\VoidEnvSettingsOverrides.cs:18)
+
+[C:\buildslave\unity\build\Runtime/Misc/Plugins.cpp line 292] 
+(Filename: D:/code/vrai/environment/neos/UnityMiddleWare2/Assets/VoidEnvSettingsOverrides.cs Line: 18)
+
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libdl.so
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libdl.so.dll
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libdl.so
+Plugins: Failed to load 'libSystem' because one or more of its dependencies could not be loaded.
+Grpc.Core.Internal.UnmanagedLibrary:.ctor(String[])
+Grpc.Core.Internal.NativeExtension:Load()
+Grpc.Core.Internal.NativeExtension:.ctor()
+Grpc.Core.Internal.NativeExtension:Get()
+Grpc.Core.Internal.NativeMethods:Get()
+Grpc.Core.GrpcEnvironment:GrpcNativeInit()
+Grpc.Core.GrpcEnvironment:.ctor()
+Grpc.Core.GrpcEnvironment:AddRef()
+Grpc.Core.Channel:.ctor(String, ChannelCredentials, IEnumerable`1)
+Grpc.Core.Channel:.ctor(String, ChannelCredentials)
+VoidEnvSettingsOverrides:Awake() (at D:\code\vrai\environment\neos\UnityMiddleWare2\Assets\VoidEnvSettingsOverrides.cs:18)
+
+[C:\buildslave\unity\build\Runtime/Misc/Plugins.cpp line 292] 
+(Filename: D:/code/vrai/environment/neos/UnityMiddleWare2/Assets/VoidEnvSettingsOverrides.cs Line: 18)
+
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libSystem.dylib
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libSystem.dylib.dll
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libSystem.dylib
+Plugins: Failed to load 'libcoreclr' because one or more of its dependencies could not be loaded.
+Grpc.Core.Internal.UnmanagedLibrary:GetNativeMethodDelegate(String)
+Grpc.Core.Internal.NativeMethods:GetMethodDelegate(UnmanagedLibrary)
+Grpc.Core.Internal.NativeMethods:.ctor(UnmanagedLibrary)
+Grpc.Core.Internal.NativeExtension:.ctor()
+Grpc.Core.Internal.NativeExtension:Get()
+Grpc.Core.Internal.NativeMethods:Get()
+Grpc.Core.GrpcEnvironment:GrpcNativeInit()
+Grpc.Core.GrpcEnvironment:.ctor()
+Grpc.Core.GrpcEnvironment:AddRef()
+Grpc.Core.Channel:.ctor(String, ChannelCredentials, IEnumerable`1)
+Grpc.Core.Channel:.ctor(String, ChannelCredentials)
+VoidEnvSettingsOverrides:Awake() (at D:\code\vrai\environment\neos\UnityMiddleWare2\Assets\VoidEnvSettingsOverrides.cs:18)
+
+[C:\buildslave\unity\build\Runtime/Misc/Plugins.cpp line 292] 
+(Filename: D:/code/vrai/environment/neos/UnityMiddleWare2/Assets/VoidEnvSettingsOverrides.cs Line: 18)
+
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libcoreclr.so
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libcoreclr.so.dll
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libcoreclr.so
+Plugins: Failed to load 'libdl' because one or more of its dependencies could not be loaded.
+Grpc.Core.Internal.UnmanagedLibrary:GetNativeMethodDelegate(String)
+Grpc.Core.Internal.NativeMethods:GetMethodDelegate(UnmanagedLibrary)
+Grpc.Core.Internal.NativeMethods:.ctor(UnmanagedLibrary)
+Grpc.Core.Internal.NativeExtension:.ctor()
+Grpc.Core.Internal.NativeExtension:Get()
+Grpc.Core.Internal.NativeMethods:Get()
+Grpc.Core.GrpcEnvironment:GrpcNativeInit()
+Grpc.Core.GrpcEnvironment:.ctor()
+Grpc.Core.GrpcEnvironment:AddRef()
+Grpc.Core.Channel:.ctor(String, ChannelCredentials, IEnumerable`1)
+Grpc.Core.Channel:.ctor(String, ChannelCredentials)
+VoidEnvSettingsOverrides:Awake() (at D:\code\vrai\environment\neos\UnityMiddleWare2\Assets\VoidEnvSettingsOverrides.cs:18)
+
+[C:\buildslave\unity\build\Runtime/Misc/Plugins.cpp line 292] 
+(Filename: D:/code/vrai/environment/neos/UnityMiddleWare2/Assets/VoidEnvSettingsOverrides.cs Line: 18)
+
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libdl.so
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libdl.so.dll
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libdl.so
+Plugins: Failed to load 'libSystem' because one or more of its dependencies could not be loaded.
+Grpc.Core.Internal.UnmanagedLibrary:GetNativeMethodDelegate(String)
+Grpc.Core.Internal.NativeMethods:GetMethodDelegate(UnmanagedLibrary)
+Grpc.Core.Internal.NativeMethods:.ctor(UnmanagedLibrary)
+Grpc.Core.Internal.NativeExtension:.ctor()
+Grpc.Core.Internal.NativeExtension:Get()
+Grpc.Core.Internal.NativeMethods:Get()
+Grpc.Core.GrpcEnvironment:GrpcNativeInit()
+Grpc.Core.GrpcEnvironment:.ctor()
+Grpc.Core.GrpcEnvironment:AddRef()
+Grpc.Core.Channel:.ctor(String, ChannelCredentials, IEnumerable`1)
+Grpc.Core.Channel:.ctor(String, ChannelCredentials)
+VoidEnvSettingsOverrides:Awake() (at D:\code\vrai\environment\neos\UnityMiddleWare2\Assets\VoidEnvSettingsOverrides.cs:18)
+
+[C:\buildslave\unity\build\Runtime/Misc/Plugins.cpp line 292] 
+(Filename: D:/code/vrai/environment/neos/UnityMiddleWare2/Assets/VoidEnvSettingsOverrides.cs Line: 18)
+
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libSystem.dylib
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libSystem.dylib.dll
+Fallback handler could not load library D:/code/vrai/environment/neos/built_env/Unity Environment_Data/Mono/libSystem.dylib
+Number of agents: 1
+UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+UnityEngine.DebugLogHandler:LogFormat(LogType, Object, String, Object[])
+UnityEngine.Logger:Log(LogType, Object)
+UnityEngine.Debug:Log(Object)
+VoidEnvSettingsOverrides:Awake() (at D:\code\vrai\environment\neos\UnityMiddleWare2\Assets\VoidEnvSettingsOverrides.cs:22)
+ 
+(Filename: D:/code/vrai/environment/neos/UnityMiddleWare2/Assets/VoidEnvSettingsOverrides.cs Line: 22)
+
+Setting up 6 worker threads for Enlighten.
+  Thread -> id: 611c -> priority: 1 
+  Thread -> id: 77f8 -> priority: 1 
+  Thread -> id: 75e0 -> priority: 1 
+  Thread -> id: 76f0 -> priority: 1 
+  Thread -> id: ed4 -> priority: 1 
+  Thread -> id: 4280 -> priority: 1 
+NullReferenceException: Object reference not set to an instance of an object
+  at TestAgent.OnApplicationQuit () [0x0000b] in D:\code\vrai\environment\neos\UnityMiddleWare2\Assets\VoidEnvironment\Scripts\TestAgent.cs:302 
+ 
+(Filename: D:/code/vrai/environment/neos/UnityMiddleWare2/Assets/VoidEnvironment/Scripts/TestAgent.cs Line: 302)
+
+##utp:{"type":"MemoryLeaks","version":2,"phase":"Immediate","time":1602630366955,"processId":6800,"allocatedMemory":15994,"memoryLabels":[{"Permanent":40},{"NewDelete":472},{"Thread":64},{"Manager":2672},{"VertexData":576},{"GfxDevice":7572},{"Physics":32},{"Serialization":40},{"String":486},{"DynamicArray":2240},{"PoolAlloc":56},{"Sprites":88},{"GI":296},{"VR":2016},{"Subsystems":-656}]}

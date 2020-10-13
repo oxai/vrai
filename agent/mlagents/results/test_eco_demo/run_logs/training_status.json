@@ -1,4 +1,20 @@
 {
+    "NeosAgent": {
+        "checkpoints": [
+            {
+                "steps": 2368,
+                "file_path": "results\\test_eco_demo\\NeosAgent\\NeosAgent-2368.nn",
+                "reward": null,
+                "creation_time": 1602630367.0116258
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 2368,
+            "file_path": "results\\test_eco_demo\\NeosAgent.nn",
+            "reward": null,
+            "creation_time": 1602630367.0116258
+        }
+    },
     "metadata": {
         "stats_format_version": "0.1.0",
         "mlagents_version": "0.22.0.dev0",
