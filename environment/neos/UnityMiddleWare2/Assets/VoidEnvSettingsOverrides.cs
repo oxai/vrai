@@ -34,7 +34,7 @@ public class VoidEnvSettingsOverrides : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log("Exception caught " + e.ToString());
+            Debug.Log("Exception caught in VoidEnvSettingsOverrides" + e.ToString());
         }
     }
     public void OnDestroy()
