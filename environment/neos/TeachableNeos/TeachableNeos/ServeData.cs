@@ -73,19 +73,18 @@ namespace FrooxEngine.LogiX
 
         private void StartRPCServer()
         {
+            TeachableNeos.DataCommImpl service = new TeachableNeos.DataCommImpl(this);
             Task.Run(() =>
             {
                 try
                 {
-                    //channel = new Channel("127.0.0.1:50052", ChannelCredentials.Insecure);
-                    //this.client = new DataComm.DataCommClient(channel);
-                    int Port = 50052 + copy_idx_tmp;
+                    int Port = 40052 + copy_idx_tmp;
                     Debug.Log("Hiiiia, starting server at " + Port.ToString());
                     GrpcEnvironment.SetLogger(new Grpc.Core.Logging.ConsoleLogger());
 
                     server = new Server
                     {
-                        Services = { DataComm.BindService(new TeachableNeos.DataCommImpl(this)) },
+                        Services = { DataComm.BindService(service) },
                         Ports = { new ServerPort("127.0.0.1", Port, ServerCredentials.Insecure) }
                     };
                     server.Start();
@@ -133,7 +132,7 @@ namespace FrooxEngine.LogiX
             {
                 for (int i = 0; i < num_cameras; i++)
                 {
-                    textures[i] = base.World.Render.Connector.Render(cameras_evald[i].GetRenderSettings(new int2(84, 84)));
+                    textures[i] = base.World.Render.Connector.Render(cameras_evald[i].GetRenderSettings(new int2(84, 84))).Result;
                 }
             }
             //texture = RenderManager.RenderToBitmap(camera.Evaluate().GetRenderSettings(new int2(84, 84))).Wait().RawData();
@@ -144,6 +143,9 @@ namespace FrooxEngine.LogiX
         public void PerformAction()
         {
             //wait to receive action from MLAgents
+            //Debug.Log("HI");
+            //Debug.Log(connected_to_mlagents);
+            //Debug.Log(recording_demo_tmp);
             if (connected_to_mlagents)
             {
                 MLAgentsUpdateEvent.Wait();

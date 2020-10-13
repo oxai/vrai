@@ -190,13 +190,28 @@ def load_demonstration(
 #%%
 
 print("#########################################")
-demo_file=sys.argv[1]
+# demo_file=sys.argv[1]
+demo_file="..\\..\\environment\\neos\\UnityMiddleWare2\\Assets\\Demonstrations\\betatest2_19.demo"
 group_spec, info_action_pairs, total_expected = load_demonstration(demo_file)
 # group_spec, info_action_pairs, total_expected = load_demonstration("..\\..\\environment\\neos\\built_env\\Unity Environment_Data\\Demonstrations\\betatest2.demo")
 # group_spec, info_action_pairs, total_expected = load_demonstration("D:\code\\temp\\built_env\\Unity Environment_Data\\Demonstrations\\betatest2_4.demo")
 # group_spec, info_action_pairs, total_expected = load_demonstration("D:\code\\temp\\built_env\\Unity Environment_Data\\Demonstrations\\older\\betatest2_3.demo")
 # group_spec, info_action_pairs, total_expected = load_demonstration("D:\code\\temp\\built_env\\Unity Environment_Data\\Demonstrations\\older\\betatest2_0.demo")
 print(group_spec)
+len(info_action_pairs)
+type(info_action_pairs)
+get_obs = lambda pair: np.array(pair.agent_info.observations[0].float_data.data)
+get_actions = lambda pair: np.array(pair.action_info.vector_actions)
+
+obs = np.stack(list(map(get_obs,info_action_pairs)))
+acts = np.stack(list(map(get_actions,info_action_pairs)))
+
+obs.shape
+acts.shape
+
+np.save("circling_box_obs",obs)
+np.save("circling_box_acts",acts)
+
 group_spec
 print("#######")
 print("Example obs-action pair")

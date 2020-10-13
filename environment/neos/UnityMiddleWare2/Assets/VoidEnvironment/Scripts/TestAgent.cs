@@ -51,10 +51,19 @@ public class TestAgent : Agent
 
     public override void Initialize()
     {
-        Debug.Log("HII");
+        //Debug.Log("HII");
         try
         {
-            var channel = new Channel("127.0.0.1:5005"+(2+agent_index).ToString(), ChannelCredentials.Insecure);
+
+            if (neos_do_recording & demo_file_writer != null)
+                demo_file_writer.Close();
+            if (client != null)
+            {
+                var res1 = client.StopConnection(new Empty());
+                if (res1.Res != "Ok")
+                    Debug.Log(res1.Res);
+            }
+            var channel = new Channel("127.0.0.1:"+(40052+agent_index).ToString(), ChannelCredentials.Insecure);
             this.client = new DataComm.DataCommClient(channel);
             is_recording =this.GetComponent<DemonstrationRecorder>().record;
 
@@ -66,6 +75,7 @@ public class TestAgent : Agent
             agent_index = response.AgentIndex;
             demo_file = response.DemoFile;
             Response res = response.Res;
+            //Debug.Log(res.Res);
             if (res.Res != "Ok")
                 Debug.Log(res.Res);
             BehaviorParameters behavior_params = GetComponent<BehaviorParameters>();
@@ -92,24 +102,30 @@ public class TestAgent : Agent
 
             if (neos_do_recording)
             {
-                demo_file_writer = new StreamWriter("Assets\\Demonstrations\\" + demo_file + "_side_info.csv", true);
+                if (demo_file!=null)
+                {
+                    demo_file_writer = new StreamWriter("Assets\\Demonstrations\\" + demo_file + "_side_info.csv", false);
+                }
             }
             else
             {
-                if (File.Exists("Assets\\Demonstrations\\" + demo_file + "_side_info.csv"))
+                if (demo_file!=null)
                 {
-                    demo_obss_list = new List<List<float>>();
-                    using (StreamReader r = new StreamReader("Assets\\Demonstrations\\" + demo_file + "_side_info.csv"))
+                    if (File.Exists("Assets\\Demonstrations\\" + demo_file + "_side_info.csv"))
                     {
-                        while (!r.EndOfStream)
+                        demo_obss_list = new List<List<float>>();
+                        using (StreamReader r = new StreamReader("Assets\\Demonstrations\\" + demo_file + "_side_info.csv"))
                         {
-                            string line = r.ReadLine();
-                            List<float> values = line.Split(',').Select((x)=>float.Parse(x)).ToList();
-                            demo_obss_list.Add(values);
+                            while (!r.EndOfStream)
+                            {
+                                string line = r.ReadLine();
+                                List<float> values = line.Split(',').Select((x)=>float.Parse(x)).ToList();
+                                demo_obss_list.Add(values);
+                            }
                         }
+                        demo_obss = demo_obss_list.Select(a => a.ToArray()).ToArray();
+                        has_loaded_demo = true;
                     }
-                    demo_obss = demo_obss_list.Select(a => a.ToArray()).ToArray();
-                    has_loaded_demo = true;
                 }
             }
             //if (File.Exists("Assets\\Demonstrations\\"+demo_file+"_side_info.csv")) {
@@ -137,7 +153,7 @@ public class TestAgent : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         NeosObservation obs = client.GetObs(new Empty());
-        for (int i = 0; i < obs.Obs.Count(); i++) { sensor.AddObservation(obs.Obs[i]); }
+        for (int i = 0; i < obs.Obs.Count(); i++) { sensor.AddObservation(Mathf.Clamp(obs.Obs[i],-2.0f, 2.0f)); }
         //Debug.Log("OBS");
         //obs.Obs.ToList().ForEach(i => Debug.Log(i.ToString()));
         if (neos_do_recording)
@@ -203,6 +219,11 @@ public class TestAgent : Agent
     public override void OnActionReceived(float[] vectorAction)
     {
         //Debug.Log("ACTIONS");
+        //if (agent_index == 2 || agent_index == 0)
+        //{
+        //    Debug.Log(agent_index);
+        //    Debug.Log(vectorAction[0].ToString());
+        //}
         //vectorAction.ToList().ForEach(i => Debug.Log(i.ToString()));
         //Debug.Log("Total steps: " + StepCount.ToString());
         //vectorAction[0] = 0;
@@ -212,7 +233,7 @@ public class TestAgent : Agent
         //vectorAction[10] = 0;
         //vectorAction[11] = 0;
         Response res;
-        if (should_reset || StepCount >= 1500)
+        if (should_reset || StepCount >= 15000)
         {
             res = client.SendAct(new NeosAction { Action = { vectorAction } });
             if (res.Res != "Ok")

@@ -16,6 +16,7 @@ namespace TeachableNeos
         public DataCommImpl(ServeData parent_node)
         {
             node = parent_node;
+            node.Debug.Log(node.GetHashCode());
         }
 
         public override Task<NeosObservation> GetObs(Empty f, ServerCallContext context)
@@ -126,8 +127,11 @@ namespace TeachableNeos
 
             try
             {
+                node.Debug.Log("Setting connected_to_ml_agents to true");
+                node.Debug.Log(node.connected_to_mlagents);
                 node.have_read = true;
                 node.connected_to_mlagents = true;
+                node.Debug.Log(node.connected_to_mlagents);
                 if (parameters.IsRecording)
                     node.recording_demo_tmp = parameters.IsRecording;
                 Response res = new Response { Res = "Ok" };

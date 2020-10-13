@@ -4,6 +4,8 @@ using UnityEngine;
 using Grpc.Core;
 using System;
 using MLAgents;
+using System.Threading;
+
 
 public class VoidEnvSettingsOverrides : MonoBehaviour
 {
@@ -13,7 +15,7 @@ public class VoidEnvSettingsOverrides : MonoBehaviour
     {
         try
         {
-            var channel = new Channel("127.0.0.1:5005" + (2 + 0).ToString(), ChannelCredentials.Insecure);
+            var channel = new Channel("127.0.0.1:40052", ChannelCredentials.Insecure);
             var client = new DataComm.DataCommClient(channel);
             var response = client.EstablishConnection(new ConnectionParams { IsRecording = false });
             int number_agents = response.NumberAgents;
@@ -23,6 +25,8 @@ public class VoidEnvSettingsOverrides : MonoBehaviour
                 Debug.Log("Creating agent copy " + i.ToString());
                 GameObject new_copy = UnityEngine.Object.Instantiate(ProtoAgent);
                 new_copy.GetComponent<TestAgent>().agent_index = i;
+                //Thread.Sleep(300);
+                new_copy.GetComponent<TestAgent>().Initialize();
             }
             var res = client.StopConnection(new Empty());
             if (res.Res != "Ok")

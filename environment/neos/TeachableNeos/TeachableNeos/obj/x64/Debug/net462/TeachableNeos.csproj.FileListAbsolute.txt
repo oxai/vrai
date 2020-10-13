@@ -177,3 +177,4 @@ D:\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\x64\Debug\net462\T
 D:\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\x64\Debug\net462\TeachableNeos.pdb
 D:\code\vrai\environment\neos\TeachableNeos\TeachableNeos\obj\x64\Debug\net462\TeachableNeos.csprojAssemblyReference.cache
 D:\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\x64\Debug\net462\Mikktspace.NET.dll
+D:\code\vrai\environment\neos\TeachableNeos\TeachableNeos\bin\x64\Debug\net462\Jeffijoe.MessageFormat.dll

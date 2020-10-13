@@ -1,0 +1,2 @@
+obj\x64\Debug\net471/BasicComm.cs \
+obj\x64\Debug\net471/BasicCommGrpc.cs: ../../protos/basic_comm.proto

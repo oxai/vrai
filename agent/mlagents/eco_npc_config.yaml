@@ -1,0 +1,79 @@
+default:
+    trainer: ppo
+    batch_size: 1024
+    beta: 5.0e-3
+    buffer_size: 10240
+    epsilon: 0.2
+    hidden_units: 128
+    lambd: 0.95
+    learning_rate: 3.0e-4
+    max_steps: 1.0e15
+    memory_size: 256
+    normalize: false
+    num_epoch: 3
+    num_layers: 2
+    time_horizon: 64
+    sequence_length: 64
+    summary_freq: 1000
+    keep-checkpoints: 1000
+    use_recurrent: false
+    threaded: true
+    reward_signals:
+        extrinsic:
+            strength: 1.0
+            gamma: 0.99
+
+NeosAgent:
+    max_steps: 1.0e15
+    batch_size: 2048
+    buffer_size: 5120
+    lambd: 0.94
+    epsilon: 0.15
+    learning_rate: 1.0e-4
+    time_horizon: 64
+    beta: 3.0e-5
+    hidden_units: 512
+    summary_freq: 1000
+    num_layers: 2
+    use_recurrent: false
+    sequence_length: 5
+    vis_encode_type: simple
+    learning_rate_schedule: linear
+    use_latent: false
+    latent_size: 3
+    reward_signals:
+        extrinsic:
+            strength: 1.0
+            gamma: 0.995
+
+# NeosAgent_alphali:
+#     max_steps: 1.0e10
+#     batch_size: 1024
+#     buffer_size: 2048
+#     lambd: 0.99
+#     epsilon: 0.2
+#     num_epoch: 2
+#     learning_rate: 5.0e-4
+#     time_horizon: 25
+#     beta: 1.0e-2
+#     hidden_units: 128
+#     summary_freq: 1000
+#     num_layers: 2
+#     use_recurrent: false
+#     sequence_length: 2
+#     vis_encode_type: simple
+#     learning_rate_schedule: linear
+#     behavioral_cloning:
+#         demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\virustestcameraf.demo
+#         strength: 0.9
+#         batch_size: 32
+#         steps: 1000000
+#     reward_signals:
+#         gail:
+#             strength: 1.0
+#             gamma: 0.9
+#             use_actions: false
+#             use_vail: false
+#             encoding_size: 64
+#             demo_path: ..\..\environment\neos\UnityMiddleWare2\Assets\Demonstrations\virustestcameraf.demo
+#             learning_rate: 1.0e-5

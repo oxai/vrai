@@ -1,0 +1,2 @@
+obj\x64\Debug\net20/BasicComm.cs \
+obj\x64\Debug\net20/BasicCommGrpc.cs: ../../protos/basic_comm.proto
