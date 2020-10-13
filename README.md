@@ -10,16 +10,17 @@ original project proposal google doc https://docs.google.com/document/d/1_GhhYuY
 
 ## Instructions for use
 
+WIP writting it up
+
 ### Set up
 
 - Install NeosVR
-- Install ML-Agents (version 0.15.X)
-- Copy the dlls in `environment/neos/dlls/Libraries` to the `Libraries` folder in the Neos installation folder (from now on refered to as "Neos folder"), often in `C:\Program Files (x86)\Steam\steamapps\common\NeosVR`.
-- Copy the file `run_neos.bat` in `environment/neos/dlls` to Neos folder.
-- If you want to use one of the existing environments (right now, only up to date environment is the betali environment I'm using with the 18dof agent (actions are head, 2 hands)), then you'd need to ask it for me. Just register on Neos, send me a friend request (I'm guillefix), and I'll send you the world.
-- The current training uses imitation learning, and that requires a demo file. I am not pusshing those because they can be too large for Github. They are in `environment/neos/built_env/Unity Environment_Data/Demonstrations`. I uploaded the current demo [here](environment/neos/UnityMiddleWare2/Assets/Demonstrations), so copy that to `environment/neos/built_env/Unity Environment_Data/Demonstrations` to use it if you want. This is quite a complex task to learn, sorry don't have a simple demo rn for testing :P maybe Rian can provide one he's working on.
+- Install ML-Agents (version 0.15.1)
+- Copy the dlls in `environment/neos/dlls/Libraries` to the `Libraries` folder in the Neos installation folder (from now on refered to as "Neos folder"), often in `C:\Program Files (x86)\Steam\steamapps\common\NeosVR`. (I have more than you probably need in there, but just to be safe)
+- Copy the files `run_neos_vrai_desktop.bat` and `run_neos_vrai_vs.bat` in `environment/neos/dlls` to Neos folder. These files start Neos with the plugin loaded in, in either desktop or VR mode respectively. They currently will load the Eco world as an example environment.
+<!--- The current training uses imitation learning, and that requires a demo file.-->
 
-### Running
+### Recording demo
 
 - Open Neos with plugins, by running `run_neos.bat` (now found in Neos folder).
 - Open the world (which would be wherever you left it after opening it from the message I sent, unless you have moved it somewhere else). This is done by double clicking on the orb. If using Neos in desktop mode, refer to here for the basic controls: http://wiki.neosvr.com/subdom/wiki/index.php?title=Basic_Controls. If you have VR, then we can meet in Neos and I can teach you the basics (or just ask me etc)
