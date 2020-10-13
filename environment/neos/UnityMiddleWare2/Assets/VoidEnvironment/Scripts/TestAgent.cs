@@ -100,34 +100,43 @@ public class TestAgent : Agent
             }
             image = raw_image.GetComponent<RawImage>();
 
-            if (neos_do_recording)
-            {
-                if (demo_file!=null)
-                {
-                    demo_file_writer = new StreamWriter("Assets\\Demonstrations\\" + demo_file + "_side_info.csv", false);
-                }
-            }
-            else
-            {
-                if (demo_file!=null)
-                {
-                    if (File.Exists("Assets\\Demonstrations\\" + demo_file + "_side_info.csv"))
-                    {
-                        demo_obss_list = new List<List<float>>();
-                        using (StreamReader r = new StreamReader("Assets\\Demonstrations\\" + demo_file + "_side_info.csv"))
-                        {
-                            while (!r.EndOfStream)
-                            {
-                                string line = r.ReadLine();
-                                List<float> values = line.Split(',').Select((x)=>float.Parse(x)).ToList();
-                                demo_obss_list.Add(values);
-                            }
-                        }
-                        demo_obss = demo_obss_list.Select(a => a.ToArray()).ToArray();
-                        has_loaded_demo = true;
-                    }
-                }
-            }
+            //try
+            //{
+            //    if (neos_do_recording)
+            //    {
+            //        if (demo_file!=null)
+            //        {
+            //            demo_file_writer = new StreamWriter(Application.dataPath+"\\Demonstrations\\" + demo_file + "_side_info.csv", false);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (demo_file!=null)
+            //        {
+            //            if (File.Exists(Application.dataPath+"\\Demonstrations\\" + demo_file + "_side_info.csv"))
+            //            {
+            //                demo_obss_list = new List<List<float>>();
+            //                using (StreamReader r = new StreamReader(Application.dataPath+"\\Demonstrations\\" + demo_file + "_side_info.csv"))
+            //                {
+            //                    while (!r.EndOfStream)
+            //                    {
+            //                        string line = r.ReadLine();
+            //                        List<float> values = line.Split(',').Select((x)=>float.Parse(x)).ToList();
+            //                        demo_obss_list.Add(values);
+            //                    }
+            //                }
+            //                demo_obss = demo_obss_list.Select(a => a.ToArray()).ToArray();
+            //                has_loaded_demo = true;
+            //            }
+            //        }
+            //    }
+            //} catch (Exception e) {
+            //    Debug.Log("Exception at importing side_info "+e.ToString());
+            //    this.gameObject.SetActive(false);
+            //    var res2 = client.StopConnection(new Empty());
+            //    if (res2.Res != "Ok")
+            //        Debug.Log(res.Res);
+            //}
             //if (File.Exists("Assets\\Demonstrations\\"+demo_file+"_side_info.csv")) {
             //    Debug.Log("loading demo file");
             //    using (StreamReader r = new StreamReader("Assets\\Demonstrations\\current_demo_floats.json"))
@@ -156,11 +165,11 @@ public class TestAgent : Agent
         for (int i = 0; i < obs.Obs.Count(); i++) { sensor.AddObservation(Mathf.Clamp(obs.Obs[i],-2.0f, 2.0f)); }
         //Debug.Log("OBS");
         //obs.Obs.ToList().ForEach(i => Debug.Log(i.ToString()));
-        if (neos_do_recording)
-        {
-            float[] side_info = obs.SideInfo.ToArray();
-            demo_file_writer.WriteLine(String.Join(",", side_info.Select((x) => x.ToString())));
-        }
+        //if (neos_do_recording)
+        //{
+        //    float[] side_info = obs.SideInfo.ToArray();
+        //    demo_file_writer.WriteLine(String.Join(",", side_info.Select((x) => x.ToString())));
+        //}
         float reward = obs.Reward;
         //obs.Obs;
         //Debug.Log("Reward " + reward.ToString());

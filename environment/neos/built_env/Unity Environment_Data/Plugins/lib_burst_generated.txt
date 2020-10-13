@@ -4,22 +4,23 @@
 --dump=Function
 --float-precision=Standard
 --format=Coff
---output=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Plugins\lib_burst_generated
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.ML-Agents.CommunicatorObjects.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.ML-Agents.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Barracuda.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\com.unity.multiplayer-hlapi.Runtime.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.TextMeshPro.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Timeline.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Mathematics.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Analytics.DataPrivacy.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\UnityEngine.XR.LegacyInputHelpers.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Burst.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\UnityEngine.SpatialTracking.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\BurstBLAS.dll
---assembly-folder=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\
+--debug
+--output=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Plugins\lib_burst_generated
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.ML-Agents.CommunicatorObjects.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.ML-Agents.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Barracuda.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\com.unity.multiplayer-hlapi.Runtime.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.TextMeshPro.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Timeline.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Mathematics.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Analytics.DataPrivacy.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\UnityEngine.XR.LegacyInputHelpers.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Burst.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\UnityEngine.SpatialTracking.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\BurstBLAS.dll
+--assembly-folder=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\
 --method=Unity.Burst.BurstCompiler+BurstCompilerHelper, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::IsBurstEnabled()--8c2be93e18276203cbd918daa2748a10
 --method=Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[UnsafeMatrixBlockMultiplyUnrolled8xhJob, BurstBLAS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnsafeMatrixBlockMultiplyUnrolled8xhJob&, BurstBLAS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--1a17ae6a16a8ef3b2e844a6f83834f74
 --platform=Windows
@@ -28,21 +29,22 @@
 --dump=Function
 --float-precision=Standard
 --format=Coff
---output=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Plugins\lib_burst_generated
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.ML-Agents.CommunicatorObjects.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.ML-Agents.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Barracuda.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\com.unity.multiplayer-hlapi.Runtime.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.TextMeshPro.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Timeline.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Mathematics.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Analytics.DataPrivacy.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\UnityEngine.XR.LegacyInputHelpers.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Burst.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\UnityEngine.SpatialTracking.dll
---root-assembly=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\BurstBLAS.dll
---assembly-folder=D:\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\
+--debug
+--output=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Plugins\lib_burst_generated
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.ML-Agents.CommunicatorObjects.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.ML-Agents.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Barracuda.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\com.unity.multiplayer-hlapi.Runtime.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.TextMeshPro.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Timeline.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Mathematics.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Analytics.DataPrivacy.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\UnityEngine.XR.LegacyInputHelpers.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\Unity.Burst.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\UnityEngine.SpatialTracking.dll
+--root-assembly=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\BurstBLAS.dll
+--assembly-folder=C:\Users\Guillermo Valle\code\vrai\environment\neos\UnityMiddleWare2\Temp\StagingArea\Data\Managed\
 --method=Unity.Burst.BurstCompiler+BurstCompilerHelper, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::IsBurstEnabled()--8c2be93e18276203cbd918daa2748a10
 --method=Unity.Jobs.IJobParallelForExtensions+ParallelForJobStruct`1[[UnsafeMatrixBlockMultiplyUnrolled8xhJob, BurstBLAS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnsafeMatrixBlockMultiplyUnrolled8xhJob&, BurstBLAS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--1a17ae6a16a8ef3b2e844a6f83834f74
