@@ -272,19 +272,19 @@
       <HintPath>C:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>C:/Users/Guillermo Valle/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil">
-      <HintPath>C:/Users/Guillermo Valle/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/nuget.mono-cecil@0.1.5-preview/Mono.Cecil.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/nuget.mono-cecil@0.1.5-preview/Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Pdb">
-      <HintPath>C:/Users/Guillermo Valle/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/nuget.mono-cecil@0.1.5-preview/Mono.Cecil.Pdb.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/nuget.mono-cecil@0.1.5-preview/Mono.Cecil.Pdb.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Mdb">
-      <HintPath>C:/Users/Guillermo Valle/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/nuget.mono-cecil@0.1.5-preview/Mono.Cecil.Mdb.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/nuget.mono-cecil@0.1.5-preview/Mono.Cecil.Mdb.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Rocks">
-      <HintPath>C:/Users/Guillermo Valle/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/nuget.mono-cecil@0.1.5-preview/Mono.Cecil.Rocks.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/nuget.mono-cecil@0.1.5-preview/Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2019.3.3f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\mscorlib.dll</HintPath>
@@ -804,21 +804,21 @@
     <Compile Include="Packages\com.unity.test-framework\UnityEditor.TestRunner\UnityTestProtocol\UtpMessageReporter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\ML-Agents\Plugins\ProtoBuffer\link.xml" />
     <None Include="Packages\com.unity.2d.sprite\Editor\UI\SpriteEditor\PolygonChangeShapeWindow.uxml" />
     <None Include="Packages\com.unity.2d.sprite\Editor\UI\SpriteEditor\SpriteEditor.uss" />
     <None Include="Packages\com.unity.2d.sprite\Editor\UI\SpriteEditor\SpriteFrameModuleInspector.uxml" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Activation.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\BarracudaReferenceImpl.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Broadcast.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Conv.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Dense.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\DenseFP16.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Generic.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Pad.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Pool.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Random.cginc" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Tensor.cginc" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Activation.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\BarracudaReferenceImpl.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Broadcast.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Conv.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\DebugUtils.cginc" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Dense.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\DenseFP16.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Generic.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Pad.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Pool.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Random.cginc" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Tensor.cginc" />
     <None Include="Packages\com.unity.barracuda\Tools\requirements.txt" />
     <None Include="Packages\com.unity.burst\Unity.Burst.Unsafe.xml" />
     <None Include="Packages\com.unity.collab-proxy\Editor\Resources\Styles\CollabHistoryCommon.uss" />
@@ -826,6 +826,7 @@
     <None Include="Packages\com.unity.collab-proxy\Editor\Resources\Styles\CollabHistoryLight.uss" />
     <None Include="Packages\com.unity.ext.nunit\net35\unity-custom\This is a custom build DONT include.txt" />
     <None Include="Packages\com.unity.ext.nunit\net35\unity-custom\nunit.framework.xml" />
+    <None Include="Packages\com.unity.ml-agents\Plugins\ProtoBuffer\link.xml" />
     <None Include="Packages\com.unity.textmeshpro\Editor Resources\Shaders\TMP_Properties.cginc" />
     <None Include="Packages\com.unity.textmeshpro\Editor Resources\Shaders\TMP_SDF Internal SSD.shader" />
     <None Include="Packages\com.unity.timeline\Editor\StyleSheets\Extensions\common.uss" />

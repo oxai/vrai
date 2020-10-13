@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
+using Unity.MLAgents.Sensors;
 
-namespace MLAgents.Sensors
+namespace Unity.MLAgents.Sensors
 {
     public class TextureSensorComponent : SensorComponent
     {

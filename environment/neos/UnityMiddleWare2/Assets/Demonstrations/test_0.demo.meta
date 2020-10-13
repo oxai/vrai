@@ -4,7 +4,7 @@ ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 2
-  userData: ' (MLAgents.Demonstrations.Demonstration)'
+  userData: ' (Unity.MLAgents.Demonstrations.DemonstrationSummary)'
   assetBundleName: 
   assetBundleVariant: 
-  script: {fileID: 11500000, guid: 84b8986718842d342bfe6e9156e4ea4d, type: 3}
+  script: {fileID: 11500000, guid: 7bd65ce151aaa4a41a45312543c56be1, type: 3}

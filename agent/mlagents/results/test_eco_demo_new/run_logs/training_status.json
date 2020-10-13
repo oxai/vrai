@@ -1,0 +1,23 @@
+{
+    "NeosAgent": {
+        "checkpoints": [
+            {
+                "steps": 35496,
+                "file_path": "results\\test_eco_demo_new\\NeosAgent\\NeosAgent-35496.nn",
+                "reward": 0.0,
+                "creation_time": 1602629536.8807063
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 35496,
+            "file_path": "results\\test_eco_demo_new\\NeosAgent.nn",
+            "reward": 0.0,
+            "creation_time": 1602629536.8807063
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.1.0",
+        "mlagents_version": "0.22.0.dev0",
+        "tensorflow_version": "2.3.1"
+    }
+}

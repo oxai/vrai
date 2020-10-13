@@ -1,0 +1,1 @@
+Neos.exe -LoadAssembly Libraries\TeachableNeos.dll -screen-fullscreen 0 -DontAutoOpenCloudHome -Open neosrec:///U-guillefix/R-4f3f73c7-17be-4b92-a3d3-6334b4cba268

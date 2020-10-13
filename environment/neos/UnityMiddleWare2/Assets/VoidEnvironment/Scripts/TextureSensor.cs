@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
+using Unity.MLAgents.Sensors;
 
-namespace MLAgents.Sensors
+namespace Unity.MLAgents.Sensors
 {
     public class TextureSensor : ISensor
     {
@@ -38,10 +39,10 @@ namespace MLAgents.Sensors
             return compressed;
         }
 
-        public int Write(WriteAdapter adapter)
+        public int Write(ObservationWriter writer)
         {
             var texture = m_Texture;
-            var numWritten = Utilities.TextureToTensorProxy(texture, adapter, m_Grayscale);
+            var numWritten = writer.WriteTexture(texture, m_Grayscale);
             UnityEngine.Object.Destroy(texture);
             return numWritten;
         }
@@ -56,5 +57,6 @@ namespace MLAgents.Sensors
         {
             m_Texture = texture; 
         }
+        public void Reset() { }
     }
 }

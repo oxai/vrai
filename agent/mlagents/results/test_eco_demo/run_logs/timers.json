@@ -1,0 +1,49 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1602628260",
+        "python_version": "3.7.4 (default, Aug  9 2019, 18:34:13) [MSC v.1915 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Anaconda\\Scripts\\mlagents-learn eco_npc_config.yaml --run-id=test_eco_demo --resume --time-scale=2.0",
+        "mlagents_version": "0.22.0.dev0",
+        "mlagents_envs_version": "0.22.0.dev0",
+        "communication_protocol_version": "1.2.0",
+        "tensorflow_version": "2.3.1",
+        "numpy_version": "1.18.1",
+        "end_time_seconds": "1602628271"
+    },
+    "total": 11.458859000000002,
+    "count": 1,
+    "self": 0.26023209999999963,
+    "children": {
+        "run_training.setup": {
+            "total": 0.018040300000000897,
+            "count": 1,
+            "self": 0.018040300000000897
+        },
+        "TrainerController.start_learning": {
+            "total": 11.180586600000002,
+            "count": 1,
+            "self": 0.00014790000000530767,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 11.054483999999999,
+                    "count": 1,
+                    "self": 11.054483999999999
+                },
+                "TrainerController._save_models": {
+                    "total": 0.12595469999999764,
+                    "count": 1,
+                    "self": 2.6799999996995894e-05,
+                    "children": {
+                        "RLTrainer._checkpoint": {
+                            "total": 0.12592790000000065,
+                            "count": 1,
+                            "self": 0.12592790000000065
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

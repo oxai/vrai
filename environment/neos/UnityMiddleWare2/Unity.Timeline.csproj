@@ -274,38 +274,38 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>Assets/Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO.Abstractions">
-      <HintPath>Assets/ML-Agents/Plugins/System.IO.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.IO.Abstractions.TestingHelpers">
-      <HintPath>Assets/ML-Agents/Plugins/System.IO.Abstractions.TestingHelpers.dll</HintPath>
-    </Reference>
-    <Reference Include="Grpc.Core">
-      <HintPath>Assets/ML-Agents/Plugins/ProtoBuffer/Grpc.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Interactive.Async">
-      <HintPath>Assets/ML-Agents/Plugins/ProtoBuffer/System.Interactive.Async.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.Advertisements">
-      <HintPath>C:/Users/Guillermo Valle/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
-      <HintPath>C:/Users/Guillermo Valle/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Editor.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>C:/Users/Guillermo Valle/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Tracker.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>C:/Users/Guillermo Valle/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.analytics@3.3.5/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Protobuf">
-      <HintPath>C:/Users/Guillermo Valle/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.barracuda@0.6.3-preview/Barracuda/Plugins/ProtoBuffer/Google.Protobuf.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.analytics@3.3.5/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Burst.Unsafe">
-      <HintPath>C:/Users/Guillermo Valle/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.burst@1.2.3/Unity.Burst.Unsafe.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.burst@1.3.4/Unity.Burst.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Abstractions">
+      <HintPath>D:/code/ml-agents/com.unity.ml-agents/Plugins/System.IO.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Abstractions.TestingHelpers">
+      <HintPath>D:/code/ml-agents/com.unity.ml-agents/Plugins/System.IO.Abstractions.TestingHelpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Grpc.Core">
+      <HintPath>D:/code/ml-agents/com.unity.ml-agents/Plugins/ProtoBuffer/Grpc.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Interactive.Async">
+      <HintPath>D:/code/ml-agents/com.unity.ml-agents/Plugins/ProtoBuffer/System.Interactive.Async.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
-      <HintPath>C:/Users/Guillermo Valle/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.purchasing@2.0.6/Editor/UnityEditor.Purchasing.dll</HintPath>
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.purchasing@2.0.6/Editor/UnityEditor.Purchasing.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf">
+      <HintPath>D:/code/vrai/environment/neos/UnityMiddleWare2/Library/PackageCache/com.unity.barracuda@1.0.3/Barracuda/Runtime/Plugins/ProtoBuffer/Google.Protobuf.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2019.3.3f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\mscorlib.dll</HintPath>
@@ -745,21 +745,21 @@
     <Compile Include="Packages\com.unity.timeline\Runtime\Utilities\WeightUtility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\ML-Agents\Plugins\ProtoBuffer\link.xml" />
     <None Include="Packages\com.unity.2d.sprite\Editor\UI\SpriteEditor\PolygonChangeShapeWindow.uxml" />
     <None Include="Packages\com.unity.2d.sprite\Editor\UI\SpriteEditor\SpriteEditor.uss" />
     <None Include="Packages\com.unity.2d.sprite\Editor\UI\SpriteEditor\SpriteFrameModuleInspector.uxml" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Activation.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\BarracudaReferenceImpl.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Broadcast.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Conv.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Dense.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\DenseFP16.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Generic.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Pad.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Pool.compute" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Random.cginc" />
-    <None Include="Packages\com.unity.barracuda\Barracuda\Core\Resources\Tensor.cginc" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Activation.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\BarracudaReferenceImpl.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Broadcast.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Conv.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\DebugUtils.cginc" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Dense.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\DenseFP16.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Generic.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Pad.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Pool.compute" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Random.cginc" />
+    <None Include="Packages\com.unity.barracuda\Barracuda\Runtime\Core\Resources\Tensor.cginc" />
     <None Include="Packages\com.unity.barracuda\Tools\requirements.txt" />
     <None Include="Packages\com.unity.burst\Unity.Burst.Unsafe.xml" />
     <None Include="Packages\com.unity.collab-proxy\Editor\Resources\Styles\CollabHistoryCommon.uss" />
@@ -767,6 +767,7 @@
     <None Include="Packages\com.unity.collab-proxy\Editor\Resources\Styles\CollabHistoryLight.uss" />
     <None Include="Packages\com.unity.ext.nunit\net35\unity-custom\This is a custom build DONT include.txt" />
     <None Include="Packages\com.unity.ext.nunit\net35\unity-custom\nunit.framework.xml" />
+    <None Include="Packages\com.unity.ml-agents\Plugins\ProtoBuffer\link.xml" />
     <None Include="Packages\com.unity.textmeshpro\Editor Resources\Shaders\TMP_Properties.cginc" />
     <None Include="Packages\com.unity.textmeshpro\Editor Resources\Shaders\TMP_SDF Internal SSD.shader" />
     <None Include="Packages\com.unity.timeline\Editor\StyleSheets\Extensions\common.uss" />

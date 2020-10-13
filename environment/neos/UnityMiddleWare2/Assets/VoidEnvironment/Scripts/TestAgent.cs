@@ -14,11 +14,12 @@ using Screen = System.Windows.Forms.Screen;
 using Google.Protobuf;
 using UnityEngine.UI;
 using Grpc.Core;
-using MLAgents;
-using MLAgents.Sensors;
-using MLAgents.SideChannels;
-using MLAgents.Demonstrations;
-using MLAgents.Policies;
+using Unity.MLAgents;
+using Unity.MLAgents.Sensors;
+using Unity.MLAgents.SideChannels;
+using Unity.MLAgents.Demonstrations;
+using Unity.MLAgents.Policies;
+using Unity.MLAgents.Actuators;
 using System.IO;
 using Newtonsoft.Json;
 using Random = System.Random;
@@ -65,7 +66,7 @@ public class TestAgent : Agent
             }
             var channel = new Channel("127.0.0.1:"+(40052+agent_index).ToString(), ChannelCredentials.Insecure);
             this.client = new DataComm.DataCommClient(channel);
-            is_recording =this.GetComponent<DemonstrationRecorder>().record;
+            is_recording =this.GetComponent<DemonstrationRecorder>().Record;
 
             var response = client.EstablishConnection(new ConnectionParams { IsRecording = is_recording });
             action_dim = response.ActionDim;
@@ -79,12 +80,13 @@ public class TestAgent : Agent
             if (res.Res != "Ok")
                 Debug.Log(res.Res);
             BehaviorParameters behavior_params = GetComponent<BehaviorParameters>();
-            behavior_params.brainParameters.vectorActionSize = new int[] { action_dim };
-            behavior_params.brainParameters.vectorObservationSize = obs_dim;
-            if (neos_do_recording) behavior_params.behaviorType = BehaviorType.HeuristicOnly;
+            behavior_params.BrainParameters.VectorActionSize = new int[] { action_dim };
+            behavior_params.BrainParameters.VectorObservationSize = obs_dim;
+            //if (neos_do_recording) behavior_params.BehaviorType = BehaviorType.HeuristicOnly;
 
             DemonstrationRecorder demo_recorder = GetComponent<DemonstrationRecorder>();
-            demo_recorder.record = neos_do_recording;
+            demo_recorder.DemonstrationName = behavior_params.BehaviorName;
+            demo_recorder.Record = neos_do_recording;
 
             //TODO: set camera params from Neos too.
             texture_sensors = new TextureSensorComponent[vis_obs_dim];
@@ -279,14 +281,19 @@ public class TestAgent : Agent
             Debug.Log(res.Res);
     }
 
-    public override float[] Heuristic()
+    public override void Heuristic(in ActionBuffers actionsOut)
     {
         //Debug.Log("HIIII HEURISTICAAA");
         NeosAction action_message = client.GatherAct(new Empty());
         var action = new float[action_dim];
         action_message.Action.CopyTo(action, 0);
         //action.ToList().ForEach(i => Debug.Log(i.ToString()));
-        return action;
+        var continuousActionsOut = actionsOut.ContinuousActions;
+        for (int i = 0; i < action_dim; i++)
+        {
+            continuousActionsOut[i] = action[i];
+        }
+        //return action;
     }
 
     private void OnApplicationQuit()

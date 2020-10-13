@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Grpc.Core;
 using System;
-using MLAgents;
+using Unity.MLAgents;
 using System.Threading;
 
 
