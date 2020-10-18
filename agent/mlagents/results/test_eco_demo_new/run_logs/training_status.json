@@ -2,17 +2,29 @@
     "NeosAgent": {
         "checkpoints": [
             {
-                "steps": 35496,
-                "file_path": "results\\test_eco_demo_new\\NeosAgent\\NeosAgent-35496.nn",
-                "reward": 0.0,
-                "creation_time": 1602629536.8807063
+                "steps": 34560,
+                "file_path": "results\\test_eco_demo_new\\NeosAgent\\NeosAgent-34560.nn",
+                "reward": null,
+                "creation_time": 1602634390.4861066
+            },
+            {
+                "steps": 60160,
+                "file_path": "results\\test_eco_demo_new\\NeosAgent\\NeosAgent-60160.nn",
+                "reward": null,
+                "creation_time": 1602634821.6812606
+            },
+            {
+                "steps": 80640,
+                "file_path": "results\\test_eco_demo_new\\NeosAgent\\NeosAgent-80640.nn",
+                "reward": null,
+                "creation_time": 1602635192.247502
             }
         ],
         "final_checkpoint": {
-            "steps": 35496,
+            "steps": 80640,
             "file_path": "results\\test_eco_demo_new\\NeosAgent.nn",
-            "reward": 0.0,
-            "creation_time": 1602629536.8807063
+            "reward": null,
+            "creation_time": 1602635192.247502
         }
     },
     "metadata": {

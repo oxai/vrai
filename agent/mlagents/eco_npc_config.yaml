@@ -1,5 +1,5 @@
 behaviors:
-  Hallway:
+  NeosAgent:
     trainer_type: ppo
     hyperparameters:
       batch_size: 128
@@ -24,19 +24,20 @@ behaviors:
         strength: 1.0
       gail:
         gamma: 0.99
-        strength: 0.1
+        strength: 0.05
         encoding_size: 128
         learning_rate: 0.0003
         use_actions: true
         use_vail: false
-        demo_path: ..\..\environment\neos\built_env\Unity Environment_Data\Demonstrations\ecotest.demo
+        demo_path: ..\..\environment\neos\built_env\Unity Environment_Data\Demonstrations\NeosAgent_4.demo
     keep_checkpoints: 5
     max_steps: 10000000
     time_horizon: 64
-    summary_freq: 10000
+    summary_freq: 1000
+    keep_checkpoints: 1000
     threaded: true
     behavioral_cloning:
-        demo_path: ..\..\environment\neos\built_env\Unity Environment_Data\Demonstrations\ecotest.demo
+        demo_path: ..\..\environment\neos\built_env\Unity Environment_Data\Demonstrations\NeosAgent_4.demo
         strength: 0.5
         batch_size: 32
         steps: 100
