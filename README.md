@@ -1,6 +1,6 @@
 Hi, welcome to VRAI (VR AI). This is a project to integrate the latest AI technologies into the latest VR technologies (with a focus on social VR). We are starting this long-term journey with reinforcement learning in social VR, using ML-Agents and NeosVR.
 
-Here is the page of the project, which started as a research project in the Oxford AI student society: http://oxai.org/socialvr-ai. We also have a discord channel: https://discord.gg/HQ8Crcw, and a [couple of](https://docs.google.com/document/d/1QVXs_M1yCFSS0QU0ZtPwBJPwRGJJOXqJmiJ_OoFwIyk/edit?usp=sharing)[Google docs]( https://docs.google.com/document/d/1_GhhYuYZBoCrgRzgp7adigoduGQmtOnopPdiNXcxktg/) with the original proposal.
+Here is the page of the project, which started as a research project in the Oxford AI student society: http://oxai.org/socialvr-ai. We also have a discord channel: https://discord.gg/HQ8Crcw, and a [couple of](https://docs.google.com/document/d/1QVXs_M1yCFSS0QU0ZtPwBJPwRGJJOXqJmiJ_OoFwIyk/edit?usp=sharing) [Google docs]( https://docs.google.com/document/d/1_GhhYuYZBoCrgRzgp7adigoduGQmtOnopPdiNXcxktg/) with the original proposal.
 
 Check out a sister project, [Neptune](https://github.com/guillefix/neptune) where I am integrating Jupyter into NeosVR which will also allow for other kinds of AI experiments!
 
