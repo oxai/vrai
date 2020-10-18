@@ -1,12 +1,10 @@
-Hi
+Hi, welcome to VRAI (VR AI). This is a project to integrate the latest AI technologies into the latest VR technologies (with a focus on social VR). We are starting this long-term journey with reinforcement learning in social VR, using ML-Agents and NeosVR.
 
-page: http://oxai.org/socialvr-ai
+Here is the page of the project, which started as a research project in the Oxford AI student society: http://oxai.org/socialvr-ai. We also have a discord channel: https://discord.gg/HQ8Crcw, and a [couple of](https://docs.google.com/document/d/1QVXs_M1yCFSS0QU0ZtPwBJPwRGJJOXqJmiJ_OoFwIyk/edit?usp=sharing)[Google docs]( https://docs.google.com/document/d/1_GhhYuYZBoCrgRzgp7adigoduGQmtOnopPdiNXcxktg/) with the original proposal.
 
-discord channel: https://discord.gg/HQ8Crcw
+Check out a sister project, [Neptune](https://github.com/guillefix/neptune) where I am integrating Jupyter into NeosVR which will also allow for other kinds of AI experiments!
 
-ai in social vr tasks google doc https://docs.google.com/document/d/1QVXs_M1yCFSS0QU0ZtPwBJPwRGJJOXqJmiJ_OoFwIyk/edit?usp=sharing
-
-original project proposal google doc https://docs.google.com/document/d/1_GhhYuYZBoCrgRzgp7adigoduGQmtOnopPdiNXcxktg/
+In the following we give an overview of the system, that should be enough to get you started. You should also check out the "TL;DR example" if you just want to see what scripts to run without necessarily understanding what you are doing XD. See also the "Instructions for development" if you want to modify the code of the plugin or other parts of the system
 
 ## Overview of system
 
@@ -142,6 +140,10 @@ You can run `nani_kore_record_demo.bat`in `agent/mlagents` which will run the sa
 
 - You can create or modify any Neos environment and include the Learn node in them. Explaining how to build with Neos is beyond the scope of this documentation, but ProbablePrime has a nice series of [videos about world building in Neos](https://www.youtube.com/user/ahref), and the community (in discord or Neos itself) is very helpful.
 - Refer to the above for the meaning of the different input/outputs for the Learn node.
+
+### ML-Agents
+
+You can also modify ML-Agents itself if you are brave, and familiar with Tensorflow. You can do that by cloning their repo. You would need to run the [two installation commands](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Installation.md#advanced-local-installation-for-development-2) to use the modified library.
 
 -----
 
