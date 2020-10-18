@@ -51,7 +51,7 @@ This is the Learn node included in TeachableNeos with a description of its diffe
 *Outputs*
 
 * **Do Action** this is an impulse triggered when the Learn node has received an action from UMW (from ML-Agents), so you should use it to trigger the effect of the action (which is found in `Action` output)
-* **Reset Agent** is triggered when the agent should reset (because the maximum number of steps per episode is reached), or because you triggered `SetAgentToReset`.
+* **Reset Agent** is triggered when the agent should reset (because the maximum number of steps per episode is reached, or because you triggered `SetAgentToReset`).
 * **Action** is the float array of actions received from ML-Agents. You should use `Unpack array` node to convert it to floats
 * **Reset Obs** this a random sample from the info stored in side info. This is currently experimental, so can be ignored.
 
