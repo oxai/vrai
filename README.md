@@ -55,6 +55,11 @@ This is the Learn node included in TeachableNeos with a description of its diffe
 * **Action** is the float array of actions received from ML-Agents. You should use `Unpack array` node to convert it to floats
 * **Reset Obs** this a random sample from the info stored in side info. This is currently experimental, so can be ignored.
 
+*Under the hood*
+
+TeachableNeos is using [gRPC](https://grpc.io/docs/languages/csharp/basics/) to communicate with the UnityMiddleWare. This server is tarted `OnStart` of the node.
+Every time the node receives a "PerformAction" trigger, if it is connected to ML-Agents it will wait until ML-Agents sends a `SendAct` request which sends the actions from UMW to the Learn node. This always happens afte a `GetObs` request which makes the Learn node return the actions to UMW. There are several other RPC to handle the communication between the TeachableNeos and UMW. Tbh now I'm thinking that websockets may be more flexible, but gRPC is one of the fastest inter-process communication tech. 
+
 ### UnityMiddleWare
 
 The unity middleware is compiled in `environment/neos/built_env`, but if you want to inspect it/develop it, its source is a Unity project in `environment/neos/UnityMiddleWare2`. 
